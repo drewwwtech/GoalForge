@@ -1,0 +1,45 @@
+.landing-page {
+    display:flex;
+    height: 100vh;
+    width: 100%;
+}
+
+.landingpage-left {
+    flex:1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding:40px;
+}
+
+.illustraion-placeholder {
+    width: 450px;
+    height: 250px;
+    background: rgba(255, 255, 255, 0);
+    border-radius:12px;
+    margin-bottom:40px;
+}
+
+.slogan{
+    color:white;
+    font-size: 32px;
+    font-weight: 600;
+    text-align: center;
+    max-width:400px;
+}
+
+.login-right{
+    flex: 1;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding:40px;
+}
+
+.login-form-container{
+    width:100%;
+    max-width:600px;
+}
