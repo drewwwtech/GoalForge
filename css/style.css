@@ -126,7 +126,7 @@ body {
   padding: 100px 60px 40px; /* Matches dashboard padding: top for header clearance, sides to push content to edges */
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Pushes left to left edge, right to right edge */
+  justify-content: center; /* Pushes left to left edge, right to right edge */
   gap: 80px; /* Increased gap for more separation between photo/slogan and form */
   min-height: calc(100vh - 100px); /* Full viewport minus header clearance */
   /* Removed max-width and margin:0 auto to allow full spread */
