@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Goal Forge</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-placeholder"></div>
+                    <span class="logo-text">Goal Forge</span>
+                </div>
+                <nav class="header-nav">
+                     <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                    <a href="goals.html" class="nav-link">Goals</a>
+                    <a href="friends.html" class="nav-link">Friends</a>
+                </nav>
+            </div>
+           
+            <div class="header-right">
+                <div class="icon-placeholder notifications-icon"></div>
+                <div class="avatar-placeholder"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        
+        <section class="welcome-banner">
+            <div class="welcome-content">
+                <h1>Welcome back, User!</h1>
+                <p>You're making great progress on your goals</p>
+            </div>
+        </section>
+
+        <section class="dashboard-banners">
+            <!--Left  banner-->
+            <div class="banner goals-banner">
+                <h2><div class="goal-icon"></div>My Goals</h2>
+                <div class="goal-lists">
+                    <!--List of goals here later-->
+                </div>
+                <button class="add-goal-btn">Create New Goal</button>
+            </div>
+
+
+            <!--Middle banner-->
+            <div class="banner friends-banner">
+                <h2><div class="friends-icon"></div>Friends Activity</h2>
+                <div class="activity-feed">
+                    <!--Activity feed here later-->
+                </div>
+            </div>
+
+            <!--Right banner-->
+
+            <div class="banner motivation-banner">
+                <h2><div class="motivation-icon"></div> Motivation</h2>
+                
+                <!-- Streak Tracking (Your Key Feature) -->
+                <div class="streak-section">
+                    <div class="streak-count">15 day streak!</div>
+                    <div class="streak-message">Keep going! You're on fire!</div>
+                </div>
+
+                <!-- Weekly Reporting (Your Key Feature) -->
+                <div class="reporting-section">
+                    <h3>Weekly Check-in</h3>
+                    <div class="checkin-status completed">✅ Completed</div>
+                    <button class="checkin-btn">View Progress Report</button>
+                </div>
+
+                <!-- Emotional Support (Your Key Feature) -->
+                <div class="support-section">
+                    <h3>Encouragement</h3>
+                    <div class="support-message">
+                        "Your consistency is inspiring your friends!"
+                    </div>
+                    <button class="encourage-btn">Send Support</button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</body>
+</html>
