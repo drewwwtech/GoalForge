@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Goals - Goal Forge</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-placeholder"></div>
+                    <span class="logo-text">GoalForge</span>
+                </div>
+                <nav class="header-nav">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="goals.html" class="nav-link active">Goals</a>
+                    <a href="friends.html" class="nav-link">Friends</a>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="icon-placeholder notifications-icon"></div>
+                <div class="avatar-placeholder"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="goals-main">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>My Goals</h1>
+            <button class="create-goal-btn">+ Create New Goal</button>
+        </div>
+
+        <!-- Goals Filter/Sort -->
+        <div class="goals-controls">
+            <div class="filter-tabs">
+                <button class="filter-btn active">All Goals</button>
+                <button class="filter-btn">Active</button>
+                <button class="filter-btn">Completed</button>
+            </div>
+            <div class="sort-options">
+                <select class="sort-select">
+                    <option>Sort by: Due Date</option>
+                    <option>Sort by: Progress</option>
+                    <option>Sort by: Name</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Goals Grid -->
+        <div class="goals-grid">
+            <!-- Goal cards will be dynamically added here -->
+            <div class="empty-goals-state">
+                <h3>No goals yet</h3>
+                <p>Create your first goal to start tracking your progress!</p>
+                <button class="create-first-goal-btn">Create Your First Goal</button>
+            </div>
+        </div>
+
+        <!-- Create Goal Modal (Hidden by default) -->
+        <div class="modal-overlay" id="createGoalModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Create New Goal</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form class="goal-form">
+                    <div class="form-group">
+                        <label for="goal-title">Goal Title</label>
+                        <input type="text" id="goal-title" placeholder="e.g., Run a marathon" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="goal-description">Description</label>
+                        <textarea id="goal-description" placeholder="Describe your goal..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="goal-category">Category</label>
+                        <select id="goal-category">
+                            <option>Health & Fitness</option>
+                            <option>Learning & Education</option>
+                            <option>Career & Business</option>
+                            <option>Personal Development</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="goal-deadline">Target Date</label>
+                        <input type="date" id="goal-deadline">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="create-btn">Create Goal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/goals.js"></script>
+</body>
+</html>
