@@ -1307,3 +1307,40 @@ body {
   background: #4f46e5;
   transform: translateY(-2px);
 }
+
+/* Message animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Message styles */
+.message {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    animation: slideIn 0.3s ease;
+}
+
+.error-message {
+    background: #ef4444;
+}
+
+.success-message {
+    background: #10b981;
+}
+
+.info-message {
+    background: #667eea;
+}

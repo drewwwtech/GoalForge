@@ -1,121 +1,202 @@
-// GoalForge Main Application
-class GoalForgeApp {
-    constructor() {
-        this.currentUser = null;
-        this.goals = [];
-        this.friends = [];
-        this.init();
+// js/app.js - Main Application Logic
+
+// User data structure
+const userData = {
+    isLoggedIn: false,
+    currentUser: null,
+    users: [] // Will store all registered users
+};
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('GoalForge app loaded!');
+    initializeApp();
+});
+
+function initializeApp() {
+    // Load existing users from localStorage
+    loadUsers();
+    
+    // Set up event listeners
+    setupEventListeners();
+    
+    // Check if user is already logged in
+    checkExistingLogin();
+}
+
+// Load users from localStorage
+function loadUsers() {
+    const savedUsers = localStorage.getItem('goalforgeUsers');
+    if (savedUsers) {
+        userData.users = JSON.parse(savedUsers);
     }
+}
 
-    init() {
-        console.log('GoalForge app initialized');
-        this.loadUserData();
-        this.setupEventListeners();
-        this.updateUI();
+// Save users to localStorage
+function saveUsers() {
+    localStorage.setItem('goalforgeUsers', JSON.stringify(userData.users));
+}
+
+// Set up all event listeners
+function setupEventListeners() {
+    // Login form submission
+    const loginForm = document.querySelector('.login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleSignup);
     }
-
-    loadUserData() {
-        // Load from localStorage or create demo data
-        const savedData = localStorage.getItem('goalforge-data');
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            this.currentUser = data.user;
-            this.goals = data.goals || [];
-            this.friends = data.friends || [];
-        } else {
-            this.createDemoData();
-        }
+    
+    // Login button in header
+    const loginBtn = document.querySelector('.login-btn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', showLoginModal);
     }
+    
+    // Social login buttons
+    const socialButtons = document.querySelectorAll('.social-login button');
+    socialButtons.forEach(button => {
+        button.addEventListener('click', handleSocialLogin);
+    });
+}
 
-    createDemoData() {
-        this.currentUser = {
-            name: 'User',
-            email: 'user@goalforge.com',
-            joinDate: new Date().toISOString()
-        };
-
-        this.goals = [
-            {
-                id: 1,
-                title: 'Run 5K',
-                description: 'Complete a 5K run without stopping',
-                category: 'Health & Fitness',
-                progress: 60,
-                deadline: '2024-12-31',
-                created: new Date().toISOString(),
-                milestones: [
-                    { text: 'Run 1K', completed: true },
-                    { text: 'Run 3K', completed: true },
-                    { text: 'Run 5K', completed: false }
-                ]
-            }
-        ];
-
-        this.friends = [
-            {
-                id: 1,
-                name: 'Sarah Chen',
-                goalsCompleted: 12,
-                lastActive: '2 hours ago'
-            },
-            {
-                id: 2, 
-                name: 'Mike Rodriguez',
-                goalsCompleted: 8,
-                lastActive: '1 day ago'
-            }
-        ];
-
-        this.saveData();
+// Handle signup form submission
+function handleSignup(event) {
+    event.preventDefault(); // Prevent page reload
+    
+    // Get form data
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+    
+    // Validate form
+    if (validateSignupForm(email, password, confirmPassword)) {
+        // Create new user
+        const newUser = createUser(email, password);
+        
+        // Save user and log them in
+        userData.users.push(newUser);
+        userData.currentUser = newUser;
+        userData.isLoggedIn = true;
+        
+        saveUsers();
+        
+        // Show success message and redirect
+        showMessage('Account created successfully!', 'success');
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 1500);
     }
+}
 
-    saveData() {
-        const data = {
-            user: this.currentUser,
-            goals: this.goals,
-            friends: this.friends
-        };
-        localStorage.setItem('goalforge-data', JSON.stringify(data));
+// Validate signup form
+function validateSignupForm(email, password, confirmPassword) {
+    // Check if email is valid
+    if (!isValidEmail(email)) {
+        showMessage('Please enter a valid email address', 'error');
+        return false;
     }
-
-    setupEventListeners() {
-        // Navigation
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('nav-link')) {
-                this.handleNavigation(e);
-            }
-        });
-
-        // Login/Logout
-        const loginBtn = document.querySelector('.login-btn');
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => this.handleLogin());
-        }
+    
+    // Check if user already exists
+    if (userExists(email)) {
+        showMessage('An account with this email already exists', 'error');
+        return false;
     }
-
-    handleNavigation(e) {
-        e.preventDefault();
-        const page = e.target.getAttribute('href');
-        if (page) {
-            window.location.href = page;
-        }
+    
+    // Check password length
+    if (password.length < 6) {
+        showMessage('Password must be at least 6 characters long', 'error');
+        return false;
     }
-
-    handleLogin() {
-        // Simple login simulation
-        alert('Login functionality would go here!');
+    
+    // Check if passwords match
+    if (password !== confirmPassword) {
+        showMessage('Passwords do not match', 'error');
+        return false;
     }
+    
+    return true;
+}
 
-    updateUI() {
-        // Update user greeting if on dashboard
-        const welcomeElement = document.querySelector('.welcome-content h1');
-        if (welcomeElement && this.currentUser) {
-            welcomeElement.textContent = `Welcome back, ${this.currentUser.name}!`;
+// Check if email is valid
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// Check if user already exists
+function userExists(email) {
+    return userData.users.some(user => user.email === email);
+}
+
+// Create new user object
+function createUser(email, password) {
+    return {
+        id: Date.now().toString(), // Simple ID generation
+        email: email,
+        password: password, // In real app, this would be hashed
+        createdAt: new Date().toISOString(),
+        goals: [],
+        circles: [],
+        streak: 0
+    };
+}
+
+// Show message to user
+function showMessage(text, type = 'info') {
+    // Create message element
+    const messageEl = document.createElement('div');
+    messageEl.className = `message ${type}-message`;
+    messageEl.textContent = text;
+    messageEl.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    // Set background color based on type
+    if (type === 'error') {
+        messageEl.style.background = '#ef4444'; // Red
+    } else if (type === 'success') {
+        messageEl.style.background = '#10b981'; // Green
+    } else {
+        messageEl.style.background = '#667eea'; // Blue
+    }
+    
+    // Add to page
+    document.body.appendChild(messageEl);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        messageEl.remove();
+    }, 3000);
+}
+
+// Check if user is already logged in
+function checkExistingLogin() {
+    const savedUser = localStorage.getItem('goalforgeCurrentUser');
+    if (savedUser) {
+        userData.currentUser = JSON.parse(savedUser);
+        userData.isLoggedIn = true;
+        // If on login page but already logged in, redirect to dashboard
+        if (window.location.pathname.includes('index.html')) {
+            window.location.href = 'dashboard.html';
         }
     }
 }
 
-// Initialize app when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.goalForgeApp = new GoalForgeApp();
-});
+// Handle social login (placeholder for now)
+function handleSocialLogin(event) {
+    const provider = event.target.textContent.includes('Google') ? 'google' : 'facebook';
+    showMessage(`${provider} login would be implemented here`, 'info');
+}
+
+// Show login modal (for header login button)
+function showLoginModal() {
+    showMessage('Login functionality would open here', 'info');
+}
+
