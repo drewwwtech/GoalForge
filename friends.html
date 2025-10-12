@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends - Goal Forge</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-placeholder"></div>
+                    <span class="logo-text">GoalForge</span>
+                </div>
+                <nav class="header-nav">
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="goals.html" class="nav-link">Goals</a>
+                    <a href="friends.html" class="nav-link active">Friends</a>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="icon-placeholder notifications-icon"></div>
+                <div class="avatar-placeholder"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="friends-main">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Friends & Accountability</h1>
+            <button class="add-friend-btn">+ Add Friend</button>
+        </div>
+
+        <!-- Friends Layout -->
+        <div class="friends-layout">
+            <!-- Left Column - Friends List -->
+            <div class="friends-list-section">
+                <div class="section-header">
+                    <h2>My Friends</h2>
+                    <div class="search-box">
+                        <input type="text" placeholder="Search friends..." class="search-input">
+                    </div>
+                </div>
+                
+                <div class="friends-list">
+                    <!-- Friends will be dynamically added here -->
+                    <div class="empty-friends-state">
+                        <h3>No friends yet</h3>
+                        <p>Add friends to build your accountability network!</p>
+                        <button class="add-first-friend-btn">Add Your First Friend</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Friend Activity & Add Friend -->
+            <div class="friends-sidebar">
+                <!-- Add Friend Card -->
+                <div class="sidebar-card add-friend-card">
+                    <h3>Add New Friend</h3>
+                    <div class="friend-search">
+                        <input type="email" placeholder="Enter friend's email" class="friend-email-input">
+                        <button class="send-request-btn">Send Request</button>
+                    </div>
+                    <div class="friend-suggestions">
+                        <h4>Suggested Friends</h4>
+                        <div class="suggestions-list">
+                            <!-- Suggestions will be added dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Friend Activity Card -->
+                <div class="sidebar-card activity-card">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list">
+                        <!-- Activities will be added dynamically -->
+                        <div class="empty-activity">
+                            <p>Friend activity will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Friend Modal -->
+        <div class="modal-overlay" id="addFriendModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add New Friend</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <form class="friend-form">
+                    <div class="form-group">
+                        <label for="friend-email">Friend's Email</label>
+                        <input type="email" id="friend-email" placeholder="Enter friend's email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="friend-message">Personal Message (Optional)</label>
+                        <textarea id="friend-message" placeholder="Add a personal message..."></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="send-request-btn">Send Friend Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/friends.js"></script>
+</body>
+</html>
