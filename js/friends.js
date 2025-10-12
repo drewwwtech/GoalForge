@@ -237,9 +237,9 @@ class FriendsManager {
 
         // Generate some sample activity
         const activities = [
-            `${this.friends[0]?.name} completed "Learn Spanish" goal! 🎉`,
-            `${this.friends[1]?.name || 'Sarah'} is on a 7-day streak! 🔥`,
-            `${this.friends[0]?.name || 'Alex'} just checked in for the week ✅`,
+            `${this.friends[0]?.name} completed "Learn Spanish" goal! `,
+            `${this.friends[1]?.name || 'Sarah'} is on a 7-day streak! `,
+            `${this.friends[0]?.name || 'Alex'} just checked in for the week `,
             'Your circle completed 12 goals this week!'
         ];
 
