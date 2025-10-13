@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & FAQ - GoalForge</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/help.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo" onclick="window.location.href='dashboard.html'">
+                    <div class="logo-placeholder"></div>
+                    <span class="logo-text">GoalForge</span>
+                </div>
+                <nav class="header-nav">
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="goals.html">Goals</a>
+                    <a href="circles.html">Circles</a>
+                    <a href="help.html" class="active">Help</a>
+                </nav>
+            </div>
+            <div class="header-right">
+                <button class="help-contact-btn" onclick="showContactForm()">Contact Support</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="help-container">
+        <div class="help-hero">
+            <h1>How can we help you?</h1>
+            <p>Find answers to common questions and learn how to make the most of GoalForge</p>
+            <div class="search-box">
+                <input type="text" id="helpSearch" placeholder="Search for help topics...">
+                <button class="search-btn">🔍</button>
+            </div>
+        </div>
+
+        <div class="help-layout">
+            <!-- Sidebar Navigation -->
+            <aside class="help-sidebar">
+                <nav class="help-categories">
+                    <a href="#getting-started" class="category-link active">🚀 Getting Started</a>
+                    <a href="#goals" class="category-link">🎯 Goals & Progress</a>
+                    <a href="#circles" class="category-link">👥 Circles & Friends</a>
+                    <a href="#account" class="category-link">👤 Account & Settings</a>
+                    <a href="#troubleshooting" class="category-link">🔧 Troubleshooting</a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="help-content">
+                <!-- Getting Started Section -->
+                <section id="getting-started" class="help-section active">
+                    <h2>Getting Started with GoalForge</h2>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do I create my first goal?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>To create your first goal:</p>
+                            <ol>
+                                <li>Go to the <strong>Goals</strong> page from the navigation</li>
+                                <li>Click the <strong>"Create New Goal"</strong> button</li>
+                                <li>Fill in your goal title and description</li>
+                                <li>Add milestones to break down your goal</li>
+                                <li>Set a deadline (optional)</li>
+                                <li>Click <strong>"Save Goal"</strong></li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>What are circles and how do they work?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Circles are small groups (up to 5 people) where you can:</p>
+                            <ul>
+                                <li>Share your goals and progress</li>
+                                <li>Get encouragement from friends</li>
+                                <li>Stay accountable with weekly check-ins</li>
+                                <li>Celebrate achievements together</li>
+                            </ul>
+                            <p>To join or create a circle, go to the <strong>Circles</strong> page.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How does the streak system work?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Your streak increases when you complete your weekly check-in. The system tracks:</p>
+                            <ul>
+                                <li><strong>Weekly Check-ins:</strong> Complete each week to maintain your streak</li>
+                                <li><strong>Goal Progress:</strong> Working on goals also contributes to motivation</li>
+                                <li><strong>Consistency Bonus:</strong> Longer streaks unlock special achievements</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Goals & Progress Section -->
+                <section id="goals" class="help-section">
+                    <h2>Goals & Progress Tracking</h2>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do I add milestones to my goals?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>When creating or editing a goal, you can add milestones by:</p>
+                            <ol>
+                                <li>Clicking the <strong>"Add Milestone"</strong> button</li>
+                                <li>Entering a description for each milestone</li>
+                                <li>Setting due dates for individual milestones (optional)</li>
+                                <li>Reordering milestones by dragging them</li>
+                            </ol>
+                            <p>Each completed milestone increases your overall goal progress automatically.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>Can I edit or delete a goal after creating it?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes! You can manage your goals by:</p>
+                            <ul>
+                                <li><strong>Editing:</strong> Click on any goal to view details, then click "Edit"</li>
+                                <li><strong>Deleting:</strong> In the goal details view, click "Delete" (this cannot be undone)</li>
+                                <li><strong>Archiving:</strong> Mark completed goals as archived to clean up your active goals list</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How is progress calculated?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Progress is automatically calculated based on:</p>
+                            <ul>
+                                <li><strong>Milestone Completion:</strong> Each milestone contributes equally to the total progress</li>
+                                <li><strong>Manual Updates:</strong> You can manually adjust progress if needed</li>
+                                <li><strong>Time-based:</strong> If deadlines are set, progress may include time-based calculations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Circles & Friends Section -->
+                <section id="circles" class="help-section">
+                    <h2>Circles & Friends</h2>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do I invite friends to my circle?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>To invite friends to join your circle:</p>
+                            <ol>
+                                <li>Go to the <strong>Circles</strong> page</li>
+                                <li>Select your circle or create a new one</li>
+                                <li>Click <strong>"Invite Members"</strong></li>
+                                <li>Share the invitation link with your friends</li>
+                                <li>They can join using the link</li>
+                            </ol>
+                            <p><em>Note: Free accounts can have up to 5 members per circle.</em></p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>What can circle members see?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Circle members can see:</p>
+                            <ul>
+                                <li>Your active goals and progress</li>
+                                <li>When you complete milestones</li>
+                                <li>Your weekly check-in status</li>
+                                <li>Messages you send to the circle</li>
+                            </ul>
+                            <p>You can adjust privacy settings in your <strong>Settings → Privacy</strong> page.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do weekly check-ins work with circles?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Weekly check-ins help maintain accountability:</p>
+                            <ul>
+                                <li>Each week, you'll be prompted to complete a check-in</li>
+                                <li>Circle members can see who has completed their check-in</li>
+                                <li>Completed check-ins increase your streak</li>
+                                <li>You can send encouragement to members who haven't checked in yet</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Account & Settings Section -->
+                <section id="account" class="help-section">
+                    <h2>Account & Settings</h2>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do I change my email or password?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Currently, email addresses cannot be changed for security reasons. For password changes:</p>
+                            <ol>
+                                <li>Go to <strong>Settings → Account</strong></li>
+                                <li>Look for the password change section</li>
+                                <li>Enter your current and new password</li>
+                                <li>Save your changes</li>
+                            </ol>
+                            <p>If you need to change your email, please contact support.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>Can I export my data?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes! You can export all your GoalForge data:</p>
+                            <ol>
+                                <li>Go to <strong>Settings → Data & Storage</strong></li>
+                                <li>Click <strong>"Export My Data"</strong></li>
+                                <li>Your data will be downloaded as a JSON file</li>
+                            </ol>
+                            <p>This file contains all your goals, circles, progress, and settings.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do I delete my account?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>To permanently delete your account:</p>
+                            <ol>
+                                <li>Go to <strong>Settings → Data & Storage</strong></li>
+                                <li>Click <strong>"Delete Account"</strong></li>
+                                <li>Confirm your decision in the popup</li>
+                            </ol>
+                            <p><strong>Warning:</strong> This action cannot be undone. All your data will be permanently deleted.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Troubleshooting Section -->
+                <section id="troubleshooting" class="help-section">
+                    <h2>Troubleshooting</h2>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>I forgot my password. How can I reset it?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>If you've forgotten your password:</p>
+                            <ol>
+                                <li>Go to the login page</li>
+                                <li>Click <strong>"Forgot Password"</strong></li>
+                                <li>Enter your email address</li>
+                                <li>Check your email for reset instructions</li>
+                            </ol>
+                            <p>If you don't receive the email, check your spam folder or contact support.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>The app is running slow. What can I do?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Try these troubleshooting steps:</p>
+                            <ul>
+                                <li><strong>Clear cache:</strong> Go to Settings → Data & Storage → Clear Cache</li>
+                                <li><strong>Check internet connection</strong></li>
+                                <li><strong>Update your browser</strong> to the latest version</li>
+                                <li><strong>Disable browser extensions</strong> that might interfere</li>
+                                <li><strong>Try a different browser</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>My progress isn't saving. What should I do?</h3>
+                            <span class="toggle-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>If your progress isn't saving:</p>
+                            <ol>
+                                <li>Check your internet connection</li>
+                                <li>Make sure you're logged in (check the header)</li>
+                                <li>Try refreshing the page</li>
+                                <li>Clear your browser cache</li>
+                                <li>Contact support if the issue persists</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact Support Section -->
+                <section class="contact-section">
+                    <h2>Still need help?</h2>
+                    <p>Can't find what you're looking for? Our support team is here to help!</p>
+                    <div class="contact-options">
+                        <button class="contact-btn email-btn" onclick="showContactForm()">
+                            <span>📧</span> Email Support
+                        </button>
+                        <button class="contact-btn chat-btn" onclick="startLiveChat()">
+                            <span>💬</span> Live Chat
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Contact Form Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Contact Support</h3>
+                <button class="close-modal" onclick="closeContactForm()">&times;</button>
+            </div>
+            <form class="contact-form" id="supportForm">
+                <div class="input-group">
+                    <label for="supportName">Your Name</label>
+                    <input type="text" id="supportName" required>
+                </div>
+                <div class="input-group">
+                    <label for="supportEmail">Email Address</label>
+                    <input type="email" id="supportEmail" required>
+                </div>
+                <div class="input-group">
+                    <label for="supportTopic">Topic</label>
+                    <select id="supportTopic" required>
+                        <option value="">Select a topic</option>
+                        <option value="technical">Technical Issue</option>
+                        <option value="account">Account Problem</option>
+                        <option value="feature">Feature Request</option>
+                        <option value="billing">Billing Question</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="supportMessage">Message</label>
+                    <textarea id="supportMessage" rows="5" placeholder="Describe your issue in detail..." required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="secondary-btn" onclick="closeContactForm()">Cancel</button>
+                    <button type="submit" class="save-btn">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/help.js"></script>
+</body>
+</html>
