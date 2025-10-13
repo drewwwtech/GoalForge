@@ -23,7 +23,7 @@
             </div>
            
             <div class="header-right">
-                <button class="login-btn">Log In</button>
+                <a href="login.html" class="login-btn">Login</a>
             </div>
         </div>
     </header>
@@ -38,50 +38,41 @@
 
         <div class="login-right">
             <div class="login-form-container">
-                <h2 class="form-title">Sign Up For Free</h2>
-                <form class="login-form">
-                    <div class="input-group">
-                        <label for="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="Enter your email"
-                            required
-                            />
-                    </div>
-                    <div class="input-group">
-                        <label for="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Enter your password"
-                            required
-                            />
-                    </div>
-                    <div class="input-group">
-                        <label for="confirm-password">Confirm Password</label>
-                        <input
-                            type="password"
-                            id="confirm-password"
-                            name="confirm-password"
-                            placeholder="Confirm your password"
-                            required
-                            />
-                    </div>
-                    <button type="submit" class="submit-button">Sign Up</button>
-                </form>
-                <div class="divider">
-                    <span>OR</span>
-                </div>
-                
-                <div class="social-login">
-                    <button type="button" class="google-btn">Continue with Google</button>
-                    <button type="button" class="facebook-btn">Continue with Facebook</button>
-                </div>
+        <!-- 🔹 AUTH FORM TITLE -->
+        <h2 class="form-title" id="form-title">Sign Up For Free</h2>
 
+        <!-- 🔹 AUTH FORM -->
+        <form class="login-form" id="auth-form">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required />
             </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required />
+            </div>
+            <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required />
+            </div>
+            <button type="submit" class="submit-button">Sign Up</button>
+        </form>
+
+        <!-- 🔹 SWITCH BETWEEN SIGNUP/LOGIN -->
+        <p class="toggle-auth">
+            Already have an account? <a href="#" id="switch-to-login">Log In</a>
+        </p>
+
+        <!-- 🔹 DIVIDER -->
+        <div class="divider"><span>OR</span></div>
+
+        <!-- 🔹 SOCIAL LOGIN -->
+        <div class="social-login">
+            <button type="button" class="google-btn">Continue with Google</button>
+            <button type="button" class="facebook-btn">Continue with Facebook</button>
+        </div>
+    </div>
+
         </div>
 
     </div>

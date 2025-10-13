@@ -22,7 +22,17 @@
             </div>
             <div class="header-right">
                 <div class="icon-placeholder notifications-icon"></div>
-                <div class="avatar-placeholder"></div>
+                <div class="profile-menu">
+                    <div class="avatar-placeholder profile-trigger"></div>
+
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" id="viewProfileBtn">Profile</button>
+                        <a href="settings.html" class="dropdown-item">Settings</a>
+                        <a href="help.html" class="dropdown-item">Help</a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" id="logout-btn">Logout</button>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -88,5 +98,23 @@
             </div>
         </section>
     </main>
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h2>Your Profile</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-info">
+                    <div class="avatar-large">U</div>
+                    <div class="user-details">
+                        <h3 id="profileEmail">user@example.com</h3>
+                        <p>Member since: <span id="memberSince"></span>-</span></p>
+                    </div>
+                </div>
+                <button class="edit-profile-btn">Edit Profile</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
