@@ -1461,3 +1461,51 @@ body {
 .edit-profile-btn:hover {
   background: #4f46e5;
 }
+
+/* Theme Styles */
+.theme-dark {
+    background: #1f2937;
+    color: #f9fafb;
+}
+
+.theme-dark .main-header {
+    background: rgba(31, 41, 55, 0.9);
+    border-bottom-color: #374151;
+}
+
+.theme-dark .settings-sidebar,
+.theme-dark .settings-content,
+.theme-dark .stat-card {
+    background: #374151;
+    color: #f9fafb;
+}
+
+.theme-dark .nav-item {
+    color: #d1d5db;
+}
+
+.theme-dark .nav-item:hover {
+    background: #4b5563;
+    color: #f9fafb;
+}
+
+.theme-dark .nav-item.active {
+    background: #667eea;
+    color: white;
+}
+
+.theme-dark .input-group input,
+.theme-dark .input-group textarea {
+    background: #4b5563;
+    border-color: #6b7280;
+    color: #f9fafb;
+}
+
+.theme-dark .input-group input:focus,
+.theme-dark .input-group textarea:focus {
+    border-color: #667eea;
+}
+
+.theme-dark .settings-section {
+    border-bottom-color: #4b5563;
+}
