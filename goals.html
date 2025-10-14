@@ -10,19 +10,28 @@
     <header class="main-header">
         <div class="header-content">
             <div class="header-left">
-                <div class="logo">
-                    <div class="logo-placeholder"></div>
-                    <span class="logo-text">Goal Forge</span>
+                <div class="logo" onclick="window.location.href='dashboard.html'">
+                    <img src="images/Goal.png" alt="Goal Forge Logo" class="logo-img">
                 </div>
                 <nav class="header-nav">
-                    <a href="dashboard.html" class="nav-link">Dashboard</a>
-                    <a href="goals.html" class="nav-link active">Goals</a>
-                    <a href="friends.html" class="nav-link">Friends</a>
+                    <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                    <a href="goals.html" class="nav-link">Goals</a>
+                    <a href="circles.html" class="nav-link">Friends</a>
                 </nav>
             </div>
             <div class="header-right">
-                <div class="icon-placeholder notifications-icon"></div>
-                <div class="avatar-placeholder"></div>
+                <img src="images/notification.svg" alt="Notifications" class="notification-icon">
+                <div class="profile-menu">
+                    <img src="images/Profile.png" alt="Profile" class="profile">
+
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" id="viewProfileBtn">Profile</button>
+                        <a href="settings.html" class="dropdown-item">Settings</a>
+                        <a href="help.html" class="dropdown-item">Help</a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" id="logout-btn">Logout</button>
+                    </div>
+                </div>
             </div>
         </div>
     </header>

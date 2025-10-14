@@ -2,6 +2,7 @@
 body {
   margin: 0;
   padding: 0;
+  padding-top: 64px;
   background: #f3f4f6; /* lighter neutral like Habitica’s dashboard bg */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #1f2937;
@@ -21,6 +22,11 @@ body {
   padding: 0 40px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   z-index: 1000;
+}
+
+.main-header .logo-placeholder {
+  width: 40px;
+  height: 40px;
 }
 
 .header-content {
@@ -43,17 +49,11 @@ body {
   cursor: pointer;
 }
 
-.logo-placeholder {
-  width: 44px;
-  height: 44px;
-  background: white;
+.logo-img {
+  width: 150px;
+  height: 60px;
+  background: transparent;
   border-radius: 8px;
-}
-
-.logo-text {
-  font-size: 22px;
-  font-weight: 600;
-  color: white;
 }
 
 .header-nav {
@@ -87,38 +87,22 @@ body {
   gap: 16px;
 }
 
-/* NEW: Style for landing page login button (compact to match dashboard right-side width) */
-.login-btn {
-  padding: 8px 16px; /* Compact padding, similar to dashboard icons */
-  background: white;
-  color: #5b4bdb;
-  border: none;
+.notification-icon {
+  width: 35%;
+  height: 35px;
   border-radius: 6px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap; /* Prevents button text from wrapping */
-  min-width: 80px; /* Ensures consistent width, prevents compression */
+  transform: translateY(2px);
+  display: block;
 }
 
-.login-btn:hover {
-  background: rgba(255, 255, 255, 0.9);
-  transform: translateY(-1px);
-}
-
-.icon-placeholder {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.avatar-placeholder {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #fff;
+.profile {
+  width: 55px;
+  height: 55px;
+  vertical-align: middle;
+  display: inline-block;
+  margin-top: auto;
+  margin-bottom: auto;
+  align-self: center;
 }
 
 /* UPDATED: Landing page layout (now full-width with side padding to push sections to edges) */
@@ -142,11 +126,11 @@ body {
   max-width: 50%; /* Optional: Limits left side to half viewport for balance */
 }
 
-.illustration-placeholder {
-  width: 100%;
+.landing-image{
+  width: 200%;
   max-width: 600px; /* Increased max for larger photo on wide screens */
   height: 400px; /* Placeholder for your illustration */
-  background: #e5e7eb;
+  background: transparent;
   border-radius: 12px;
   margin-bottom: 24px;
 }
@@ -224,6 +208,18 @@ body {
 
 .submit-button:hover {
   background: #4f46e5;
+}
+
+.login-form input,
+.login-form button {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .divider {
@@ -1508,4 +1504,8 @@ body {
 
 .theme-dark .settings-section {
     border-bottom-color: #4b5563;
+}
+
+.toggle-auth{
+  text-align: center;
 }
