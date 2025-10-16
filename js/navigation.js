@@ -1,6 +1,10 @@
 // js/navigation.js - Global Navigation & Shared Functions
 
-// Global logout function
+// ====================
+// 🔹 GLOBAL AUTH & UTILITIES
+// ====================
+
+// Logout function
 function handleLogout() {
     if (confirm('Are you sure you want to logout?')) {
         localStorage.removeItem('goalforgeCurrentUser');
@@ -11,12 +15,10 @@ function handleLogout() {
     }
 }
 
-// Global message function
+// Show message notification (global)
 function showMessage(text, type = 'info') {
-    // Remove existing messages
-    const existingMessages = document.querySelectorAll('.global-message');
-    existingMessages.forEach(msg => msg.remove());
-    
+    document.querySelectorAll('.global-message').forEach(msg => msg.remove());
+
     const messageEl = document.createElement('div');
     messageEl.className = `global-message message ${type}-message`;
     messageEl.textContent = text;
@@ -31,13 +33,13 @@ function showMessage(text, type = 'info') {
         z-index: 10000;
         animation: slideIn 0.3s ease;
     `;
-    
+
     if (type === 'error') messageEl.style.background = '#ef4444';
     else if (type === 'success') messageEl.style.background = '#10b981';
     else messageEl.style.background = '#667eea';
-    
+
     document.body.appendChild(messageEl);
-    
+
     setTimeout(() => {
         messageEl.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => messageEl.remove(), 300);
@@ -59,11 +61,10 @@ function getCurrentUser() {
     return JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
 }
 
-// Update user data
+// Update user data in localStorage
 function updateCurrentUser(updatedUser) {
     localStorage.setItem('goalforgeCurrentUser', JSON.stringify(updatedUser));
-    
-    // Also update in users array
+
     const users = JSON.parse(localStorage.getItem('goalforgeUsers')) || [];
     const userIndex = users.findIndex(user => user.id === updatedUser.id);
     if (userIndex !== -1) {
@@ -72,33 +73,56 @@ function updateCurrentUser(updatedUser) {
     }
 }
 
-// Add animations to CSS
+// ====================
+// 🔹 PROFILE & NOTIFICATION DROPDOWNS
+// ====================
+
+document.addEventListener("DOMContentLoaded", () => {
+    const notifTrigger = document.getElementById("notifTrigger");
+    const notifDropdown = document.querySelector(".notif-dropdown");
+    const profileTrigger = document.getElementById("profileTrigger");
+    const profileDropdown = document.querySelector(".profile-dropdown");
+
+    function closeAllDropdowns() {
+        if (notifDropdown) notifDropdown.style.display = "none";
+        if (profileDropdown) profileDropdown.style.display = "none";
+    }
+
+    notifTrigger?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isVisible = notifDropdown.style.display === "flex";
+        closeAllDropdowns();
+        notifDropdown.style.display = isVisible ? "none" : "flex";
+    });
+
+    profileTrigger?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isVisible = profileDropdown.style.display === "flex";
+        closeAllDropdowns();
+        profileDropdown.style.display = isVisible ? "none" : "flex";
+    });
+
+    document.addEventListener("click", closeAllDropdowns);
+});
+
+// ====================
+// 🔹 ANIMATIONS
+// ====================
+
 if (!document.querySelector('style[data-global-animations]')) {
     const style = document.createElement('style');
     style.setAttribute('data-global-animations', 'true');
     style.textContent = `
         @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
-        
+
         @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
         }
-        
+
         .global-message {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }

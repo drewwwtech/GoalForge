@@ -8,25 +8,39 @@
     <link rel="stylesheet" href="css/settings.css">
 </head>
 <body>
-    <!-- Header -->
     <header class="main-header">
         <div class="header-content">
             <div class="header-left">
                 <div class="logo" onclick="window.location.href='dashboard.html'">
-                    <div class="logo-placeholder"></div>
-                    <span class="logo-text">Goal Forge</span>
+                    <img src="images/Goal.png" alt="Goal Forge Logo" class="logo-img">
                 </div>
                 <nav class="header-nav">
-                    <a href="dashboard.html">Dashboard</a>
-                    <a href="goals.html">Goals</a>
-                    <a href="circles.html">Circles</a>
+                    <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                    <a href="goals.html" class="nav-link">Goals</a>
+                    <a href="circles.html" class="nav-link">Friends</a>
                 </nav>
             </div>
             <div class="header-right">
-                <button class="logout-btn" id="logoutBtn">Logout</button>
+                <div class="notification-menu">
+                    <img id="notifTrigger" src="images/notification.svg" alt="Notifications" class="notification-icon">
+                    <div class="notif-dropdown">
+                        <div class="dropdown-header">Notifications</div>
+                        <div class="notif-item">No new notifications</div>
+                    </div>
+                </div>
+                
+                <div class="profile-menu">
+                    <img id="profileTrigger" src="images/Profile.png" alt="Profile" class="profile">
+                    <div class="profile-dropdown">
+                        <a href="settings.html">Settings</a>
+                        <a href="help.html">Help</a>
+                        <a href="#" onclick="handleLogout()">Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
+
 
     <main class="settings-container">
         <div class="settings-layout">

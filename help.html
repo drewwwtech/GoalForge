@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help & FAQ - GoalForge</title>
+    <title>Help & FAQ - Goal Forge</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/help.css">
 </head>
@@ -13,22 +13,35 @@
         <div class="header-content">
             <div class="header-left">
                 <div class="logo" onclick="window.location.href='dashboard.html'">
-                    <div class="logo-placeholder">
-                        <img src="images/Goal.png" alt="Goal Forge Logo" class="logo-img">
-                    </div>
+                    <img src="images/Goal.png" alt="Goal Forge Logo" class="logo-img">
                 </div>
                 <nav class="header-nav">
-                    <a href="dashboard.html">Dashboard</a>
-                    <a href="goals.html">Goals</a>
-                    <a href="circles.html">Circles</a>
-                    <a href="help.html" class="active">Help</a>
+                    <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                    <a href="goals.html" class="nav-link">Goals</a>
+                    <a href="circles.html" class="nav-link">Friends</a>
                 </nav>
             </div>
             <div class="header-right">
-                <button class="help-contact-btn" onclick="showContactForm()">Contact Support</button>
+                <div class="notification-menu">
+                    <img id="notifTrigger" src="images/notification.svg" alt="Notifications" class="notification-icon">
+                    <div class="notif-dropdown">
+                        <div class="dropdown-header">Notifications</div>
+                        <div class="notif-item">No new notifications</div>
+                    </div>
+                </div>
+                
+                <div class="profile-menu">
+                    <img id="profileTrigger" src="images/Profile.png" alt="Profile" class="profile">
+                    <div class="profile-dropdown">
+                        <a href="settings.html">Settings</a>
+                        <a href="help.html">Help</a>
+                        <a href="#" onclick="handleLogout()">Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
+
 
     <main class="help-container">
         <div class="help-hero">
