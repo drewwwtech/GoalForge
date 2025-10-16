@@ -1,0 +1,217 @@
+body {
+  margin: 0;
+  padding: 0;
+  padding-top: 64px;
+  background: #f3f4f6; /* lighter neutral like Habitica’s dashboard bg */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1f2937;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  z-index: -1;
+}
+.login{
+    width: 50%;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+
+.login-right {
+  flex: 0 0 400px; /* Fixed width, pushed to right edge */
+  padding: 40px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  align-self: center; /* Centers vertically on the right */
+}
+
+.login-form-container {
+  max-width: 100%;
+}
+
+.form-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #5b4bdb;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background: #5b4bdb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-bottom: 20px;
+}
+
+.submit-button:hover {
+  background: #4f46e5;
+}
+
+.login-form input,
+.login-form button {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.divider {
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.divider span {
+  background: white;
+  padding: 0 16px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.google-btn,
+.facebook-btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.google-btn:hover,
+.facebook-btn:hover {
+  background: #f9fafb;
+  border-color: #5b4bdb;
+}
+
+.toggle-auth{
+    text-align: center;
+    margin-top: 16px;
+    font-size: 14px;
+    color: white;
+}
+
+#switch-to-login{
+    color: white;
+}
+
+#switch-to-login:active{
+    color: gray;
+}
+
+.divider {
+  text-align: center;
+  margin: 30px 0;
+  position: relative;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.6); /* soft white line */
+  transform: translateY(-50%);
+  z-index: 1; /* ⬅️ FIX: put line above background */
+}
+
+.divider span {
+  position: relative;
+  background: #643eb8; /* match background */
+  padding: 0 12px;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  z-index: 2;
+}
+
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.google-btn,
+.facebook-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.google-btn:hover,
+.facebook-btn:hover {
+  background: #f9fafb;
+  border: #5b4bdb solid 2px;
+}
