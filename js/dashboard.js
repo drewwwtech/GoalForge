@@ -20,7 +20,7 @@ class DashboardManager {
             window.location.href = 'index.html';
             return;
         }
-        
+
         // Update welcome message
         const welcomeElement = document.querySelector('.welcome-content h1');
         if (welcomeElement) {
@@ -62,29 +62,33 @@ class DashboardManager {
         }
     }
 
+    // ==================== PROFILE DROPDOWN ====================
     setupProfileDropdown() {
         const profileTrigger = document.querySelector('.profile-trigger');
-        const dropdownMenu = document.querySelector('.dropdown-menu');
+        const dropdownMenu = document.querySelector('.profile-dropdown');
 
         if (profileTrigger && dropdownMenu) {
             profileTrigger.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const isVisible = dropdownMenu.style.display === 'flex';
-                dropdownMenu.style.display = isVisible ? 'none' : 'flex';
+                const isVisible = dropdownMenu.style.display === 'block';
+                dropdownMenu.style.display = isVisible ? 'none' : 'block';
             });
 
             // Close when clicking outside
-            document.addEventListener('click', () => {
-                dropdownMenu.style.display = 'none';
-            });
-
-            // Prevent closing when clicking inside dropdown
-            dropdownMenu.addEventListener('click', (e) => {
-                e.stopPropagation();
+            document.addEventListener('click', (e) => {
+                if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
+                    dropdownMenu.style.display = 'none';
+                }
             });
         }
 
-        // Profile modal
+        // === LOGOUT HANDLER ===
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => this.handleLogout());
+        }
+
+        // === PROFILE MODAL HANDLER ===
         const viewProfileBtn = document.getElementById('viewProfileBtn');
         const profileModal = document.getElementById('profileModal');
         const closeModalBtn = profileModal?.querySelector('.close-modal');
@@ -104,16 +108,9 @@ class DashboardManager {
                 }
             });
         }
-
-        // Logout
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', () => {
-                this.handleLogout();
-            });
-        }
     }
 
+    // ==================== MODALS ====================
     setupModals() {
         // Close all modals with Escape key
         document.addEventListener('keydown', (e) => {
@@ -142,7 +139,7 @@ class DashboardManager {
         }
 
         if (memberSince) {
-            const joinDate = this.currentUser.createdAt ? 
+            const joinDate = this.currentUser.createdAt ?
                 new Date(this.currentUser.createdAt).toLocaleDateString() : 'Recently';
             memberSince.textContent = joinDate;
         }
@@ -158,6 +155,7 @@ class DashboardManager {
         });
     }
 
+    // ==================== DATA & ACTIVITY ====================
     loadDashboardData() {
         this.loadGoalsSummary();
         this.loadFriendActivity();
@@ -167,7 +165,7 @@ class DashboardManager {
     loadGoalsSummary() {
         const goals = JSON.parse(localStorage.getItem('goalforge-goals')) || [];
         const goalsBanner = document.querySelector('.goals-banner .goal-lists');
-        
+
         if (!goalsBanner) return;
 
         if (goals.length === 0) {
@@ -208,7 +206,7 @@ class DashboardManager {
     loadFriendActivity() {
         const activities = JSON.parse(localStorage.getItem('goalforge-activities')) || [];
         const activityFeed = document.querySelector('.activity-feed');
-        
+
         if (!activityFeed) return;
 
         if (activities.length === 0) {
@@ -230,7 +228,6 @@ class DashboardManager {
     }
 
     loadRecentActivity() {
-        // This would load real activity data in a full implementation
         const mockActivities = [
             "You completed your daily check-in! 🔥",
             "Sarah reached 50% on 'Learn Spanish'",
@@ -238,7 +235,6 @@ class DashboardManager {
             "Your streak is getting impressive! 💪"
         ];
 
-        // Simulate random activity
         if (Math.random() > 0.5) {
             const randomActivity = mockActivities[Math.floor(Math.random() * mockActivities.length)];
             this.addActivity(randomActivity);
@@ -248,13 +244,13 @@ class DashboardManager {
     updateStreakDisplay() {
         const streakCount = document.querySelector('.streak-count');
         const streakMessage = document.querySelector('.streak-message');
-        
+
         if (!streakCount || !streakMessage) return;
 
         const streak = this.currentUser.streak || 0;
-        
+
         streakCount.textContent = `${streak} day streak!`;
-        
+
         if (streak === 0) {
             streakMessage.textContent = "Start your journey today!";
         } else if (streak < 7) {
@@ -269,10 +265,9 @@ class DashboardManager {
     updateMotivationPanel() {
         const checkinStatus = document.querySelector('.checkin-status');
         if (checkinStatus) {
-            // Simple check-in logic - in real app, check against actual dates
             const today = new Date().toDateString();
             const lastCheckin = this.currentUser.lastCheckin;
-            
+
             if (lastCheckin === today) {
                 checkinStatus.textContent = "Completed";
                 checkinStatus.className = "checkin-status completed";
@@ -283,31 +278,26 @@ class DashboardManager {
         }
     }
 
+    // ==================== ACTIONS ====================
     completeWeeklyCheckin() {
         const today = new Date().toDateString();
-        
-        // Update user data
+
         this.currentUser.lastCheckin = today;
         this.currentUser.streak = (this.currentUser.streak || 0) + 1;
-        
-        // Save to localStorage
+
         localStorage.setItem('goalforgeCurrentUser', JSON.stringify(this.currentUser));
-        
-        // Update UI
+
         this.updateStreakDisplay();
         this.updateMotivationPanel();
-        
-        // Show success message
+
         this.showNotification("Weekly check-in completed! Your streak continues! 🎉", "success");
-        
-        // Add activity
+
         this.addActivity("Completed weekly check-in and maintained streak! 🔥");
     }
 
     sendEncouragement() {
         this.showNotification("Encouragement sent to your friends! 💌", "success");
-        
-        // Simulate friend response
+
         setTimeout(() => {
             const friends = ['Sarah', 'Mike', 'Alex'];
             const randomFriend = friends[Math.floor(Math.random() * friends.length)];
@@ -322,11 +312,10 @@ class DashboardManager {
             message: message,
             timestamp: new Date().toISOString()
         };
-        
+
         activities.unshift(newActivity);
         localStorage.setItem('goalforge-activities', JSON.stringify(activities));
-        
-        // Update UI if we're on the dashboard
+
         this.loadFriendActivity();
     }
 
@@ -340,6 +329,7 @@ class DashboardManager {
         }
     }
 
+    // ==================== UTILITIES ====================
     showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
@@ -377,7 +367,7 @@ class DashboardManager {
         if (diffMins < 60) return `${diffMins}m ago`;
         if (diffHours < 24) return `${diffHours}h ago`;
         if (diffDays < 7) return `${diffDays}d ago`;
-        
+
         return date.toLocaleDateString();
     }
 
@@ -391,19 +381,19 @@ class DashboardManager {
     }
 }
 
-// Add CSS animations
+// ==================== STYLE INJECTION ====================
 const dashboardStyle = document.createElement('style');
 dashboardStyle.textContent = `
     @keyframes slideIn {
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
     }
-    
+
     @keyframes slideOut {
         from { transform: translateX(0); opacity: 1; }
         to { transform: translateX(100%); opacity: 0; }
     }
-    
+
     .goals-summary {
         display: flex;
         justify-content: space-around;
@@ -412,28 +402,28 @@ dashboardStyle.textContent = `
         background: #f8fafc;
         border-radius: 8px;
     }
-    
+
     .goal-stat {
         text-align: center;
     }
-    
+
     .stat-number {
         display: block;
         font-size: 24px;
         font-weight: bold;
         color: #5b4bdb;
     }
-    
+
     .stat-label {
         font-size: 12px;
         color: #6b7280;
         text-transform: uppercase;
     }
-    
+
     .recent-goals {
         margin-top: 15px;
     }
-    
+
     .recent-goal {
         display: flex;
         justify-content: space-between;
@@ -441,27 +431,27 @@ dashboardStyle.textContent = `
         padding: 8px 0;
         border-bottom: 1px solid #e5e7eb;
     }
-    
+
     .recent-goal:last-child {
         border-bottom: none;
     }
-    
+
     .goal-title {
         font-size: 14px;
         color: #374151;
     }
-    
+
     .goal-progress {
         font-size: 12px;
         color: #10b981;
         font-weight: 600;
     }
-    
+
     .checkin-status.pending {
         background: #fef3c7;
         color: #92400e;
     }
-    
+
     .checkin-status.completed {
         background: #d1fae5;
         color: #065f46;
@@ -469,7 +459,7 @@ dashboardStyle.textContent = `
 `;
 document.head.appendChild(dashboardStyle);
 
-// Initialize Dashboard
+// ==================== INITIALIZE DASHBOARD ====================
 let dashboardManager;
 document.addEventListener('DOMContentLoaded', () => {
     dashboardManager = new DashboardManager();

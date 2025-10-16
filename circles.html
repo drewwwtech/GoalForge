@@ -20,20 +20,15 @@
                 </nav>
             </div>
             <div class="header-right">
-                <div class="notification-menu">
-                    <img id="notifTrigger" src="images/notification.svg" alt="Notifications" class="notification-icon">
-                    <div class="notif-dropdown">
-                        <div class="dropdown-header">Notifications</div>
-                        <div class="notif-item">No new notifications</div>
-                    </div>
-                </div>
-                
+                <img src="images/notification.svg" alt="Notifications" class="notification-icon">
                 <div class="profile-menu">
-                    <img id="profileTrigger" src="images/Profile.png" alt="Profile" class="profile">
-                    <div class="profile-dropdown">
-                        <a href="settings.html">Settings</a>
-                        <a href="help.html">Help</a>
-                        <a href="#" onclick="handleLogout()">Logout</a>
+                    <img src="images/Profile.png" alt="Profile" class="profile profile-trigger">
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" id="viewProfileBtn"><Profile></button>
+                        <a href="settings.html" class="dropdown-item">Settings</a>
+                        <a href="help.html" class="dropdown-item">Help</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="index.html" class="dropdown-item" id="logout-btn">Logout</a>
                     </div>
                 </div>
             </div>
@@ -124,5 +119,27 @@
     </main>
 
     <script src="js/circles.js"></script>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const profileTrigger = document.querySelector(".profile-trigger");
+  const dropdownMenu = document.querySelector(".dropdown-menu");
+
+  if (!profileTrigger || !dropdownMenu) return;
+
+  // Toggle dropdown on profile click
+  profileTrigger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdownMenu.style.display =
+      dropdownMenu.style.display === "flex" ? "none" : "flex";
+  });
+
+  // Hide dropdown when clicking anywhere else
+  document.addEventListener("click", (e) => {
+    if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
+      dropdownMenu.style.display = "none";
+    }
+  });
+});
+</script>
 </body>
 </html>
