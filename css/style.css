@@ -1396,7 +1396,7 @@ body {
 }
 
 /* Message styles */
-.message {
+.global-message {
     position: fixed;
     top: 100px;
     right: 20px;
@@ -1410,8 +1410,8 @@ body {
     animation: slideIn 0.3s ease;
 }
 
-.error-message {
-    background: #ef4444;
+.global-message.error {
+    background: #ef4444 !important;
 }
 
 .success-message {
