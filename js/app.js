@@ -319,16 +319,18 @@ class AuthManager {
         el.className = `global-message ${type}`;
         el.textContent = text;
         el.style.cssText = `
-            position:fixed;top:100px;right:20px;
-            padding:14px 22px;border-radius:10px;
-            color:#fff;font-weight:600;z-index:9999;
+            position:fixed
+            ;top:100px;
+            right:20px;
+            padding:14px 22px;
+            border-radius:10px;
+            color:#fff;
+            font-weight:600;
+            z-index:9999;
+            opacity:1;
+            filter:none;
+            background: ${type === "success" ? "#10b981" : type === "error" ? "#ef4444" : "#4f46e5"};
         `;
-        const colors = {
-            success: "#10b981",
-            error: "#ef4444",
-            info: "#4f46e5",
-        };
-        el.style.background = colors[type] || colors.info;
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 4000);
     }

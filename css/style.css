@@ -4,7 +4,7 @@ body {
   padding: 0;
   padding-top: 64px;
   background: #f3f4f6; /* lighter neutral like Habitica’s dashboard bg */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', sans-serif;
   color: #1f2937;
 }
 
@@ -1405,6 +1405,8 @@ body {
     color: white;
     font-weight: 500;
     z-index: 10000;
+    opacity: 1 !important;
+    filter:brightness(1);
     animation: slideIn 0.3s ease;
 }
 
