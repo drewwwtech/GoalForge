@@ -1,10 +1,3 @@
-// js/navigation.js - Global Navigation & Shared Functions
-
-// ====================
-// 🔹 GLOBAL AUTH & UTILITIES
-// ====================
-
-// Logout function
 function handleLogout() {
     if (confirm('Are you sure you want to logout?')) {
         localStorage.removeItem('goalforgeCurrentUser');
@@ -15,7 +8,7 @@ function handleLogout() {
     }
 }
 
-// Show message notification (global)
+
 function showMessage(text, type = 'info') {
     document.querySelectorAll('.global-message').forEach(msg => msg.remove());
 
@@ -46,7 +39,7 @@ function showMessage(text, type = 'info') {
     }, 3000);
 }
 
-// Check authentication on protected pages
+
 function checkAuth() {
     const currentUser = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
     if (!currentUser && !window.location.pathname.includes('index.html')) {
@@ -56,12 +49,12 @@ function checkAuth() {
     return currentUser;
 }
 
-// Get current user data
+
 function getCurrentUser() {
     return JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
 }
 
-// Update user data in localStorage
+
 function updateCurrentUser(updatedUser) {
     localStorage.setItem('goalforgeCurrentUser', JSON.stringify(updatedUser));
 
@@ -73,9 +66,7 @@ function updateCurrentUser(updatedUser) {
     }
 }
 
-// ====================
-// 🔹 PROFILE & NOTIFICATION DROPDOWNS
-// ====================
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const notifTrigger = document.getElementById("notifTrigger");
@@ -104,10 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("click", closeAllDropdowns);
 });
-
-// ====================
-// 🔹 ANIMATIONS
-// ====================
 
 if (!document.querySelector('style[data-global-animations]')) {
     const style = document.createElement('style');

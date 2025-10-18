@@ -1,4 +1,3 @@
-// Friends Management System
 class FriendsManager {
     constructor() {
         this.friends = this.loadFriends();
@@ -23,12 +22,12 @@ class FriendsManager {
     }
 
     setupEventListeners() {
-        // Add friend buttons
+
         document.querySelectorAll('.add-friend-btn, .add-first-friend-btn').forEach(btn => {
             btn.addEventListener('click', () => this.openAddFriendModal());
         });
 
-        // Modal controls
+
         const modal = document.getElementById('addFriendModal');
         if (modal) {
             modal.querySelector('.close-modal').addEventListener('click', () => this.closeModal());
@@ -40,13 +39,13 @@ class FriendsManager {
             });
         }
 
-        // Quick add friend
+      
         const quickAddBtn = document.querySelector('.send-request-btn');
         if (quickAddBtn) {
             quickAddBtn.addEventListener('click', () => this.quickAddFriend());
         }
 
-        // Search functionality
+  
         const searchInput = document.querySelector('.search-input');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => this.searchFriends(e.target.value));
@@ -80,7 +79,7 @@ class FriendsManager {
             return;
         }
 
-        // Simulate sending friend request
+    
         const request = {
             id: Date.now().toString(),
             email: email,
@@ -95,7 +94,7 @@ class FriendsManager {
         
         this.showNotification('Friend request sent successfully!');
         
-        // Simulate response after 2 seconds
+   
         setTimeout(() => {
             this.simulateFriendAcceptance(email);
         }, 2000);
@@ -135,7 +134,7 @@ class FriendsManager {
         this.saveFriends();
         this.renderFriends();
         
-        // Add activity
+   
         this.addActivity(`${newFriend.name} accepted your friend request and joined GoalForge!`);
         
         this.showNotification(`${newFriend.name} is now your friend!`);
@@ -199,7 +198,7 @@ class FriendsManager {
         const suggestionsList = document.querySelector('.suggestions-list');
         if (!suggestionsList) return;
 
-        // Mock suggestions
+ 
         const suggestions = [
             { name: 'Alex Johnson', email: 'alex@example.com' },
             { name: 'Sarah Miller', email: 'sarah@example.com' },
@@ -235,7 +234,7 @@ class FriendsManager {
                 </div>
             `;
             
-            // Re-attach event listener
+     
             const addBtn = friendsList.querySelector('.add-first-friend-btn');
             if (addBtn) {
                 addBtn.addEventListener('click', () => this.openAddFriendModal());
@@ -254,7 +253,7 @@ class FriendsManager {
         const friend = this.friends.find(f => f.id === friendId);
         if (friend) {
             this.showNotification(`Opening chat with ${friend.name}...`);
-            // In a real app, this would open a chat interface
+    
         }
     }
 
@@ -289,7 +288,7 @@ class FriendsManager {
             if (filteredFriends.length === 0) {
                 friendsList.innerHTML = '<div class="empty-friends-state"><p>No friends found matching your search</p></div>';
             } else {
-                // Re-render with filtered friends
+      
                 const friendsHTML = filteredFriends.map(friend => `
                     <div class="friend-card" data-friend-id="${friend.id}">
                         <div class="friend-avatar">${friend.avatar}</div>
@@ -328,7 +327,7 @@ class FriendsManager {
         this.renderActivities();
     }
 
-    // Utility Methods
+
     isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
@@ -351,11 +350,11 @@ class FriendsManager {
     }
 
     showNotification(message, type = 'success') {
-        // Reuse the notification system from goals.js
+
         if (window.goalsManager && typeof window.goalsManager.showNotification === 'function') {
             window.goalsManager.showNotification(message);
         } else {
-            // Fallback notification
+ 
             const notification = document.createElement('div');
             notification.className = 'notification';
             notification.textContent = message;
@@ -385,7 +384,7 @@ class FriendsManager {
             .replace(/'/g, "&#039;");
     }
 
-    // Data Persistence
+
     loadFriends() {
         const saved = localStorage.getItem('goalforge-friends');
         return saved ? JSON.parse(saved) : [];
@@ -420,7 +419,6 @@ class FriendsManager {
     }
 }
 
-// Initialize Friends Manager
 let friendsManager;
 document.addEventListener('DOMContentLoaded', () => {
     friendsManager = new FriendsManager();

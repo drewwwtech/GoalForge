@@ -48,7 +48,7 @@
         </div>
 
         <div class="help-layout">
-            <!-- Sidebar Navigation -->
+           
             <aside class="help-sidebar">
                 <nav class="help-categories">
                     <a href="#getting-started" class="category-link active">Getting Started</a>
@@ -363,14 +363,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!profileTrigger || !dropdownMenu) return;
 
-  // Toggle dropdown on profile click
+  
   profileTrigger.addEventListener("click", (e) => {
     e.stopPropagation();
     dropdownMenu.style.display =
       dropdownMenu.style.display === "flex" ? "none" : "flex";
   });
 
-  // Hide dropdown when clicking anywhere else
+  
   document.addEventListener("click", (e) => {
     if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
       dropdownMenu.style.display = "none";

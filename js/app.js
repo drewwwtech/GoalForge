@@ -1,4 +1,3 @@
-// js/app.js — GoalForge Authentication & App Initialization (Final Fix)
 class AuthManager {
     constructor() {
         this.userData = {
@@ -20,9 +19,6 @@ class AuthManager {
         });
     }
 
-    // ====================
-    // AUTH SYSTEM
-    // ====================
 
     setupAuthSystem() {
         const authForm = document.getElementById("auth-form");
@@ -32,7 +28,7 @@ class AuthManager {
 
         let currentMode = "signup";
 
-        // Toggle between login/signup
+
         if (toggleLink) {
             toggleLink.addEventListener("click", (e) => {
                 e.preventDefault();
@@ -41,13 +37,13 @@ class AuthManager {
             });
         }
 
-        // Handle form submit
+
         authForm?.addEventListener("submit", (e) => {
             e.preventDefault();
             this.handleFormSubmission(currentMode);
         });
 
-        // Social + Validation
+
         this.setupSocialLogin();
         this.setupRealTimeValidation();
     }
@@ -70,7 +66,7 @@ class AuthManager {
             toggleLink.textContent = "Log In";
         }
 
-        // Add subtle fade animation
+ 
         titleEl.style.opacity = "0";
         setTimeout(() => {
             titleEl.style.transition = "opacity 0.3s ease";
@@ -104,10 +100,6 @@ class AuthManager {
             button.classList.remove("loading");
         }, 500);
     }
-
-    // ====================
-    // VALIDATION
-    // ====================
 
     validateForm(mode) {
         const email = document.getElementById("email").value.trim();
@@ -188,9 +180,6 @@ class AuthManager {
         document.querySelectorAll(".field-error").forEach((e) => e.remove());
     }
 
-    // ====================
-    // AUTH LOGIC
-    // ====================
 
     handleSignup() {
         const email = document.getElementById("email").value.trim();
@@ -241,9 +230,6 @@ class AuthManager {
         this.userData.isLoggedIn = true;
     }
 
-    // ====================
-    // UTILITIES
-    // ====================
 
     isValidEmail(e) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
@@ -285,10 +271,6 @@ class AuthManager {
         }
     }
 
-    // ====================
-    // GLOBAL + SERVICE WORKER
-    // ====================
-
     setupGlobalHandlers() {
         window.handleLogout = this.handleLogout.bind(this);
         window.showMessage = this.showMessage.bind(this);
@@ -309,9 +291,6 @@ class AuthManager {
         }
     }
 
-    // ====================
-    // MESSAGES
-    // ====================
 
     showMessage(text, type = "info") {
         document.querySelectorAll(".global-message").forEach((m) => m.remove());
@@ -336,7 +315,7 @@ class AuthManager {
     }
 }
 
-// === Styles & Init ===
+
 const style = document.createElement("style");
 style.textContent = `
 @keyframes shake {

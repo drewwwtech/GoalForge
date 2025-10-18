@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   padding-top: 64px;
-  background: #f3f4f6; /* lighter neutral like Habitica’s dashboard bg */
+  background: #f3f4f6;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #1f2937;
 }
@@ -23,13 +23,13 @@ body {
 }
 
 .login-right {
-  flex: 0 0 400px; /* Fixed width, pushed to right edge */
+  flex: 0 0 400px;
   padding: 40px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
-  align-self: center; /* Centers vertically on the right */
+  align-self: center; 
 }
 
 .login-form-container {
@@ -152,7 +152,7 @@ body {
     height: 22px;
 }
 
-/* === GOOGLE BUTTON === */
+
 .google-btn {
     background: #ffffff;
     color: #333;
@@ -163,7 +163,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* === FACEBOOK BUTTON === */
+
 .facebook-btn {
     background: #ffffff;
     color: #333;
@@ -174,7 +174,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* === RESPONSIVE === */
+
 @media (max-width: 480px) {
     .social-login button {
         font-size: 0.95rem;
@@ -210,14 +210,14 @@ body {
   left: 0;
   width: 100%;
   height: 1px;
-  background: rgba(255, 255, 255, 0.6); /* soft white line */
+  background: rgba(255, 255, 255, 0.6); 
   transform: translateY(-50%);
-  z-index: 1; /* ⬅️ FIX: put line above background */
+  z-index: 1; 
 }
 
 .divider span {
   position: relative;
-  background: #643eb8; /* match background */
+  background: #643eb8; 
   padding: 0 12px;
   color: white;
   font-weight: 700;

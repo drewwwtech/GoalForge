@@ -1,4 +1,3 @@
-// Goals Management System
 class GoalsManager {
     constructor() {
         this.goals = this.loadGoals();
@@ -8,7 +7,7 @@ class GoalsManager {
     }
 
     init() {
-        // Wait for DOM to be fully ready
+        
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.initializeApp());
         } else {
@@ -17,44 +16,43 @@ class GoalsManager {
     }
 
     initializeApp() {
-        // DOM Elements
+      
         this.modal = document.getElementById('createGoalModal');
         this.goalsGrid = document.querySelector('.goals-grid');
         this.emptyState = document.querySelector('.empty-goals-state');
         
-        // Event Listeners
+        
         this.setupEventListeners();
         
-        // Render initial goals (with slight delay to prevent flash)
+        
         setTimeout(() => {
             this.renderGoals();
         }, 100);
     }
 
     setupEventListeners() {
-        // Create goal buttons
+       
         document.querySelectorAll('.create-goal-btn, .create-first-goal-btn').forEach(btn => {
             btn.addEventListener('click', () => this.openModal());
         });
 
-        // Modal controls
+       
         document.querySelector('.close-modal').addEventListener('click', () => this.closeModal());
         document.querySelector('.cancel-btn').addEventListener('click', () => this.closeModal());
         
-        // Form submission
+       
         document.querySelector('.goal-form').addEventListener('submit', (e) => this.createGoal(e));
         
-        // Close modal when clicking outside
+        
         this.modal.addEventListener('click', (e) => {
             if (e.target === this.modal) this.closeModal();
         });
 
-        // Filter buttons
+        
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => this.setFilter(e.target));
         });
 
-        // Sort select
         document.querySelector('.sort-select').addEventListener('change', (e) => {
             this.sortGoals(e.target.value);
         });
@@ -68,7 +66,7 @@ class GoalsManager {
     closeModal() {
         this.modal.classList.remove('active');
         document.querySelector('.goal-form').reset();
-        // Reset modal to create mode
+
         document.querySelector('.modal-header h2').textContent = 'Create New Goal';
         document.querySelector('.create-btn').textContent = 'Create Goal';
         this.editingGoalId = null;
@@ -94,22 +92,22 @@ class GoalsManager {
         this.renderGoals();
         this.closeModal();
         
-        // Show success message
+
         this.showNotification('Goal created successfully!');
     }
 
-    // ADD THIS NEW METHOD FOR COMPLETING GOALS
+
     completeGoal(goalId) {
         const goal = this.goals.find(g => g.id === goalId);
         if (goal) {
             if (goal.status === 'completed') {
-                // Reactivate goal
+ 
                 goal.status = 'active';
                 goal.progress = 0;
                 goal.completedAt = null;
                 this.showNotification('Goal reactivated!');
             } else {
-                // Mark as completed
+
                 goal.status = 'completed';
                 goal.progress = 100;
                 goal.completedAt = new Date().toISOString();
@@ -121,10 +119,10 @@ class GoalsManager {
     }
 
     renderGoals() {
-        // Clear the goals grid first
+
         this.goalsGrid.innerHTML = '';
 
-        // Filter goals based on current filter
+
         const filteredGoals = this.getFilteredGoals();
 
         if (filteredGoals.length === 0) {
@@ -198,7 +196,7 @@ class GoalsManager {
     }
 
     showEmptyState() {
-        // Remove any existing empty state
+
         const existingEmptyState = document.querySelector('.empty-goals-state');
         if (existingEmptyState) {
             existingEmptyState.remove();
@@ -230,7 +228,6 @@ class GoalsManager {
 
         this.goalsGrid.innerHTML = emptyStateHTML;
         
-        // Re-attach event listeners for buttons in empty state
         const createBtn = this.goalsGrid.querySelector('.create-first-goal-btn');
         if (createBtn) {
             createBtn.addEventListener('click', () => this.openModal());
@@ -245,24 +242,24 @@ class GoalsManager {
     }
 
     viewGoal(goalId) {
-        // Navigate to goal detail page (to be implemented)
+
         this.showNotification('Redirecting to goal details...');
     }
 
     editGoal(goalId) {
         const goal = this.goals.find(g => g.id === goalId);
         if (goal) {
-            // Populate modal with goal data
+
             document.getElementById('goal-title').value = goal.title;
             document.getElementById('goal-description').value = goal.description;
             document.getElementById('goal-category').value = goal.category;
             document.getElementById('goal-deadline').value = goal.deadline;
             
-            // Change modal to edit mode
+  
             document.querySelector('.modal-header h2').textContent = 'Edit Goal';
             document.querySelector('.create-btn').textContent = 'Update Goal';
             
-            // Store editing goal ID
+
             this.editingGoalId = goalId;
             
             this.openModal();
@@ -279,25 +276,25 @@ class GoalsManager {
     }
 
     setFilter(button) {
-        // Update active filter button
+
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
         
-        // Set current filter based on button text
+
         this.currentFilter = button.textContent.toLowerCase().replace(' goals', '');
         this.renderGoals();
     }
 
     sortGoals(sortBy) {
-        // Sort logic would go here (for future enhancement)
+
         this.showNotification(`Sorted by: ${sortBy}`);
     }
 
     showNotification(message) {
-        // Clear any existing notifications
+
         this.clearNotifications();
         
-        // Create notification element
+
         const notification = document.createElement('div');
         notification.className = 'notification';
         notification.textContent = message;
@@ -317,7 +314,7 @@ class GoalsManager {
         document.body.appendChild(notification);
         this.notifications.push(notification);
 
-        // Remove after 2 seconds (faster)
+       
         setTimeout(() => {
             this.removeNotification(notification);
         }, 2000);
@@ -365,7 +362,7 @@ class GoalsManager {
     }
 }
 
-// Add CSS animations for notifications and status badges
+
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
@@ -564,7 +561,7 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Initialize Goals Manager
+
 let goalsManager;
 document.addEventListener('DOMContentLoaded', () => {
     goalsManager = new GoalsManager();

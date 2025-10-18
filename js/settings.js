@@ -1,5 +1,3 @@
-// js/settings.js - Settings Page Functionality
-
 document.addEventListener('DOMContentLoaded', function() {
     initializeSettings();
 });
@@ -11,7 +9,7 @@ function initializeSettings() {
     setupTabNavigation();
 }
 
-// Check if user is logged in
+
 function checkAuthentication() {
     const currentUser = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
     if (!currentUser) {
@@ -21,12 +19,12 @@ function checkAuthentication() {
     return currentUser;
 }
 
-// Load user settings and data
+
 function loadSettingsData() {
     const user = checkAuthentication();
     if (!user) return;
 
-    // Load user data into forms
+    
     loadUserProfile(user);
     loadNotificationSettings(user);
     loadPrivacySettings(user);
@@ -34,25 +32,25 @@ function loadSettingsData() {
     loadUserStats(user);
 }
 
-// Set up all event listeners
+
 function setupSettingsEvents() {
-    // Account form submission
+    
     const accountForm = document.getElementById('accountForm');
     if (accountForm) {
         accountForm.addEventListener('submit', handleAccountUpdate);
     }
 
-    // Logout button
+    
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', handleLogout);
     }
 
-    // Real-time setting changes
+    
     setupRealTimeSettings();
 }
 
-// Set up tab navigation
+
 function setupTabNavigation() {
     const navItems = document.querySelectorAll('.nav-item');
     
@@ -60,25 +58,25 @@ function setupTabNavigation() {
         item.addEventListener('click', function() {
             const targetTab = this.getAttribute('data-tab');
             
-            // Remove active class from all items and tabs
+            
             navItems.forEach(nav => nav.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             
-            // Add active class to clicked item and target tab
+            
             this.classList.add('active');
             document.getElementById(`${targetTab}-tab`).classList.add('active');
         });
     });
 }
 
-// Load user profile data into form
+
 function loadUserProfile(user) {
     document.getElementById('displayName').value = user.displayName || '';
     document.getElementById('email').value = user.email || '';
     document.getElementById('bio').value = user.bio || '';
 }
 
-// Load notification settings
+
 function loadNotificationSettings(user) {
     const settings = user.settings?.notifications || {};
     
@@ -90,44 +88,44 @@ function loadNotificationSettings(user) {
     document.getElementById('pushStreakReminders').checked = settings.pushStreakReminders !== false;
 }
 
-// Load privacy settings
+
 function loadPrivacySettings(user) {
     const settings = user.settings?.privacy || {};
     
-    // Profile visibility
+    
     const visibility = settings.profileVisibility || 'public';
     document.querySelector(`input[name="profileVisibility"][value="${visibility}"]`).checked = true;
     
-    // Activity sharing
+    
     document.getElementById('shareGoalCompletions').checked = settings.shareGoalCompletions !== false;
     document.getElementById('shareMilestoneProgress').checked = settings.shareMilestoneProgress !== false;
 }
 
-// Load appearance settings
+
 function loadAppearanceSettings(user) {
     const settings = user.settings?.appearance || {};
     
-    // Theme
+ 
     const theme = settings.theme || 'light';
     document.querySelector(`input[name="theme"][value="${theme}"]`).checked = true;
     
-    // Layout
+
     document.getElementById('compactLayout').checked = settings.compactLayout || false;
     
-    // Apply current theme
+  
     applyTheme(theme);
 }
 
-// Load user stats
+
 function loadUserStats(user) {
     document.getElementById('totalGoals').textContent = user.goals?.length || 0;
     document.getElementById('currentStreak').textContent = user.streak || 0;
     document.getElementById('circlesCount').textContent = user.circles?.length || 0;
 }
 
-// Set up real-time setting changes
+
 function setupRealTimeSettings() {
-    // Theme changes
+    
     const themeRadios = document.querySelectorAll('input[name="theme"]');
     themeRadios.forEach(radio => {
         radio.addEventListener('change', function() {
@@ -138,7 +136,7 @@ function setupRealTimeSettings() {
         });
     });
 
-    // Toggle switches
+    
     const toggles = document.querySelectorAll('.toggle-label input[type="checkbox"]');
     toggles.forEach(toggle => {
         toggle.addEventListener('change', function() {
@@ -148,7 +146,7 @@ function setupRealTimeSettings() {
         });
     });
 
-    // Radio buttons (privacy)
+
     const privacyRadios = document.querySelectorAll('input[name="profileVisibility"]');
     privacyRadios.forEach(radio => {
         radio.addEventListener('change', function() {
@@ -159,36 +157,36 @@ function setupRealTimeSettings() {
     });
 }
 
-// Handle account form submission
+
 function handleAccountUpdate(event) {
     event.preventDefault();
     
     const user = checkAuthentication();
     if (!user) return;
 
-    // Get form values
+
     const displayName = document.getElementById('displayName').value;
     const bio = document.getElementById('bio').value;
 
-    // Update user data
+
     user.displayName = displayName;
     user.bio = bio;
 
-    // Save to localStorage
+    
     localStorage.setItem('goalforgeCurrentUser', JSON.stringify(user));
     
-    // Update in users array
+   
     updateUserInStorage(user);
 
     showMessage('Profile updated successfully!', 'success');
 }
 
-// Save individual setting
+
 function saveSetting(category, setting, value) {
     const user = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
     if (!user) return;
 
-    // Initialize settings object if it doesn't exist
+ 
     if (!user.settings) {
         user.settings = {};
     }
@@ -196,18 +194,18 @@ function saveSetting(category, setting, value) {
         user.settings[category] = {};
     }
 
-    // Update setting
+
     user.settings[category][setting] = value;
 
-    // Save user
+ 
     localStorage.setItem('goalforgeCurrentUser', JSON.stringify(user));
     updateUserInStorage(user);
 
-    // Show quick save feedback
+
     showQuickSaveFeedback();
 }
 
-// Get setting category from ID
+
 function getSettingCategory(settingId) {
     if (settingId.includes('email') || settingId.includes('push')) {
         return 'notifications';
@@ -219,20 +217,20 @@ function getSettingCategory(settingId) {
     return 'general';
 }
 
-// Apply theme to the page
+e
 function applyTheme(theme) {
     const body = document.body;
     
-    // Remove existing theme classes
+
     body.classList.remove('theme-light', 'theme-dark');
     
-    // Apply new theme
+
     if (theme === 'dark') {
         body.classList.add('theme-dark');
     } else if (theme === 'light') {
         body.classList.add('theme-light');
     } else {
-        // Auto theme - use system preference
+       
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             body.classList.add('theme-dark');
         } else {
@@ -241,7 +239,7 @@ function applyTheme(theme) {
     }
 }
 
-// Update user in main users array
+
 function updateUserInStorage(updatedUser) {
     const users = JSON.parse(localStorage.getItem('goalforgeUsers')) || [];
     const userIndex = users.findIndex(user => user.id === updatedUser.id);
@@ -252,7 +250,7 @@ function updateUserInStorage(updatedUser) {
     }
 }
 
-// Save notification settings
+
 function saveNotificationSettings() {
     const user = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
     if (!user) return;
@@ -275,7 +273,7 @@ function saveNotificationSettings() {
     showMessage('Notification settings saved!', 'success');
 }
 
-// Save privacy settings
+
 function savePrivacySettings() {
     const user = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
     if (!user) return;
@@ -297,7 +295,7 @@ function savePrivacySettings() {
     showMessage('Privacy settings saved!', 'success');
 }
 
-// Save appearance settings
+
 function saveAppearanceSettings() {
     const user = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
     if (!user) return;
@@ -318,18 +316,18 @@ function saveAppearanceSettings() {
     showMessage('Appearance settings saved!', 'success');
 }
 
-// Data management functions
+
 
 function deleteAccount() {
     if (confirm('Are you absolutely sure? This will permanently delete your account and all data. This action cannot be undone.')) {
         const user = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
         if (user) {
-            // Remove from users array
+            
             const users = JSON.parse(localStorage.getItem('goalforgeUsers')) || [];
             const updatedUsers = users.filter(u => u.id !== user.id);
             localStorage.setItem('goalforgeUsers', JSON.stringify(updatedUsers));
             
-            // Clear current user
+            
             localStorage.removeItem('goalforgeCurrentUser');
             
             showMessage('Account deleted successfully', 'success');
@@ -340,7 +338,7 @@ function deleteAccount() {
     }
 }
 
-// Handle logout
+
 function handleLogout() {
     localStorage.removeItem('goalforgeCurrentUser');
     showMessage('Logged out successfully', 'success');
@@ -349,7 +347,7 @@ function handleLogout() {
     }, 1000);
 }
 
-// Show quick save feedback
+
 function showQuickSaveFeedback() {
     const feedback = document.createElement('div');
     feedback.textContent = '✓ Saved';
@@ -374,7 +372,7 @@ function showQuickSaveFeedback() {
     }, 2000);
 }
 
-// Reuse message function
+
 function showMessage(text, type = 'info') {
     const messageEl = document.createElement('div');
     messageEl.className = `message ${type}-message`;
@@ -402,7 +400,7 @@ function showMessage(text, type = 'info') {
     }, 3000);
 }
 
-// Add fadeInOut animation to CSS
+
 const style = document.createElement('style');
 style.textContent = `
     @keyframes fadeInOut {

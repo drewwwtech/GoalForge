@@ -59,7 +59,7 @@
 
         <!-- Goals Grid -->
         <div class="goals-grid">
-            <!-- Goal cards will be dynamically added here -->
+            
             <div class="empty-goals-state">
                 <h3>No goals yet</h3>
                 <p>Create your first goal to start tracking your progress!</p>
@@ -67,7 +67,7 @@
             </div>
         </div>
 
-        <!-- Create Goal Modal (Hidden by default) -->
+       
         <div class="modal-overlay" id="createGoalModal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -116,14 +116,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!profileTrigger || !dropdownMenu) return;
 
-  // Toggle dropdown on profile click
+  
   profileTrigger.addEventListener("click", (e) => {
     e.stopPropagation();
     dropdownMenu.style.display =
       dropdownMenu.style.display === "flex" ? "none" : "flex";
   });
 
-  // Hide dropdown when clicking anywhere else
+  
   document.addEventListener("click", (e) => {
     if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
       dropdownMenu.style.display = "none";

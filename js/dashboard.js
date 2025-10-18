@@ -1,4 +1,3 @@
-// ==================== DASHBOARD SCRIPT ====================
 class DashboardManager {
     constructor() {
         this.currentUser = null;
@@ -14,7 +13,7 @@ class DashboardManager {
         });
     }
 
-    // ==================== AUTHENTICATION ====================
+ 
     checkAuthentication() {
         this.currentUser = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
         if (!this.currentUser) {
@@ -22,7 +21,7 @@ class DashboardManager {
             return;
         }
 
-        // Initialize user streak data if it doesn't exist
+
         if (this.currentUser.streak === undefined) {
             this.currentUser.streak = 0;
             this.currentUser.lastCheckin = null;
@@ -36,7 +35,7 @@ class DashboardManager {
         }
     }
 
-    // ==================== DASHBOARD INIT ====================
+
     initializeDashboard() {
         this.setupProfileDropdown();
         this.setupModals();
@@ -52,7 +51,7 @@ class DashboardManager {
         if (encouragebtn) encouragebtn.addEventListener('click', () => this.sendEncouragement());
     }
 
-    // ==================== PROFILE DROPDOWN ====================
+
     setupProfileDropdown() {
         const profileTrigger = document.querySelector('.profile-trigger');
         const dropdownMenu = document.querySelector('.profile-dropdown');
@@ -86,7 +85,7 @@ class DashboardManager {
         }
     }
 
-    // ==================== MODALS ====================
+
     setupModals() {
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') this.closeAllModals();
@@ -124,9 +123,7 @@ class DashboardManager {
         document.querySelectorAll('.modal-overlay').forEach(modal => modal.classList.remove('active'));
     }
 
-    // ==================== DAILY STREAK SYSTEM ====================
 
-    // ==================== DATA & ACTIVITY ====================
     loadDashboardData() {
         this.loadGoalsSummary();
         this.loadFriendActivity();
@@ -203,7 +200,6 @@ class DashboardManager {
         }
     }
 
-    // ==================== ACTIONS ====================
     sendEncouragement() {
         const quotes = [
             "Keep pushing! Small steps still move you forward 💪",
@@ -243,7 +239,6 @@ class DashboardManager {
         }
     }
 
-    // ==================== UTILITIES ====================
     showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
@@ -289,7 +284,6 @@ class DashboardManager {
     }
 }
 
-// ==================== STYLE INJECTION ====================
 const dashboardStyle = document.createElement('style');
 dashboardStyle.textContent = `
 @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -313,7 +307,7 @@ dashboardStyle.textContent = `
 `;
 document.head.appendChild(dashboardStyle);
 
-// ==================== INITIALIZE DASHBOARD ====================
+
 let dashboardManager;
 document.addEventListener('DOMContentLoaded', () => {
     dashboardManager = new DashboardManager();

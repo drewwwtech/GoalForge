@@ -1,12 +1,9 @@
-/* css/help.css - Help & FAQ Styles */
-
 .help-container {
     padding: 100px 40px 40px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* Hero Section */
 .help-hero {
     text-align: center;
     margin-bottom: 60px;
@@ -28,7 +25,7 @@
     opacity: 0.9;
 }
 
-/* Search Box */
+
 .search-box {
     display: flex;
     max-width: 500px;
@@ -64,7 +61,7 @@
     transform: scale(1.05);
 }
 
-/* Help Layout */
+
 .help-layout {
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -72,7 +69,7 @@
     align-items: start;
 }
 
-/* Sidebar */
+
 .help-sidebar {
     position: sticky;
     top: 120px;
@@ -120,7 +117,6 @@
     font-size: 1.2rem;
 }
 
-/* Help Content */
 .help-content {
     background: white;
     border-radius: 12px;
@@ -145,7 +141,6 @@
     padding-bottom: 12px;
 }
 
-/* FAQ Items */
 .faq-item {
     border: 1px solid #e5e7eb;
     border-radius: 8px;
@@ -231,7 +226,7 @@
     font-size: 0.9rem;
 }
 
-/* Contact Section */
+
 .contact-section {
     text-align: center;
     padding: 60px 40px;
@@ -285,7 +280,7 @@
     font-size: 1.2rem;
 }
 
-/* Modal Styles */
+
 .modal {
     display: none;
     position: fixed;
@@ -357,7 +352,6 @@
     margin-top: 24px;
 }
 
-/* Header Contact Button */
 .help-contact-btn {
     background: transparent;
     color: white;
@@ -374,7 +368,7 @@
     color: #667eea;
 }
 
-/* Animations */
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -391,14 +385,14 @@
     }
 }
 
-/* Search Highlight */
+
 .highlight {
     background: #fef3c7;
     padding: 2px 4px;
     border-radius: 2px;
 }
 
-/* No Results State */
+
 .no-results {
     text-align: center;
     padding: 60px 40px;
@@ -410,7 +404,7 @@
     color: #374151;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .help-container {
         padding: 100px 20px 20px;
@@ -453,7 +447,7 @@
     }
 }
 
-/* Dark Theme Support */
+
 .theme-dark .help-sidebar,
 .theme-dark .help-content,
 .theme-dark .faq-item,
@@ -494,7 +488,7 @@
     color: #f9fafb;
     border: 1px solid #6b7280;
 }
-/* === HERO SECTION === */
+
 .help-hero {
     max-width: 800px;
     margin: 0 auto 3rem auto;
@@ -513,7 +507,7 @@
     margin-bottom: 2rem;
 }
 
-/* === SEARCH BOX === */
+
 .search-box {
     display: flex;
     justify-content: center;
@@ -566,7 +560,7 @@
     transform: translateY(-1px);
 }
 
-/* === CONTACT SUPPORT SECTION === */
+
 .contact-section {
     background: #6c63ff;
     border-radius: 16px;
@@ -589,7 +583,7 @@
     margin-bottom: 1.5rem;
 }
 
-/* === CONTACT BUTTONS === */
+
 .contact-options {
     display: flex;
     justify-content: center;
@@ -636,7 +630,7 @@
     transform: scale(1.05);
 }
 
-/* === RESPONSIVE === */
+
 @media (max-width: 600px) {
     .search-box {
         flex-direction: column;
@@ -654,7 +648,7 @@
     }
 }
 
-/* === Subtle Animation === */
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }

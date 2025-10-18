@@ -1,9 +1,8 @@
-/* Global */
 body {
   margin: 0;
   padding: 0;
   padding-top: 64px;
-  background: #f3f4f6; /* lighter neutral like Habitica’s dashboard bg */
+  background: #f3f4f6; 
   font-family: 'Inter', sans-serif;
   color: #1f2937;
 }
@@ -18,14 +17,14 @@ body {
   z-index: -1;
 }
 
-/* HEADER BAR */
+
 .main-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 64px;
-  background: #5a4ed3; /* Solid purple tone */
+  background: #5a4ed3;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -39,7 +38,7 @@ body {
   left: 0;
   right: 0;
   height: 64px;
-  background: transparent; /* Solid purple tone */
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -92,7 +91,7 @@ body {
   padding-bottom: 4px;
   transition: all 0.3s ease;
   opacity: 0.9;
-  white-space: nowrap; /* Prevents nav text from wrapping/compressing */
+  white-space: nowrap; 
 }
 
 .nav-link:hover {
@@ -145,31 +144,31 @@ body {
   align-self: center;
 }
 
-/* UPDATED: Landing page layout (now full-width with side padding to push sections to edges) */
+
 .landing-page {
-  padding: 0; /* Matches dashboard padding: top for header clearance, sides to push content to edges */
+  padding: 0; 
   display: flex;
   align-items: center;
-  justify-content: center; /* Pushes left to left edge, right to right edge */
-  gap: 80px; /* Increased gap for more separation between photo/slogan and form */
-  min-height: calc(100vh - 100px); /* Full viewport minus header clearance */
-  /* Removed max-width and margin:0 auto to allow full spread */
+  justify-content: center; 
+  gap: 80px; 
+  min-height: calc(100vh - 100px);
+  
 }
 
 .landingpage-left {
-  flex: 1; /* Grows to fill left space, pushing photo/slogan further left */
+  flex: 1; 
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start; /* Aligns content to the left edge */
-  padding: 20px 0; /* Minimal padding, no right padding to hug left */
-  max-width: 50%; /* Optional: Limits left side to half viewport for balance */
+  align-items: flex-start; 
+  padding: 20px 0; 
+  max-width: 50%; 
 }
 
 .landing-image{
   width: 200%;
-  max-width: 600px; /* Increased max for larger photo on wide screens */
-  height: 400px; /* Placeholder for your illustration */
+  max-width: 600px;
+  height: 400px; 
   background: transparent;
   border-radius: 12px;
   margin-bottom: 24px;
@@ -181,17 +180,17 @@ body {
   color: #FFFDD0;
   margin: 0;
   line-height: 1.2;
-  align-self: flex-start; /* Ensures slogan hugs left */
+  align-self: flex-start;
 }
 
 .login-right {
-  flex: 0 0 400px; /* Fixed width, pushed to right edge */
+  flex: 0 0 400px;
   padding: 40px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
-  align-self: center; /* Centers vertically on the right */
+  align-self: center;
 }
 
 .login-form-container {
@@ -275,14 +274,14 @@ body {
   left: 0;
   width: 100%;
   height: 2px;
-  background: black; /* soft white line */
+  background: black;
   transform: translateY(-50%);
-  z-index: 1; /* ⬅️ FIX: put line above background */
+  z-index: 1; 
 }
 
 .divider span {
   position: relative;
-  background: white; /* match background */
+  background: white;
   padding: 0 12px;
   color: black;
   font-weight: bold;
@@ -319,7 +318,7 @@ body {
     height: 22px;
 }
 
-/* === GOOGLE BUTTON === */
+
 .google-btn {
     background: #ffffff;
     color: #333;
@@ -330,7 +329,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* === FACEBOOK BUTTON === */
+
 .facebook-btn {
     background: #ffffff;
     color: #333;
@@ -341,7 +340,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* === RESPONSIVE === */
+
 @media (max-width: 480px) {
     .social-login button {
         font-size: 0.95rem;
@@ -349,13 +348,12 @@ body {
     }
 }
 
-/* MAIN DASHBOARD */
+
 .dashboard-main {
   padding: 100px 60px 40px;
   min-height: 100vh;
 }
 
-/* WELCOME BANNER */
 .welcome-banner {
   background: white;
   color: #1f2937;
@@ -379,7 +377,6 @@ body {
   font-size: 15px;
 }
 
-/* DASHBOARD CARDS */
 .dashboard-banners {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -412,7 +409,7 @@ body {
   margin-bottom: 20px;
 }
 
-/* GOALS BUTTON */
+
 .add-goal-btn {
   width: 100%;
   padding: 12px;
@@ -431,7 +428,7 @@ body {
   transform: translateY(-1px);
 }
 
-/* MOTIVATION PANEL */
+
 .motivation-banner .checkin-btn {
     padding: 12px 24px;
     border-radius: 8px;
@@ -491,7 +488,7 @@ body {
   text-align: center;
 }
 
-/* RESPONSIVE DESIGN */
+
 @media (max-width: 1024px) {
   .dashboard-banners {
     grid-template-columns: 1fr;
@@ -501,22 +498,22 @@ body {
     padding: 100px 20px 20px;
   }
 
-  /* UPDATED: Responsive for landing page (stacks, but with reduced side padding) */
+
   .landing-page {
     flex-direction: column;
-    padding: 100px 20px 20px; /* Reduced side padding on small screens */
-    gap: 40px; /* Smaller gap when stacked */
-    align-items: center; /* Centers when stacked */
+    padding: 100px 20px 20px; 
+    gap: 40px; 
+    align-items: center; 
   }
 
   .landingpage-left {
-    max-width: none; /* Full width on mobile */
-    align-items: center; /* Center content when stacked */
-    text-align: center; /* Center slogan */
+    max-width: none; 
+    align-items: center; 
+    text-align: center; 
   }
 
   .slogan {
-    align-self: center; /* Centers slogan on mobile */
+    align-self: center; 
   }
 
   .login-right {
@@ -527,11 +524,11 @@ body {
   }
 
   .header-nav {
-    gap: 20px; /* Reduce nav gap on small screens to prevent overflow */
+    gap: 20px;
   }
 
   .header-left {
-    gap: 20px; /* Reduce left gap to avoid compression */
+    gap: 20px; 
   }
 }
 
@@ -543,7 +540,7 @@ body {
     font-size: 14px;
 }
 
-/* ===== GOALS PAGE STYLES ===== */
+
 .goals-main {
     padding: 100px 60px 40px;
     min-height: 100vh;
@@ -551,7 +548,7 @@ body {
     margin: 0 auto;
 }
 
-/* Page Header */
+
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -586,7 +583,7 @@ body {
     box-shadow: 0 4px 12px rgba(91, 75, 219, 0.3);
 }
 
-/* Goals Controls */
+
 .goals-controls {
     display: flex;
     justify-content: space-between;
@@ -633,14 +630,13 @@ body {
     color: #374151;
 }
 
-/* Goals Grid */
 .goals-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 24px;
 }
 
-/* Empty State */
+
 .empty-goals-state {
     grid-column: 1 / -1;
     text-align: center;
@@ -678,7 +674,6 @@ body {
     transform: translateY(-2px);
 }
 
-/* Goal Card (for when we add goals with JavaScript) */
 .goal-card {
     background: white;
     border-radius: 12px;
@@ -693,7 +688,7 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Modal Styles */
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -832,7 +827,7 @@ body {
     background: #4f46e5;
 }
 
-/* Responsive Goals Page */
+
 @media (max-width: 768px) {
     .goals-main {
         padding: 100px 20px 20px;
@@ -860,7 +855,7 @@ body {
     }
 }
 
-/* ===== FRIENDS PAGE STYLES ===== */
+
 .friends-main {
     padding: 100px 60px 40px;
     min-height: 100vh;
@@ -875,7 +870,7 @@ body {
     align-items: start;
 }
 
-/* Friends List Section */
+
 .friends-list-section {
     background: white;
     border-radius: 12px;
@@ -917,7 +912,7 @@ body {
     border-color: #5b4bdb;
 }
 
-/* Friends List */
+
 .friends-list {
     display: flex;
     flex-direction: column;
@@ -998,7 +993,6 @@ body {
     border-color: #ef4444;
 }
 
-/* Empty States */
 .empty-friends-state,
 .empty-activity {
     text-align: center;
@@ -1027,7 +1021,7 @@ body {
     background: #4f46e5;
 }
 
-/* Sidebar Cards */
+
 .friends-sidebar {
     display: flex;
     flex-direction: column;
@@ -1053,7 +1047,7 @@ body {
     color: #374151;
 }
 
-/* Add Friend Card */
+
 .friend-search {
     display: flex;
     gap: 8px;
@@ -1083,7 +1077,7 @@ body {
     background: #4f46e5;
 }
 
-/* Suggestions */
+
 .suggestions-list {
     display: flex;
     flex-direction: column;
@@ -1131,11 +1125,11 @@ body {
     background: #059669;
 }
 
-/* FRIEND ACTIVITY LIST */
+
 .activity-feed {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* <- this controls space between each activity item */
+  gap: 16px;
 }
 
 .activity-list {
@@ -1164,7 +1158,7 @@ body {
     margin: 4px 0 0 0;
 }
 
-/* Responsive Friends Page */
+
 @media (max-width: 1024px) {
     .friends-layout {
         grid-template-columns: 1fr;
@@ -1206,7 +1200,7 @@ body {
     }
 }
 
-/* === ADD FRIEND BUTTON === */
+
 .add-friend-btn {
   background: #5b4bdb;
   color: white;
@@ -1226,7 +1220,6 @@ body {
   box-shadow: 0 4px 12px rgba(91, 75, 219, 0.3);
 }
 
-/* === MODAL OVERLAY === */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1247,7 +1240,7 @@ body {
   opacity: 1;
 }
 
-/* === MODAL CONTENT === */
+
 .modal-content {
   background: white;
   border-radius: 12px;
@@ -1269,7 +1262,7 @@ body {
   }
 }
 
-/* === MODAL HEADER === */
+
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -1295,7 +1288,7 @@ body {
   color: #374151;
 }
 
-/* === FORM FIELDS === */
+
 .friend-form .form-group {
   margin-bottom: 20px;
 }
@@ -1325,7 +1318,7 @@ body {
   box-shadow: 0 0 0 3px rgba(91, 75, 219, 0.15);
 }
 
-/* === BUTTON ROW === */
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -1363,7 +1356,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Message animations */
+
 @keyframes slideIn {
     from {
         transform: translateX(100%);
@@ -1375,7 +1368,7 @@ body {
     }
 }
 
-/* Message styles */
+
 .global-message {
     position: fixed;
     top: 100px;
@@ -1402,7 +1395,7 @@ body {
     background: #667eea;
 }
 
-/* === PROFILE DROPDOWN MENU === */
+
 .profile-menu {
   position: relative;
   display: inline-block;
@@ -1458,7 +1451,7 @@ body {
   margin: 4px 0;
 }
 
-/* === PROFILE MODAL === */
+
 .modal-overlay {
   display: none;
   position: fixed;
@@ -1519,7 +1512,7 @@ body {
   background: #4f46e5;
 }
 
-/* Theme Styles */
+
 .theme-dark {
     background: #1f2937;
     color: #f9fafb;
