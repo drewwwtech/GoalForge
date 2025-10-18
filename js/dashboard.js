@@ -14,6 +14,7 @@ class DashboardManager {
         });
     }
 
+    // ==================== AUTHENTICATION ====================
     checkAuthentication() {
         this.currentUser = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
         if (!this.currentUser) {
@@ -21,7 +22,13 @@ class DashboardManager {
             return;
         }
 
-        // Update welcome message
+        // Initialize user streak data if it doesn't exist
+        if (this.currentUser.streak === undefined) {
+            this.currentUser.streak = 0;
+            this.currentUser.lastCheckin = null;
+            localStorage.setItem('goalforgeCurrentUser', JSON.stringify(this.currentUser));
+        }
+
         const welcomeElement = document.querySelector('.welcome-content h1');
         if (welcomeElement) {
             const displayName = this.currentUser.displayName || this.currentUser.email.split('@')[0];
@@ -29,37 +36,20 @@ class DashboardManager {
         }
     }
 
+    // ==================== DASHBOARD INIT ====================
     initializeDashboard() {
         this.setupProfileDropdown();
         this.setupModals();
-        this.updateStreakDisplay();
+        this.setupDailyStreakSystem();
         this.loadRecentActivity();
     }
 
     setupEventListeners() {
-        // Create goal button
         const addGoalBtn = document.querySelector('.add-goal-btn');
-        if (addGoalBtn) {
-            addGoalBtn.addEventListener('click', () => {
-                window.location.href = 'goals.html';
-            });
-        }
+        if (addGoalBtn) addGoalBtn.addEventListener('click', () => window.location.href = 'goals.html');
 
-        // Check-in button
-        const checkinBtn = document.querySelector('.checkin-btn');
-        if (checkinBtn) {
-            checkinBtn.addEventListener('click', () => {
-                this.completeWeeklyCheckin();
-            });
-        }
-
-        // Encourage button
-        const encourageBtn = document.querySelector('.encourage-btn');
-        if (encourageBtn) {
-            encourageBtn.addEventListener('click', () => {
-                this.sendEncouragement();
-            });
-        }
+        const encouragebtn = document.querySelector('.encourage-btn');
+        if (encouragebtn) encouragebtn.addEventListener('click', () => this.sendEncouragement());
     }
 
     // ==================== PROFILE DROPDOWN ====================
@@ -70,11 +60,9 @@ class DashboardManager {
         if (profileTrigger && dropdownMenu) {
             profileTrigger.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const isVisible = dropdownMenu.style.display === 'block';
-                dropdownMenu.style.display = isVisible ? 'none' : 'block';
+                dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
             });
 
-            // Close when clicking outside
             document.addEventListener('click', (e) => {
                 if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
                     dropdownMenu.style.display = 'none';
@@ -82,41 +70,26 @@ class DashboardManager {
             });
         }
 
-        // === LOGOUT HANDLER ===
         const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', () => this.handleLogout());
-        }
+        if (logoutBtn) logoutBtn.addEventListener('click', () => this.handleLogout());
 
-        // === PROFILE MODAL HANDLER ===
         const viewProfileBtn = document.getElementById('viewProfileBtn');
         const profileModal = document.getElementById('profileModal');
         const closeModalBtn = profileModal?.querySelector('.close-modal');
 
         if (viewProfileBtn && profileModal) {
-            viewProfileBtn.addEventListener('click', () => {
-                this.openProfileModal();
-            });
-
-            closeModalBtn?.addEventListener('click', () => {
-                this.closeModal(profileModal);
-            });
-
+            viewProfileBtn.addEventListener('click', () => this.openProfileModal());
+            closeModalBtn?.addEventListener('click', () => this.closeModal(profileModal));
             profileModal.addEventListener('click', (e) => {
-                if (e.target === profileModal) {
-                    this.closeModal(profileModal);
-                }
+                if (e.target === profileModal) this.closeModal(profileModal);
             });
         }
     }
 
     // ==================== MODALS ====================
     setupModals() {
-        // Close all modals with Escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeAllModals();
-            }
+            if (e.key === 'Escape') this.closeAllModals();
         });
     }
 
@@ -134,9 +107,7 @@ class DashboardManager {
         const profileEmail = document.getElementById('profileEmail');
         const memberSince = document.getElementById('memberSince');
 
-        if (profileEmail) {
-            profileEmail.textContent = this.currentUser.email;
-        }
+        if (profileEmail) profileEmail.textContent = this.currentUser.email;
 
         if (memberSince) {
             const joinDate = this.currentUser.createdAt ?
@@ -150,36 +121,23 @@ class DashboardManager {
     }
 
     closeAllModals() {
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.classList.remove('active');
-        });
+        document.querySelectorAll('.modal-overlay').forEach(modal => modal.classList.remove('active'));
     }
-    
+
+    // ==================== DAILY STREAK SYSTEM ====================
+
     // ==================== DATA & ACTIVITY ====================
     loadDashboardData() {
         this.loadGoalsSummary();
         this.loadFriendActivity();
-        this.updateMotivationPanel();
+        this.updateStreakDisplay();
     }
 
-    
-
     loadGoalsSummary() {
-        console.log('Loading goals summary...');
-
         let goals = JSON.parse(localStorage.getItem('goalforge-goals')) || [];
-        console.log('Loaded goals:', goals);
-        
-
-
         const goalsBanner = document.querySelector('.goals-banner .goal-lists');
 
-        console.log('Found goalsBanner:', goalsBanner);
-        if (!goalsBanner) {
-            console.warn('Goals banner element not found.');
-           return;
-        }
-
+        if (!goalsBanner) return;
         goalsBanner.innerHTML = '';
 
         if (goals.length === 0) {
@@ -187,52 +145,30 @@ class DashboardManager {
             return;
         }
 
-        goals.forEach(goal => {
-            const goalItem = document.createElement('div');
-            goalItem.classList.add('goal-item');
-            goalItem.innerHTML = `
-                <div class="goal-title">${goal.title}</div>
-                <div class="goal-category">${goal.category}</div>
-                <div> class="goal-deadline">${goal.deadline ? goal.deadline : 'No deadline'}</div>
-            `;
-            goalsBanner.appendChild(goalItem);
-        });
-
         const activeGoals = goals.filter(goal => goal.status === 'active');
         const completedGoals = goals.filter(goal => goal.status === 'completed');
 
         goalsBanner.innerHTML = `
             <div class="goals-summary">
-                <div class="goal-stat">
-                    <span class="stat-number">${activeGoals.length}</span>
-                    <span class="stat-label">Active Goals</span>
-                </div>
-                <div class="goal-stat">
-                    <span class="stat-number">${completedGoals.length}</span>
-                    <span class="stat-label">Completed</span>
-                </div>
-                <div class="goal-stat">
-                    <span class="stat-number">${Math.round((completedGoals.length / goals.length) * 100) || 0}%</span>
-                    <span class="stat-label">Success Rate</span>
-                </div>
+                <div class="goal-stat"><span class="stat-number">${activeGoals.length}</span><span class="stat-label">Active</span></div>
+                <div class="goal-stat"><span class="stat-number">${completedGoals.length}</span><span class="stat-label">Completed</span></div>
+                <div class="goal-stat"><span class="stat-number">${Math.round((completedGoals.length / goals.length) * 100) || 0}%</span><span class="stat-label">Success</span></div>
             </div>
             <div class="recent-goals">
                 <h4>Recent Goals</h4>
                 ${activeGoals.slice(0, 3).map(goal => `
                     <div class="recent-goal">
                         <span class="goal-title">${this.escapeHtml(goal.title)}</span>
-                        <span class="goal-progress">${goal.progress}%</span>
+                        <span class="goal-progress">${goal.progress || 0}%</span>
                     </div>
                 `).join('')}
             </div>
         `;
     }
-    
 
     loadFriendActivity() {
         const activities = JSON.parse(localStorage.getItem('goalforge-activities')) || [];
         const activityFeed = document.querySelector('.activity-feed');
-
         if (!activityFeed) return;
 
         if (activities.length === 0) {
@@ -256,7 +192,7 @@ class DashboardManager {
     loadRecentActivity() {
         const mockActivities = [
             "You completed your daily check-in! 🔥",
-            "Sarah reached 50% on 'Learn Spanish'",
+            "Sarah reached 50% on 'Learn Spanish' 📘",
             "Mike completed 'Morning Run' goal! 🎉",
             "Your streak is getting impressive! 💪"
         ];
@@ -267,65 +203,24 @@ class DashboardManager {
         }
     }
 
-    updateStreakDisplay() {
-        const streakCount = document.querySelector('.streak-count');
-        const streakMessage = document.querySelector('.streak-message');
-
-        if (!streakCount || !streakMessage) return;
-
-        const streak = this.currentUser.streak || 0;
-
-        streakCount.textContent = `${streak} day streak!`;
-
-        if (streak === 0) {
-            streakMessage.textContent = "Start your journey today!";
-        } else if (streak < 7) {
-            streakMessage.textContent = "Great start! Keep building your streak.";
-        } else if (streak < 30) {
-            streakMessage.textContent = "You're building great habits!";
-        } else {
-            streakMessage.textContent = "Incredible consistency! You're inspiring others.";
-        }
-    }
-
-    updateMotivationPanel() {
-        const checkinStatus = document.querySelector('.checkin-status');
-        if (checkinStatus) {
-            const today = new Date().toDateString();
-            const lastCheckin = this.currentUser.lastCheckin;
-
-            if (lastCheckin === today) {
-                checkinStatus.textContent = "Completed";
-                checkinStatus.className = "checkin-status completed";
-            } else {
-                checkinStatus.textContent = "Pending";
-                checkinStatus.className = "checkin-status pending";
-            }
-        }
-    }
-
     // ==================== ACTIONS ====================
-    completeWeeklyCheckin() {
-        const today = new Date().toDateString();
-
-        this.currentUser.lastCheckin = today;
-        this.currentUser.streak = (this.currentUser.streak || 0) + 1;
-
-        localStorage.setItem('goalforgeCurrentUser', JSON.stringify(this.currentUser));
-
-        this.updateStreakDisplay();
-        this.updateMotivationPanel();
-
-        this.showNotification("Weekly check-in completed! Your streak continues! 🎉", "success");
-
-        this.addActivity("Completed weekly check-in and maintained streak! 🔥");
-    }
-
     sendEncouragement() {
-        this.showNotification("Encouragement sent to your friends! 💌", "success");
+        const quotes = [
+            "Keep pushing! Small steps still move you forward 💪",
+            "Your consistency is your superpower 🔥",
+            "You're doing great — don't stop now! 🌟",
+            "Progress, not perfection. Keep it up! 🚀",
+            "Your effort today builds your tomorrow 💯"
+        ];
+
+        const friends = ['Sarah', 'Mike', 'Alex'];
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        const randomFriend = friends[Math.floor(Math.random() * friends.length)];
+
+        this.showNotification(`Sent support to ${randomFriend}: "${randomQuote}"`, "success");
+        this.addActivity(`You encouraged ${randomFriend}: "${randomQuote}" ❤️`);
 
         setTimeout(() => {
-            const friends = ['Sarah', 'Mike', 'Alex'];
             const randomFriend = friends[Math.floor(Math.random() * friends.length)];
             this.addActivity(`${randomFriend} appreciated your encouragement! ❤️`);
         }, 2000);
@@ -333,15 +228,10 @@ class DashboardManager {
 
     addActivity(message) {
         const activities = JSON.parse(localStorage.getItem('goalforge-activities')) || [];
-        const newActivity = {
-            id: Date.now().toString(),
-            message: message,
-            timestamp: new Date().toISOString()
-        };
+        const newActivity = { id: Date.now().toString(), message, timestamp: new Date().toISOString() };
 
         activities.unshift(newActivity);
         localStorage.setItem('goalforge-activities', JSON.stringify(activities));
-
         this.loadFriendActivity();
     }
 
@@ -349,9 +239,7 @@ class DashboardManager {
         if (confirm('Are you sure you want to logout?')) {
             localStorage.removeItem('goalforgeCurrentUser');
             this.showNotification('Logged out successfully', 'success');
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1000);
+            setTimeout(() => window.location.href = 'index.html', 1000);
         }
     }
 
@@ -361,20 +249,15 @@ class DashboardManager {
         notification.className = `notification ${type}`;
         notification.textContent = message;
         notification.style.cssText = `
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            z-index: 10000;
+            position: fixed; top: 100px; right: 20px;
+            padding: 12px 20px; border-radius: 8px;
+            color: white; font-weight: 500; z-index: 10000;
+            background: ${type === 'error' ? '#ef4444' :
+                type === 'success' ? '#10b981' : '#667eea'};
             animation: slideIn 0.3s ease;
-            background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#667eea'};
         `;
 
         document.body.appendChild(notification);
-
         setTimeout(() => {
             notification.style.animation = 'slideOut 0.3s ease';
             setTimeout(() => notification.remove(), 300);
@@ -398,96 +281,41 @@ class DashboardManager {
     }
 
     escapeHtml(unsafe) {
-        return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+        return unsafe.replace(/&/g, "&amp;")
+                     .replace(/</g, "&lt;")
+                     .replace(/>/g, "&gt;")
+                     .replace(/"/g, "&quot;")
+                     .replace(/'/g, "&#039;");
     }
 }
 
 // ==================== STYLE INJECTION ====================
 const dashboardStyle = document.createElement('style');
 dashboardStyle.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-
-    @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-
-    .goals-summary {
-        display: flex;
-        justify-content: space-around;
-        margin-bottom: 20px;
-        padding: 15px;
-        background: #f8fafc;
-        border-radius: 8px;
-    }
-
-    .goal-stat {
-        text-align: center;
-    }
-
-    .stat-number {
-        display: block;
-        font-size: 24px;
-        font-weight: bold;
-        color: #5b4bdb;
-    }
-
-    .stat-label {
-        font-size: 12px;
-        color: #6b7280;
-        text-transform: uppercase;
-    }
-
-    .recent-goals {
-        margin-top: 15px;
-    }
-
-    .recent-goal {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .recent-goal:last-child {
-        border-bottom: none;
-    }
-
-    .goal-title {
-        font-size: 14px;
-        color: #374151;
-    }
-
-    .goal-progress {
-        font-size: 12px;
-        color: #10b981;
-        font-weight: 600;
-    }
-
-    .checkin-status.pending {
-        background: #fef3c7;
-        color: #92400e;
-    }
-
-    .checkin-status.completed {
-        background: #d1fae5;
-        color: #065f46;
-    }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+.goals-summary { display: flex; justify-content: space-around; margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 8px; }
+.goal-stat { text-align: center; }
+.stat-number { font-size: 24px; font-weight: bold; color: #5b4bdb; }
+.stat-label { font-size: 12px; color: #6b7280; text-transform: uppercase; }
+.recent-goals { margin-top: 15px; }
+.recent-goal { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e7eb; }
+.recent-goal:last-child { border-bottom: none; }
+.goal-title { font-size: 14px; color: #374151; }
+.goal-progress { font-size: 12px; color: #10b981; font-weight: 600; }
+.checkin-btn { padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; background: #4caf50; color: white; transition: all 0.3s ease; font-size: 14px; margin-top: 10px; }
+.checkin-btn:hover:not(:disabled) { background: #45a049; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.checkin-btn.completed { background: #2196f3; cursor: not-allowed; transform: none; box-shadow: none; }
+.checkin-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+.streak-section { text-align: center; margin-bottom: 20px; }
+.streak-count { font-size: 24px; font-weight: bold; color: #5b4bdb; margin-bottom: 8px; }
+.streak-message { font-size: 14px; color: #6b7280; font-style: italic; line-height: 1.4; }
 `;
 document.head.appendChild(dashboardStyle);
 
 // ==================== INITIALIZE DASHBOARD ====================
 let dashboardManager;
 document.addEventListener('DOMContentLoaded', () => {
-    const dashboardManager = new DashboardManager();
+    dashboardManager = new DashboardManager();
     dashboardManager.loadDashboardData();
 });

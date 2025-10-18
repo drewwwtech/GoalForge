@@ -319,44 +319,6 @@ function saveAppearanceSettings() {
 }
 
 // Data management functions
-function exportUserData() {
-    const user = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
-    if (!user) return;
-
-    const dataStr = JSON.stringify(user, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(dataBlob);
-    link.download = `goalforge-data-${user.email}-${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
-    
-    showMessage('Data exported successfully!', 'success');
-}
-
-function clearCache() {
-    // Clear any cached data (simplified version)
-    localStorage.removeItem('goalforgeCache');
-    showMessage('Cache cleared successfully!', 'success');
-}
-
-function resetApp() {
-    if (confirm('Are you sure you want to reset all app data? This will clear all your goals and circles, but keep your account.')) {
-        const user = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
-        if (user) {
-            user.goals = [];
-            user.circles = [];
-            user.streak = 0;
-            localStorage.setItem('goalforgeCurrentUser', JSON.stringify(user));
-            updateUserInStorage(user);
-            
-            showMessage('App data reset successfully!', 'success');
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1500);
-        }
-    }
-}
 
 function deleteAccount() {
     if (confirm('Are you absolutely sure? This will permanently delete your account and all data. This action cannot be undone.')) {

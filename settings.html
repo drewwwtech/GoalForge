@@ -21,7 +21,6 @@
                 </nav>
             </div>
             <div class="header-right">
-                <img src="images/notification.svg" alt="Notifications" class="notification-icon">
                 <div class="profile-menu">
                     <img src="images/Profile.png" alt="Profile" class="profile profile-trigger">
                     <div class="dropdown-menu">
@@ -44,9 +43,6 @@
                 <nav class="sidebar-nav">
                     <a href="#account" class="nav-item active" data-tab="account">
                         <span></span> Account
-                    </a>
-                    <a href="#notifications" class="nav-item" data-tab="notifications">
-                        <span></span> Notifications
                     </a>
                     <a href="#privacy" class="nav-item" data-tab="privacy">
                         <span></span> Privacy
@@ -160,8 +156,6 @@
                             </label>
                         </div>
                     </div>
-
-                    <button class="save-btn" onclick="saveNotificationSettings()">Save Notification Settings</button>
                 </div>
 
                 <!-- Privacy Tab -->
@@ -269,21 +263,6 @@
                 <div class="tab-content" id="data-tab">
                     <h1>Data & Storage</h1>
                     
-                    <div class="settings-section">
-                        <h3>Data Management</h3>
-                        <div class="data-actions">
-                            <button class="secondary-btn" onclick="exportUserData()">
-                                <span><img src="images/export.svg" alt="Export Data"></span> Export My Data
-                            </button>
-                            <button class="secondary-btn" onclick="clearCache()">
-                                <span><img src="images/clear.svg" alt="Clear Cache"></span> Clear Cache
-                            </button>
-                            <button class="secondary-btn" onclick="resetApp()">
-                                <span><img src="images/reset.svg" alt="Reset App"></span> Reset Application
-                            </button>
-                        </div>
-                    </div>
-
                     <div class="settings-section">
                         <h3>Account Actions</h3>
                         <div class="danger-actions">
