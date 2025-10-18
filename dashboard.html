@@ -51,7 +51,7 @@
                 <div class="goal-lists">
                     <div class="empty-state">No goals yet. Create your first goal!</div>
                 </div>
-                <button class="add-goal-btn">Create New Goal</button>
+                <button class="add-goal-btn" onClick="window.location.href='goals.html'">View Goal</button>
             </div>
 
             <!-- Middle Banner -->
@@ -83,7 +83,6 @@
                 <div class="reporting-section">
                     <h3>Weekly Check-in</h3>
                     <div class="checkin-status completed">Completed</div>
-                    <button class="checkin-btn">View Progress Report</button>
                 </div>
 
                 <div class="support-section">
@@ -114,6 +113,10 @@
             </div>
         </div>
     </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/goals.js"></script>
 
     <script>
 document.addEventListener("DOMContentLoaded", () => {

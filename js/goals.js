@@ -351,6 +351,8 @@ class GoalsManager {
 
     saveGoals() {
         localStorage.setItem('goalforge-goals', JSON.stringify(this.goals));
+
+        window.dispatchEvent(new Event('goalforge:goalsUpdated'));
     }
 
     escapeHtml(unsafe) {

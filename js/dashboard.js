@@ -154,7 +154,7 @@ class DashboardManager {
             modal.classList.remove('active');
         });
     }
-
+    
     // ==================== DATA & ACTIVITY ====================
     loadDashboardData() {
         this.loadGoalsSummary();
@@ -162,16 +162,41 @@ class DashboardManager {
         this.updateMotivationPanel();
     }
 
+    
+
     loadGoalsSummary() {
-        const goals = JSON.parse(localStorage.getItem('goalforge-goals')) || [];
+        console.log('Loading goals summary...');
+
+        let goals = JSON.parse(localStorage.getItem('goalforge-goals')) || [];
+        console.log('Loaded goals:', goals);
+        
+
+
         const goalsBanner = document.querySelector('.goals-banner .goal-lists');
 
-        if (!goalsBanner) return;
+        console.log('Found goalsBanner:', goalsBanner);
+        if (!goalsBanner) {
+            console.warn('Goals banner element not found.');
+           return;
+        }
+
+        goalsBanner.innerHTML = '';
 
         if (goals.length === 0) {
             goalsBanner.innerHTML = '<div class="empty-state">No goals yet. Create your first goal!</div>';
             return;
         }
+
+        goals.forEach(goal => {
+            const goalItem = document.createElement('div');
+            goalItem.classList.add('goal-item');
+            goalItem.innerHTML = `
+                <div class="goal-title">${goal.title}</div>
+                <div class="goal-category">${goal.category}</div>
+                <div> class="goal-deadline">${goal.deadline ? goal.deadline : 'No deadline'}</div>
+            `;
+            goalsBanner.appendChild(goalItem);
+        });
 
         const activeGoals = goals.filter(goal => goal.status === 'active');
         const completedGoals = goals.filter(goal => goal.status === 'completed');
@@ -202,6 +227,7 @@ class DashboardManager {
             </div>
         `;
     }
+    
 
     loadFriendActivity() {
         const activities = JSON.parse(localStorage.getItem('goalforge-activities')) || [];
@@ -462,5 +488,6 @@ document.head.appendChild(dashboardStyle);
 // ==================== INITIALIZE DASHBOARD ====================
 let dashboardManager;
 document.addEventListener('DOMContentLoaded', () => {
-    dashboardManager = new DashboardManager();
+    const dashboardManager = new DashboardManager();
+    dashboardManager.loadDashboardData();
 });
