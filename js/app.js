@@ -19,14 +19,21 @@ class AuthManager {
         });
     }
 
-
     setupAuthSystem() {
         const authForm = document.getElementById("auth-form");
         const formTitle = document.getElementById("form-title");
         const toggleText = document.querySelector(".toggle-auth");
         const toggleLink = toggleText?.querySelector("a");
 
+        // Determine initial mode: If on login.html and the form has a confirm-password field, assume signup mode is possible
+        // Otherwise, look for the 'Log In' button text to infer login mode.
         let currentMode = "signup";
+        const confirmPwField = document.getElementById("confirm-password");
+        if (confirmPwField && confirmPwField.closest(".input-group").style.display === "none") {
+            currentMode = "login";
+        } else if (document.querySelector(".submit-button")?.textContent === "Login") {
+             currentMode = "login";
+        }
 
 
         if (toggleLink) {
@@ -35,6 +42,8 @@ class AuthManager {
                 currentMode = currentMode === "signup" ? "login" : "signup";
                 this.updateFormMode(currentMode, formTitle, toggleText, toggleLink);
             });
+            // Run updateFormMode once to ensure the initial form state matches the mode
+            this.updateFormMode(currentMode, formTitle, toggleText, toggleLink, true); 
         }
 
 
@@ -43,35 +52,123 @@ class AuthManager {
             this.handleFormSubmission(currentMode);
         });
 
-
         this.setupSocialLogin();
         this.setupRealTimeValidation();
     }
 
-    updateFormMode(mode, titleEl, toggleText, toggleLink) {
+    // ===================================================================
+    // Social Login Functionality (Updated Selectors for both pages)
+    // ===================================================================
+
+    setupSocialLogin() {
+        // **FIXED SELECTORS**: Search broadly for social buttons within the main document.
+        const googleBtn = document.querySelector('.google-btn');
+        const facebookBtn = document.querySelector('.facebook-btn');
+
+        googleBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showFakePopup('google');
+        });
+
+        facebookBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showFakePopup('facebook');
+        });
+    }
+
+    showFakePopup(platform) {
+        document.querySelectorAll('.fake-popup').forEach(p => p.remove());
+
+        const isGoogle = platform === 'google';
+        const content = isGoogle 
+            ? `
+                <div class="popup-content">
+                    <h3 style="margin-top:0; color:#444;">Choose an account to continue to GoalForge</h3>
+                    <div class="account-option">
+                        <img src="images/Profile.png" alt="Profile Icon">
+                        <div>
+                            <p style="margin:0; font-weight:600; font-size:15px; color:#222;">John Doe</p>
+                            <p style="margin:0; font-size:13px; color:#666;">john.doe@example.com</p>
+                        </div>
+                    </div>
+                    <button class="cancel-popup">Cancel</button>
+                </div>
+              `
+            : `
+                <div class="fb-content">
+                    <div class="fb-header">
+                        <img src="images/facebook.svg" alt="Facebook Icon">
+                        <span>facebook</span>
+                    </div>
+                    <h3>Continue as John Doe?</h3>
+                    <p class="fb-receive">GoalForge will receive your name, profile picture, and email address.</p>
+                    <button class="fb-continue">Continue</button>
+                    <button class="fb-cancel">Cancel</button>
+                    <p class="fb-note">You can edit what info you share with GoalForge in your app settings.</p>
+                </div>
+            `;
+
+        const popupDiv = document.createElement('div');
+        popupDiv.className = 'fake-popup';
+        popupDiv.innerHTML = content;
+        
+        popupDiv.querySelector('.cancel-popup')?.addEventListener('click', () => popupDiv.remove());
+        popupDiv.querySelector('.fb-cancel')?.addEventListener('click', () => popupDiv.remove());
+        
+        const continueBtn = popupDiv.querySelector('.fb-continue') || popupDiv.querySelector('.account-option');
+
+        continueBtn?.addEventListener('click', () => {
+             this.showMessage(`Welcome back, John Doe!`, "success");
+             
+             const fakeUser = {
+                 id: this.generateId(),
+                 email: "john.doe@example.com",
+                 password: this.hashPassword("social-login-fake"),
+                 displayName: "John Doe",
+                 createdAt: new Date().toISOString(),
+                 lastLogin: new Date().toISOString(),
+             };
+             this.loginUser(fakeUser);
+             popupDiv.remove();
+             setTimeout(() => (window.location.href = "dashboard.html"), 1000);
+        });
+
+        document.body.appendChild(popupDiv);
+    }
+    
+    // ===================================================================
+    // END: Social Login Functionality
+    // ===================================================================
+
+
+    updateFormMode(mode, titleEl, toggleText, toggleLink, initial = false) {
         const confirmGroup = document.querySelector("#confirm-password")?.closest(".input-group");
         const submitBtn = document.querySelector(".submit-button");
 
         if (mode === "login") {
             titleEl.textContent = "Welcome Back!";
+            // Ensure confirm group is hidden in login mode
             if (confirmGroup) confirmGroup.style.display = "none";
             submitBtn.textContent = "Log In";
-            toggleText.firstChild.textContent = "Don’t have an account? ";
-            toggleLink.textContent = "Sign Up";
+            if(toggleText) toggleText.firstChild.textContent = "Don’t have an account? ";
+            if(toggleLink) toggleLink.textContent = "Sign Up";
         } else {
             titleEl.textContent = "Start Your Journey";
+            // Ensure confirm group is visible in signup mode
             if (confirmGroup) confirmGroup.style.display = "block";
             submitBtn.textContent = "Create Account";
-            toggleText.firstChild.textContent = "Already have an account? ";
-            toggleLink.textContent = "Log In";
+            if(toggleText) toggleText.firstChild.textContent = "Already have an account? ";
+            if(toggleLink) toggleLink.textContent = "Log In";
         }
 
- 
-        titleEl.style.opacity = "0";
-        setTimeout(() => {
-            titleEl.style.transition = "opacity 0.3s ease";
-            titleEl.style.opacity = "1";
-        }, 100);
+        // Only use transition animation after the initial load
+        if (!initial && titleEl) {
+            titleEl.style.opacity = "0";
+            setTimeout(() => {
+                titleEl.style.transition = "opacity 0.3s ease";
+                titleEl.style.opacity = "1";
+            }, 100);
+        }
     }
 
     handleFormSubmission(mode) {
@@ -102,9 +199,14 @@ class AuthManager {
     }
 
     validateForm(mode) {
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
+        const email = document.getElementById("email")?.value.trim();
+        const password = document.getElementById("password")?.value.trim();
         let valid = true;
+        
+        if (!email) {
+            // This is likely a non-auth page, skip validation
+            return true;
+        }
 
         if (!this.isValidEmail(email)) {
             this.showFieldError("email", "Please enter a valid email");
@@ -117,7 +219,7 @@ class AuthManager {
         } else this.clearFieldError("password");
 
         if (mode === "signup") {
-            const confirm = document.getElementById("confirm-password").value.trim();
+            const confirm = document.getElementById("confirm-password")?.value.trim();
             if (password !== confirm) {
                 this.showFieldError("confirm-password", "Passwords do not match");
                 valid = false;
@@ -262,12 +364,25 @@ class AuthManager {
 
     checkExistingLogin() {
         const currentUser = localStorage.getItem("goalforgeCurrentUser");
-        if (currentUser && window.location.pathname.includes("index.html")) {
-            this.showMessage("Redirecting to your dashboard...", "info");
-            setTimeout(() => (window.location.href = "dashboard.html"), 500);
-        } else if (!currentUser && !window.location.pathname.includes("index.html")) {
+        const currentPath = window.location.pathname;
+        const isProtectedPage = !(currentPath.includes("index.html") || currentPath.includes("login.html"));
+
+        // CASE 1: NOT LOGGED IN and on a PROTECTED page -> Redirect to index/login
+        if (!currentUser && isPublicPage) {
             this.showMessage("Please log in to continue", "error");
             setTimeout(() => (window.location.href = "index.html"), 1000);
+            return;
+        }
+
+        // CASE 2: LOGGED IN and on the LOGIN page -> Redirect to dashboard
+        if (currentUser && isPublicPage) {
+            // Prevent user from sitting on the dedicated login page if already signed in
+            const message = window.location.pathname.includes("login.html")
+                ? "You are already logged in."
+                : "Welcome back! Ready for your dashboard?";
+            this.showMessage(message, "info");
+            
+            return;
         }
     }
 
@@ -319,12 +434,87 @@ class AuthManager {
 const style = document.createElement("style");
 style.textContent = `
 @keyframes shake {
-  0%,100%{transform:translateX(0);}
-  25%{transform:translateX(-5px);}
-  75%{transform:translateX(5px);}
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    75%{transform:translateX(5px);}
 }
 .field-error{color:#ef4444;font-size:14px;}
 .error{border-color:#ef4444!important;background:#fef2f2!important;}
+.fake-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    backdrop-filter: blur(3px);
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+.popup-content, .fb-content {
+    background: #fff;
+    border-radius: 10px;
+    width: 340px;
+    max-width: calc(100% - 40px);
+    padding: 18px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    animation: popin .16s ease;
+}
+@keyframes popin { from {opacity:0; transform:scale(0.95);} to {opacity:1; transform:scale(1);} }
+
+.account-option {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px;
+    margin:8px 0;
+    background:#fafafa;
+    border-radius:8px;
+    cursor:pointer;
+    border: 1px solid #eee;
+    transition: background 0.1s ease;
+}
+.account-option:hover {
+    background: #f1f1f1;
+}
+.account-option img { width:36px; height:36px; border-radius:50%; }
+.cancel-popup { 
+    margin-top:15px; 
+    padding:8px 12px; 
+    background:#eee; 
+    border:1px solid #ddd; 
+    border-radius:6px; 
+    cursor:pointer; 
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+}
+.cancel-popup:hover {
+    background: #e0e0e0;
+}
+
+.fb-header { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px; }
+.fb-header img { width:28px; height:28px; }
+.fb-header span { color:#1877f2; font-weight:700; font-size:18px; }
+.fb-content h3 { font-size:15px; margin:6px 0; font-weight:600; color:#111; }
+.fb-receive { color:#444; margin-bottom:15px; font-size:14px; }
+.fb-continue {
+    background:#1877f2; color:#fff; border:none; padding:10px; width:100%; border-radius:6px; cursor:pointer; font-weight:600;
+}
+.fb-continue:hover {
+    background:#166fe5;
+}
+.fb-cancel { 
+    background:none; 
+    border:none; 
+    color:#555; 
+    margin-top:10px; 
+    cursor:pointer; 
+    font-weight: 500;
+    font-size: 14px;
+}
+.fb-note { margin-top:12px; color:#777; font-size:12px; }
 `;
 document.head.appendChild(style);
 
