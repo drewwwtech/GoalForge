@@ -14,19 +14,28 @@
                 <div class="logo">
                     <img src="images/Goal.png" alt="Goal Forge Logo" class="logo-img">
                 </div>
-                <nav class="header-nav">
+                <nav class="header-nav" id="desktopNav">
                     <a href="login.html" class="nav-link">Get Started</a>
                     <a href="#" class="nav-link">Learn More</a>
                     <a href="#" class="nav-link">About</a>
                 </nav>
             </div>
-           
+            
             <div class="header-right">
                 <button class="login-btn" id="login-btn" onClick="window.location.href='login.html'">Log In</button>
             </div>
+
+            <button class="menu-toggle" aria-label="Toggle navigation" id="landingMenuToggle">&#9776;</button>
         </div>
     </header>
 
+    <nav class="mobile-menu-landing" id="mobileMenuLanding">
+        <a href="login.html" class="nav-link">Get Started</a>
+        <a href="#" class="nav-link">Learn More</a>
+        <a href="#" class="nav-link">About</a>
+        <div class="dropdown-divider"></div>
+        <a href="login.html" class="nav-link mobile-login-btn">Log In</a>
+    </nav>
     <div class="landing-page">  
         <div class="landingpage-left">
             <img src="images/Illustration.png" alt="Inspiring visual" class="landing-image">
@@ -35,10 +44,10 @@
 
         <div class="login-right">
             <div class="login-form-container">
-     
+    
         <h2 class="form-title" id="form-title">Sign Up For Free</h2>
 
-  
+    
         <form class="login-form" id="auth-form">
             <div class="input-group">
                 <label for="email">Email</label>
@@ -55,7 +64,7 @@
             <button type="submit" class="submit-button">Sign Up</button>
         </form>
 
-      
+    
         <p class="toggle-auth">Already have an account? <a href="#" id="switch-to-login">Log In</a></p>
 
     
@@ -68,15 +77,39 @@
         </div>
     </div>
 
-         </div>
+            </div>
 
     </div>
 
     <img src="images/Background.png" alt="Starry Night Sky" class="background">
 
-
-
     <script src="js/app.js"></script>
+
+    <script>
+        // --- NEW Mobile Menu Toggle Logic for Landing Page ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleButton = document.getElementById('landingMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenuLanding');
+            const desktopLoginBtn = document.getElementById('login-btn');
+            const mobileLoginBtn = document.querySelector('.mobile-login-btn');
+
+            if (toggleButton && mobileMenu) {
+                toggleButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('is-open');
+                    // Optional: Hide the desktop login button when the menu is open (if they overlap)
+                    desktopLoginBtn.style.display = mobileMenu.classList.contains('is-open') ? 'none' : 'block';
+                });
+                
+                // Close menu when a link is clicked
+                mobileMenu.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.remove('is-open');
+                        desktopLoginBtn.style.display = 'block'; // Show desktop button again
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 
 <footer>

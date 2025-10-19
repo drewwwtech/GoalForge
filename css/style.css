@@ -38,7 +38,7 @@ body {
   left: 0;
   right: 0;
   height: 64px;
-  background: transparent;
+  background: #4f2f9d;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1752,4 +1752,242 @@ footer {
   padding-top: 15px;
   color: #777;
   font-size: 14px;
+}
+
+/* ==================================== */
+/* MOBILE RESPONSIVENESS       */
+/* ==================================== */
+
+/* --- Mobile Header (Hamburger Menu) --- */
+
+.menu-toggle {
+    display: none; /* Hidden by default on desktop */
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    /* Move toggle button to far right, above other content */
+    z-index: 1001; 
+    margin-left: 20px; /* Space between profile icon and toggle */
+}
+
+/* Style the Mobile Menu (Slide-out effect) */
+.mobile-menu {
+    position: fixed;
+    top: 64px; /* Below the header */
+    left: 0;
+    width: 80%; /* Takes up 80% of the screen width */
+    max-width: 300px;
+    height: calc(100% - 64px);
+    background: #5a4ed3; /* Same as header color */
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    z-index: 999;
+    /* This makes it hidden initially and enables the slide-out effect */
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+}
+
+.mobile-menu.is-open {
+    transform: translateX(0);
+}
+
+.mobile-menu .nav-link {
+    padding: 15px 0;
+    font-size: 1.2rem;
+    color: white; /* Ensure text is white in the menu */
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    display: block;
+    text-align: left;
+}
+.mobile-menu .nav-link:last-child {
+    border-bottom: none;
+}
+
+.mobile-menu .dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 10px 0;
+}
+
+
+/* --- Media Queries for Header and Main Content (768px and below) --- */
+@media (max-width: 768px) {
+    /* Hide the desktop nav links and force logo to the left */
+    .header-nav {
+        display: none; 
+    }
+
+    /* Show the hamburger button */
+    .menu-toggle {
+        display: block; 
+    }
+
+    /* Adjust padding for smaller screens */
+    .main-header {
+        padding: 0 20px;
+    }
+
+    /* Adjust header-left to ensure logo and profile right-side elements are visible */
+    .header-content {
+        justify-content: space-between;
+    }
+    
+    /* Make the logo image smaller for mobile */
+    .logo-img {
+        width: 120px; 
+        height: 50px;
+    }
+    
+    /* Center profile icon and toggle button on the right */
+    .header-right {
+        gap: 8px;
+    }
+
+    /* Dashboard adjustments */
+    .dashboard-main {
+        padding: 20px;
+    }
+
+}
+
+/* --- Footer Responsiveness (500px and below) --- */
+@media (max-width: 500px) {
+    footer {
+        padding: 30px 20px;
+    }
+    
+    .footer-container {
+        /* This will force columns to stack fully vertically */
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 30px;
+    }
+
+    .footer-column {
+        flex: 0 0 100%; /* Force full width on small screens */
+        min-width: unset; 
+        margin-bottom: 0;
+    }
+}
+
+/* ==================================== */
+/* MOBILE RESPONSIVENESS - LANDING PAGE */
+/* ==================================== */
+
+/* Styles for the landing page-specific mobile menu */
+.mobile-menu-landing {
+    position: fixed;
+    top: 64px; 
+    left: 0;
+    width: 80%;
+    max-width: 300px;
+    height: calc(100% - 64px);
+    background: #4a42b0; /* A darker, slightly different shade for the landing page */
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    z-index: 999;
+    /* Initial state: hidden off-screen */
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+}
+
+.mobile-menu-landing.is-open {
+    transform: translateX(0);
+}
+
+.mobile-menu-landing .nav-link {
+    padding: 15px 0;
+    font-size: 1.2rem;
+    color: white; 
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    display: block;
+    text-align: left;
+}
+
+.mobile-menu-landing .mobile-login-btn {
+    margin-top: 15px;
+    background: #fff;
+    color: #4a42b0;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-align: center;
+    border-bottom: none;
+}
+.mobile-menu-landing .mobile-login-btn:hover {
+    background: #eee;
+}
+
+/* Landing Page Mobile Adjustments (768px and below) */
+@media (max-width: 768px) {
+    /* Hide desktop nav on landing page */
+    .main-header-landing .header-nav {
+        display: none; 
+    }
+
+    .main-header-landing .login-btn {
+      display: none;
+    }
+
+    /* Show hamburger button on landing page */
+    .main-header-landing .menu-toggle {
+        display: block; 
+        color: white; /* Ensure color contrasts with transparent header */
+        z-index: 1001; 
+    }
+
+    /* Adjust header padding for mobile screens */
+    .main-header-landing {
+        padding: 0 20px;
+    }
+
+    /* Ensure header content is correctly spaced */
+    .main-header-landing .header-content {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    /* --- Landing Page Content Stacking --- */
+    .landing-page {
+        flex-direction: column; /* Stacks image and form vertically */
+        padding: 80px 20px 40px; /* Adjust padding for fixed header */
+    }
+
+    .landingpage-left {
+        width: 100%;
+        padding: 0;
+        text-align: center;
+    }
+    
+    .landing-image {
+        max-width: 80%; /* Shrink image on small screens */
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .slogan {
+        font-size: 2rem; /* Smaller, readable slogan */
+        margin-bottom: 40px;
+    }
+
+    .login-right {
+        width: 100%; /* Form takes full width */
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 30px;
+    }
 }

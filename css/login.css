@@ -1,307 +1,385 @@
+/* =================================================================== */
+/* BASE LAYOUT AND CENTERING                                           */
+/* =================================================================== */
+
 body {
-  margin: 0;
-  padding: 0;
-  padding-top: 64px;
-  background: #f3f4f6;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #1f2937;
+    margin: 0;
+    padding: 0;
+    padding-top: 0;
+    background: #f3f4f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1f2937;
+    /* Flexbox for vertical/horizontal centering on desktop */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  z-index: -1;
-}
-.login{
-    width: 50%;
-    margin: 0 auto;
-    padding-top: 100px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    z-index: -1;
 }
 
-.login-right {
-  flex: 0 0 400px;
-  padding: 40px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
-  align-self: center; 
+.login {
+    /* Centers the login-wrapper content on desktop */
+    flex-grow: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    padding: 50px 20px; 
 }
 
+/* --- Wrapper for Back Button and Form (Desktop Layout Fix) --- */
+.login-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Aligns the back button and form to the left */
+    width: 100%;
+    max-width: 520px; /* Wider desktop form size */
+}
+
+/* --- Back Button Style --- */
+.back-link {
+    display: inline-block; /* Allows margin-bottom to work */
+    color: white; /* Visible against the gradient background */
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 20px; /* Space between the link and the form container */
+    transition: color 0.2s;
+    z-index: 10;
+    padding-left: 5px; /* Slight alignment adjustment */
+}
+
+.back-link:hover {
+    color: #d1d5db; 
+}
+
+/* Form Container (The White Box) */
 .login-form-container {
-  max-width: 100%;
-  margin-bottom: 100px;
+    width: 100%;
+    max-width: 520px; /* MUST match the wrapper's max-width */
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid #e5e7eb;
+    box-sizing: border-box;
+    z-index: 10;
 }
+
+/* =================================================================== */
+/* FORM ELEMENTS (Color Corrections for Readability)                   */
+/* =================================================================== */
 
 .form-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 24px;
-  text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937; /* Dark text on white background */
+    margin-bottom: 30px;
+    text-align: center;
 }
 
 .input-group {
-  margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .input-group label {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-  margin-bottom: 6px;
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #4b5563; /* Dark text on white background */
+    margin-bottom: 8px;
 }
 
 .input-group input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 0.2s;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
 }
 
 .input-group input:focus {
-  outline: none;
-  border-color: #5b4bdb;
-}
-
-.submit-button {
-  width: 100%;
-  padding: 12px;
-  background: #5b4bdb;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-  margin-bottom: 20px;
-}
-
-.submit-button:hover {
-  background: #4f46e5;
-}
-
-.login-form input,
-.login-form button {
-  box-sizing: border-box;
-  width: 100%;
+    outline: none;
+    border-color: #5b4bdb;
 }
 
 .login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.divider {
-  text-align: center;
-  margin: 20px 0;
-  position: relative;
+.submit-button {
+    width: 100%;
+    padding: 14px;
+    background: #5b4bdb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    margin-bottom: 25px;
 }
 
-.divider::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: #e5e7eb;
+.submit-button:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
 }
 
-.divider span {
-  background: white;
-  padding: 0 16px;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-.social-login {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  text-align: center;
-}
-
-.social-login button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 0.9rem 1.2rem;
-  border-radius: 10px;
-  border: none;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
-}
-
-.social-login button img {
-    width: 22px;
-    height: 22px;
-}
-
-
-.google-btn {
-    background: #ffffff;
-    color: #333;
-}
-
-.google-btn:hover {
-    background: #f2f2f2;
-    transform: translateY(-2px);
-}
-
-
-.facebook-btn {
-    background: #ffffff;
-    color: #333;
-}
-
-.facebook-btn:hover {
-    background: #f2f2f2;
-    transform: translateY(-2px);
-}
-
-
-@media (max-width: 480px) {
-    .social-login button {
-        font-size: 0.95rem;
-        padding: 0.8rem 1rem;
-    }
-}
-
-.toggle-auth{
+.toggle-auth {
     text-align: center;
     margin-top: 16px;
-    font-size: 14px;
-    color: white;
+    font-size: 15px;
+    color: #4b5563;
 }
 
-#switch-to-login{
-    color: white;
+#switch-to-login {
+    color: #5b4bdb;
+    text-decoration: none;
+    font-weight: 600;
 }
 
-#switch-to-login:active{
-    color: gray;
+#switch-to-login:hover {
+    text-decoration: underline;
 }
+
+
+/* =================================================================== */
+/* DIVIDER STYLES                                                      */
+/* =================================================================== */
 
 .divider {
-  text-align: center;
-  margin: 30px 0;
-  position: relative;
+    text-align: center;
+    margin: 30px 0;
+    position: relative;
 }
 
 .divider::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.6); 
-  transform: translateY(-50%);
-  z-index: 1; 
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #e5e7eb;
+    transform: translateY(-50%);
+    z-index: 1;
 }
 
 .divider span {
-  position: relative;
-  background: #643eb8; 
-  padding: 0 12px;
-  color: white;
-  font-weight: 700;
-  font-size: 14px;
-  z-index: 2;
+    position: relative;
+    background: white; 
+    padding: 0 12px;
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 14px;
+    z-index: 2;
 }
 
+/* =================================================================== */
+/* SOCIAL LOGIN STYLES                                                 */
+/* =================================================================== */
 
 .social-login {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .google-btn,
 .facebook-btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  background: white;
-  color: #374151;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    background: white;
+    color: #374151;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #d1d5db;
 }
 
 .google-btn:hover,
 .facebook-btn:hover {
-  background: #f9fafb;
-  border: #5b4bdb solid 2px;
+    background: #f9fafb;
+    border: 1px solid #5b4bdb;
 }
 
+.social-login button img {
+    width: 20px;
+    height: 20px;
+}
+
+/* =================================================================== */
+/* FOOTER STYLES                                                       */
+/* =================================================================== */
+
 footer {
-  background-color: #fff;
-  padding: 50px 80px 30px;
-  border-top: 2px solid #e0e0e0;
+    background-color: #fff;
+    padding: 50px 80px 30px;
+    border-top: 2px solid #e0e0e0;
 }
 
 .footer-container {
-  display: flex;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-  gap: 40px;
-  text-align: left;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 40px;
+    text-align: left;
 }
 
 .footer-column {
-  flex: 1;
-  min-width: 180px;
+    flex: 1;
+    min-width: 180px;
 }
 
 .footer-column h3 {
-  color: #6a1b9a;
-  font-size: 18px;
-  margin-bottom: 15px;
+    color: #6a1b9a;
+    font-size: 18px;
+    margin-bottom: 15px;
 }
 
 .footer-column ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .footer-column ul li {
-  margin-bottom: 10px;
-  color: #555;
+    margin-bottom: 10px;
+    color: #555;
 }
 
 .footer-column ul li a {
-  text-decoration: none;
-  color: #555;
-  transition: color 0.3s;
+    text-decoration: none;
+    color: #555;
+    transition: color 0.3s;
 }
 
 .footer-column ul li a:hover {
-  color: #6a1b9a;
+    color: #6a1b9a;
 }
 
 .footer-bottom {
-  text-align: center;
-  margin-top: 40px;
-  border-top: 1px solid #e0e0e0;
-  padding-top: 15px;
-  color: #777;
-  font-size: 14px;
+    text-align: center;
+    margin-top: 40px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+    color: #777;
+    font-size: 14px;
 }
+
+/* =================================================================== */
+/* MOBILE RESPONSIVENESS (768px and below)                             */
+/* =================================================================== */
+
+@media (max-width: 768px) {
+    /* Login wrapper should start at top, not be fully centered vertically */
+    .login {
+        padding: 40px 0; 
+        align-items: flex-start; 
+        flex-grow: 0; 
+    }
+
+    .login-wrapper {
+        width: 90%;
+        max-width: 100%;
+        margin: 0 auto; /* Center the 90% wide container */
+    }
+
+    .login-form-container {
+        max-width: 100%;
+        width: 100%; 
+        padding: 30px 20px; 
+        border-radius: 0; 
+        box-shadow: none; 
+        border: none; 
+    }
+}
+
+/* Footer responsiveness (600px and below) */
+@media (max-width: 600px) {
+    footer {
+        padding: 30px 20px;
+    }
+    
+    .footer-container {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+        padding: 0;
+    }
+    
+    .footer-column {
+        min-width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+
+/* =================================================================== */
+/* IMITATION POPUP STYLES (Keep at the end)                            */
+/* =================================================================== */
+
+.fake-popup {
+ position: fixed;
+ inset: 0;
+ background: rgba(0,0,0,0.55);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ z-index: 9999;
+}
+.popup-content, .fb-content {
+ background: #fff;
+ border-radius: 10px;
+ width: 340px;
+ max-width: calc(100% - 40px);
+ padding: 18px;
+ text-align: center;
+ box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+ font-family: "Segoe UI", Roboto, Arial, sans-serif;
+ animation: popin .16s ease;
+}
+@keyframes popin { from {opacity:0; transform:scale(0.98);} to {opacity:1; transform:scale(1);} }
+
+/* Google picker */
+.account-option {
+ display:flex;
+ align-items:center;
+ gap:10px;
+ padding:10px;
+ margin:8px 0;
+ background:#fafafa;
+ border-radius:8px;
+ cursor:pointer;
+}
+.account-option img { width:36px; height:36px; border-radius:50%; }
+.cancel-popup { margin-top:10px; padding:8px 12px; background:#eee; border:none; border-radius:6px; cursor:pointer; }
+
+/* Facebook style */
+.fb-header { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px; }
+.fb-header img { width:28px; height:28px; }
+.fb-header span { color:#1877f2; font-weight:700; font-size:18px; }
+.fb-content h3 { font-size:15px; margin:6px 0; font-weight:600; color:#111; }
+.fb-receive { color:#444; margin-bottom:10px; font-size:14px; }
+.fb-continue {
+ background:#1877f2; color:#fff; border:none; padding:10px; width:100%; border-radius:6px; cursor:pointer; font-weight:600;
+}
+.fb-cancel { background:none; border:none; color:#555; margin-top:8px; cursor:pointer; }
+.fb-note { margin-top:10px; color:#777; font-size:12px; }

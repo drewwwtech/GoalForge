@@ -31,9 +31,19 @@
                     </div>
                 </div>
             </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">&#9776;</button>
         </div>
     </header>
 
+    <nav class="mobile-menu" id="mobileMenu">
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="goals.html" class="nav-link">Goals</a>
+        <a href="circles.html" class="nav-link">Friends</a>
+        <div class="dropdown-divider"></div>
+        <a href="settings.html" class="nav-link">Settings</a>
+        <a href="help.html" class="nav-link">Help</a>
+        <a href="index.html" class="nav-link">Log Out</a>
+    </nav>
     <main class="dashboard-main">
         
         <section class="welcome-banner">
@@ -44,7 +54,6 @@
         </section>
 
         <section class="dashboard-banners">
-            <!-- Left Banner -->
             <div class="banner goals-banner">
                 <h2>My Goals</h2>
                 <div class="goal-lists">
@@ -53,10 +62,9 @@
                 <button class="add-goal-btn" onClick="window.location.href='goals.html'">View Goal</button>
             </div>
 
-            <!-- Middle Banner -->
             <div class="banner friends-banner">
                 <h2>Activity</h2>
-               
+                
                 <div class="activity-feed">
                     <div class="activity-item">
                         <p class="activity-message">Alex completed "Learn Spanish" goal! 🎉</p>
@@ -66,11 +74,10 @@
                         <p class="activity-message">Sarah is on a 7-day streak! 🔥</p>
                         <p class="activity-time">1 day ago</p>
                     </div>
-                   
+                    
                 </div>
             </div>
 
-            <!-- Right Banner -->
             <div class="banner motivation-banner">
                 <h2>Motivation</h2>
                 
@@ -89,7 +96,7 @@
                         "Your consistency is inspiring your friends!"
                     </div>
                     <button class="encourage-btn">Send Support</button>
-            </div>
+                </div>
         </section>
     </main>
     <div class="modal-overlay" id="profileModal">
@@ -118,24 +125,42 @@
 
     <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const profileTrigger = document.querySelector(".profile-trigger");
-  const dropdownMenu = document.querySelector(".dropdown-menu");
+    // Existing Profile Menu Toggle Logic
+    const profileTrigger = document.querySelector(".profile-trigger");
+    const dropdownMenu = document.querySelector(".dropdown-menu");
 
-  if (!profileTrigger || !dropdownMenu) return;
+    if (profileTrigger && dropdownMenu) {
+        // Toggle dropdown on profile click
+        profileTrigger.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdownMenu.style.display =
+                dropdownMenu.style.display === "flex" ? "none" : "flex";
+        });
 
-  // Toggle dropdown on profile click
-  profileTrigger.addEventListener("click", (e) => {
-    e.stopPropagation();
-    dropdownMenu.style.display =
-      dropdownMenu.style.display === "flex" ? "none" : "flex";
-  });
-
-  // Hide dropdown when clicking anywhere else
-  document.addEventListener("click", (e) => {
-    if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
-      dropdownMenu.style.display = "none";
+        // Hide dropdown when clicking anywhere else
+        document.addEventListener("click", (e) => {
+            if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
+                dropdownMenu.style.display = "none";
+            }
+        });
     }
-  });
+
+    // *** NEW Mobile Menu Toggle Logic ***
+    const toggleButton = document.querySelector('.menu-toggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (toggleButton && mobileMenu) {
+        toggleButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('is-open');
+        });
+        
+        // Close menu when a link is clicked
+        mobileMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('is-open');
+            });
+        });
+    }
 });
 </script>
 
@@ -143,52 +168,52 @@ document.addEventListener("DOMContentLoaded", () => {
 </body>
 
 <footer>
-  <div class="footer-container">
-    <div class="footer-column">
-      <h3>About GoalForge</h3>
-      <ul>
-        <li><a href="mission.html">Our Mission</a></li>
-      </ul>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3>About GoalForge</h3>
+            <ul>
+                <li><a href="mission.html">Our Mission</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Features</h3>
+            <ul>
+                <li>Goal Creation</li>
+                <li>Accountability Circles</li>
+                <li>Progress Tracking</li>
+                <li>Motivational Feed</li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Support</h3>
+            <ul>
+                <li><a href="report.html">Report an Issue</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Resources</h3>
+            <ul>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Service</a></li>
+            </ul>
+        </div>
     </div>
 
-    <div class="footer-column">
-      <h3>Features</h3>
-      <ul>
-        <li>Goal Creation</li>
-        <li>Accountability Circles</li>
-        <li>Progress Tracking</li>
-        <li>Motivational Feed</li>
-      </ul>
+    <div class="footer-bottom">
+        <p>&copy; 2025 GoalForge. All rights reserved.</p>
     </div>
-
-    <div class="footer-column">
-      <h3>Support</h3>
-      <ul>
-        <li><a href="report.html">Report an Issue</a></li>
-        <li><a href="contact.html">Contact Us</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-column">
-      <h3>Resources</h3>
-      <ul>
-        <li><a href="privacy.html">Privacy Policy</a></li>
-        <li><a href="terms.html">Terms of Service</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>&copy; 2025 GoalForge. All rights reserved.</p>
-  </div>
 </footer>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll("footer a").forEach(link => {
-    link.addEventListener("click", () => {
-      sessionStorage.setItem("previousPage", window.location.href);
+    document.querySelectorAll("footer a").forEach(link => {
+        link.addEventListener("click", () => {
+            sessionStorage.setItem("previousPage", window.location.href);
+        });
     });
-  });
 });
 </script>
 
