@@ -429,59 +429,79 @@ body {
 }
 
 
-.motivation-banner .checkin-btn {
-    padding: 12px 24px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    background: #4caf50;
-    color: white;
-    transition: all 0.3s ease;
-    font-size: 14px;
-    margin-top: 10px;
+.checkin-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.motivation-banner .streak-section {
+.checkin-btn,
+.encourage-btn {
+  width: 100%;
+  padding: 10px;
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 12px;
+}
+
+.checkin-btn:hover,
+.encourage-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.streak-section {
     text-align: center;
     margin-bottom: 20px;
 }
 
-.motivation-banner .streak-count {
+.streak-count {
     font-size: 24px;
     font-weight: bold;
     color: #5b4bdb;
     margin-bottom: 8px;
 }
 
-.motivation-banner .streak-message {
+.streak-message {
     font-size: 14px;
     color: #6b7280;
     font-style: italic;
     line-height: 1.4;
 }
 
-.motivation-banner .reporting-section,
+.reporting-section,
 .support-section {
   margin-bottom: 24px;
   padding-bottom: 20px;
   border-bottom: 1px solid #e5e7eb;
 }
 
-.motivation-banner .reporting-section:last-child,
+.reporting-section:last-child,
 .support-section:last-child {
   border-bottom: none;
   margin-bottom: 0;
 }
 
-.motivation-banner .reporting-section h3,
+.reporting-section h3,
 .support-section h3 {
   margin: 0 0 12px 0;
   font-size: 15px;
   color: #374151;
 }
 
-.motivation-banner .support-message {
+.support-message {
   font-style: italic;
   color: #6b7280;
   margin-bottom: 12px;
@@ -497,6 +517,7 @@ body {
   .dashboard-main {
     padding: 100px 20px 20px;
   }
+
 
 
   .landing-page {
