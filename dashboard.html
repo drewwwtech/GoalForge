@@ -23,7 +23,7 @@
                 <div class="profile-menu">
                     <img src="images/Profile.png" alt="Profile" class="profile profile-trigger">
                     <div class="dropdown-menu">
-                        <button class="dropdown-item" id="viewProfileBtn"><Profile></button>
+                        <button class="dropdown-item" id="viewProfileBtn">Profile</button> 
                         <a href="settings.html" class="dropdown-item">Settings</a>
                         <a href="help.html" class="dropdown-item">Help</a>
                         <div class="dropdown-divider"></div>
@@ -48,15 +48,15 @@
         
         <section class="welcome-banner">
             <div class="welcome-content">
-                <h1>Welcome back, User!</h1>
+                <h1 id="welcome-message">Welcome back, User!</h1> 
                 <p>You're making great progress on your goals!</p>
             </div>
         </section>
 
-        <section class="dashboard-banners">
+        <section class="dashboard-banners" id="dashboard-banners">
             <div class="banner goals-banner">
-                <h2>My Goals</h2>
-                <div class="goal-lists">
+                <h2 id="goals-title">My Goals</h2>
+                <div class="goal-lists" id="goal-lists">
                     <div class="empty-state">No goals yet. Create your first goal!</div>
                 </div>
                 <button class="add-goal-btn" onClick="window.location.href='goals.html'">View Goal</button>
@@ -65,7 +65,7 @@
             <div class="banner friends-banner">
                 <h2>Activity</h2>
                 
-                <div class="activity-feed">
+                <div class="activity-feed" id="activity-feed">
                     <div class="activity-item">
                         <p class="activity-message">Alex completed "Learn Spanish" goal! 🎉</p>
                         <p class="activity-time">2 hours ago</p>
@@ -74,7 +74,6 @@
                         <p class="activity-message">Sarah is on a 7-day streak! 🔥</p>
                         <p class="activity-time">1 day ago</p>
                     </div>
-                    
                 </div>
             </div>
 
@@ -82,13 +81,13 @@
                 <h2>Motivation</h2>
                 
                 <div class="streak-section">
-                    <div class="streak-count">1 Week Streak!</div>
+                    <div class="streak-count"><span id="streakCount">0</span> Day Streak!</div>
                     <div class="streak-message">“Success is not final; failure is not fatal: It is the courage to continue that counts.” —Winston Churchill</div>
                 </div>
 
                 <div class="reporting-section">
                     <h3>Weekly Check-in</h3>
-                    <button class="checkin-btn">Check-in</button>
+                    <button class="checkin-btn" id="weekly-checkin-btn">Check-in</button>
                 </div>
 
                 <div class="support-section">
@@ -107,8 +106,9 @@
             </div>
             <div class="modal-body">
                 <div class="profile-info">
-                    <div class="avatar-large">U</div>
+                    <div class="avatar-large" id="profileAvatar">U</div> 
                     <div class="user-details">
+                        <h3 id="profileName">User</h3> 
                         <h3 id="profileEmail">user@example.com</h3>
                         <p>Member since: <span id="memberSince"></span>-</span></p>
                     </div>
@@ -118,7 +118,7 @@
         </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <script src="js/app.js"></script> 
     <script src="js/dashboard.js"></script>
     <script src="js/goals.js"></script>
     <script src="js/circles.js"></script>
@@ -128,24 +128,48 @@ document.addEventListener("DOMContentLoaded", () => {
     // Existing Profile Menu Toggle Logic
     const profileTrigger = document.querySelector(".profile-trigger");
     const dropdownMenu = document.querySelector(".dropdown-menu");
+    const profileModal = document.getElementById("profileModal");
+    const viewProfileBtn = document.getElementById("viewProfileBtn");
+    const closeModalBtn = profileModal?.querySelector(".close-modal");
+    const closeOverlay = profileModal?.querySelector(".modal-overlay");
 
+    // Profile menu visibility
     if (profileTrigger && dropdownMenu) {
-        // Toggle dropdown on profile click
         profileTrigger.addEventListener("click", (e) => {
             e.stopPropagation();
             dropdownMenu.style.display =
                 dropdownMenu.style.display === "flex" ? "none" : "flex";
         });
 
-        // Hide dropdown when clicking anywhere else
         document.addEventListener("click", (e) => {
             if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
                 dropdownMenu.style.display = "none";
             }
         });
     }
+    
+    // Profile modal show/hide
+    if (viewProfileBtn && profileModal) {
+        viewProfileBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            profileModal.classList.add('is-open');
+            dropdownMenu.style.display = 'none';
+        });
+        
+        const closeProfileModal = () => {
+             profileModal.classList.remove('is-open');
+        }
+        
+        closeModalBtn?.addEventListener('click', closeProfileModal);
+        
+        profileModal.addEventListener('click', (e) => {
+             if(e.target === profileModal) {
+                 closeProfileModal();
+             }
+        });
+    }
 
-    // *** NEW Mobile Menu Toggle Logic ***
+    // Mobile Menu Toggle Logic
     const toggleButton = document.querySelector('.menu-toggle');
     const mobileMenu = document.getElementById('mobileMenu');
 
@@ -161,6 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
+
+    // NOTE: The check-in logic has been moved to app.js for better structure, 
+    // but the DOMContentLoaded event still sets up the other header/menu handlers.
 });
 </script>
 

@@ -5,6 +5,25 @@ class AuthManager {
             currentUser: null,
             users: []
         };
+        // *** START: Dashboard Data (MODIFIED FOR PERSISTENCE) ***
+        // Load persistent data or use defaults
+        const storedAppData = JSON.parse(localStorage.getItem('goalforgeAppData') || '{}');
+
+        this.appData = {
+            // Load from storage or default to empty arrays/0
+            goals: storedAppData.goals || [], 
+            friends: storedAppData.friends || ["Alex", "Sarah", "Mike"], // Pre-populate friends for activity demo
+            
+            activity: [
+                { user: "Alex", message: "completed 'Learn Spanish' goal! 🎉", time: "2 hours ago" },
+                { user: "Sarah", message: "is on a 7-day streak! 🔥", time: "1 day ago" },
+                { user: "Mike", message: "checked in on 'Start a business' goal.", time: "1 day ago" },
+            ],
+            // Use stored values for streak and lastCheckInDate (CRUCIAL)
+            streak: storedAppData.streak || 0, 
+            lastCheckInDate: storedAppData.lastCheckInDate || null 
+        };
+        // *** END: Dashboard Data ***
         this.init();
     }
 
@@ -16,8 +35,24 @@ class AuthManager {
             this.checkExistingLogin();
             this.setupGlobalHandlers();
             this.setupServiceWorker();
+            
+            // --- ADDED: Start dashboard setup ---
+            this.setupDashboard(); 
+            // ------------------------------------
         });
     }
+
+    // New method to persist the appData (streak and date)
+    saveAppData() {
+        const dataToStore = {
+            goals: this.appData.goals,
+            friends: this.appData.friends,
+            streak: this.appData.streak,
+            lastCheckInDate: this.appData.lastCheckInDate,
+        };
+        localStorage.setItem('goalforgeAppData', JSON.stringify(dataToStore));
+    }
+
 
     setupAuthSystem() {
         const authForm = document.getElementById("auth-form");
@@ -106,7 +141,7 @@ class AuthManager {
                     <button class="fb-cancel">Cancel</button>
                     <p class="fb-note">You can edit what info you share with GoalForge in your app settings.</p>
                 </div>
-            `;
+              `;
 
         const popupDiv = document.createElement('div');
         popupDiv.className = 'fake-popup';
@@ -324,6 +359,172 @@ class AuthManager {
         setTimeout(() => (window.location.href = "dashboard.html"), 1000);
     }
 
+    // ===================================================================
+    // START: Dynamic Dashboard Logic (MODIFIED)
+    // ===================================================================
+
+    setupDashboard() {
+        // Only run dashboard logic on the dashboard page
+        if (!document.getElementById('dashboard-banners')) return; 
+
+        console.log("Setting up Dashboard content...");
+        this.renderUserProfile();
+        this.renderGoals();
+        this.renderActivity();
+        this.renderStreaks();
+        
+        // Setup listener for the check-in button
+        document.getElementById('weekly-checkin-btn')?.addEventListener('click', () => {
+            this.handleWeeklyCheckin();
+        });
+        
+        // NEW: Check and update button status on page load
+        this.updateCheckInButtonStatus();
+    }
+
+    // NEW: Handles the button state on load/render
+    updateCheckInButtonStatus() {
+        const checkinBtn = document.getElementById('weekly-checkin-btn');
+        if (!checkinBtn) return;
+        
+        const today = new Date().toDateString();
+
+        if (this.appData.lastCheckInDate === today) {
+            checkinBtn.textContent = "Checked-in Today 🎉";
+            checkinBtn.disabled = true;
+            checkinBtn.classList.add('checked-in'); 
+        } else {
+            checkinBtn.textContent = "Check-in";
+            checkinBtn.disabled = false;
+            checkinBtn.classList.remove('checked-in');
+        }
+    }
+
+
+    // 2. Renders the user's name and profile data (Restored to match structure)
+    renderUserProfile() {
+        const user = JSON.parse(localStorage.getItem("goalforgeCurrentUser"));
+        if (!user) return; 
+
+        // Welcome Banner
+        const welcomeEl = document.getElementById('welcome-message');
+        if(welcomeEl) {
+             welcomeEl.textContent = `Welcome back, ${user.displayName}!`;
+        }
+
+        // Profile Modal
+        const profileNameEl = document.getElementById('profileName');
+        if(profileNameEl) profileNameEl.textContent = user.displayName;
+
+        const profileEmailEl = document.getElementById('profileEmail');
+        if(profileEmailEl) profileEmailEl.textContent = user.email;
+
+        const profileAvatarEl = document.getElementById('profileAvatar');
+        if(profileAvatarEl) profileAvatarEl.textContent = user.displayName.charAt(0).toUpperCase();
+        
+        const memberSinceEl = document.getElementById('memberSince');
+        if(memberSinceEl) {
+            const memberSince = new Date(user.createdAt).toLocaleDateString();
+            memberSinceEl.textContent = memberSince;
+        }
+    }
+
+    // 3. Renders the Goals list (UPDATED for empty state)
+    renderGoals() {
+        const goalListContainer = document.getElementById('goal-lists');
+        const goalsTitle = document.getElementById('goals-title');
+        
+        // The goals array is now empty by default (as requested)
+        if (this.appData.goals.length === 0) {
+            if(goalsTitle) goalsTitle.textContent = "My Active Goals (0)";
+            // Display message when goals are empty
+            if(goalListContainer) goalListContainer.innerHTML = '<div class="empty-state">No goals yet. Create your first goal!</div>';
+            return;
+        }
+
+        if(goalsTitle) goalsTitle.textContent = `My Active Goals (${this.appData.goals.length})`;
+        if(goalListContainer) {
+            goalListContainer.innerHTML = this.appData.goals.map(goal => `
+                <div class="goal-item">
+                    <span class="goal-title">${goal.title}</span>
+                    <span class="goal-progress">${goal.progress}% Complete</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    // 4. Renders the Friends Activity Feed (UPDATED to filter by friends)
+    renderActivity() {
+        const activityFeedContainer = document.getElementById('activity-feed');
+        
+        // --- NEW FILTER LOGIC ---
+        // Filter the raw activity list to only include users in the 'friends' array
+        const friendsActivity = this.appData.activity.filter(item => 
+            this.appData.friends.includes(item.user)
+        );
+        // --- END NEW FILTER LOGIC ---
+        
+        // Check if the filtered list is empty
+        if (friendsActivity.length === 0) {
+            // Display message when the filtered activity is empty
+            if(activityFeedContainer) activityFeedContainer.innerHTML = '<div class="empty-state-activity">No friend activity to show. Add friends or check back later!</div>';
+            return;
+        }
+        
+        // Map over the FILTERED list to generate HTML
+        if(activityFeedContainer) {
+            activityFeedContainer.innerHTML = friendsActivity.map(item => `
+                <div class="activity-item">
+                    <p class="activity-message"><strong>${item.user}</strong> ${item.message}</p>
+                    <p class="activity-time">${item.time}</p>
+                </div>
+            `).join('');
+        }
+    }
+
+
+    // 5. Renders Streak and Quote (MODIFIED to target the new span)
+    renderStreaks() {
+        const streakDisplayEl = document.getElementById('streakCount');
+        if (streakDisplayEl) {
+             streakDisplayEl.textContent = this.appData.streak;
+        }
+        // The quote is static for now, but the framework is set for dynamic updates
+    }
+
+
+    // 6. Handles the Check-in button click (MODIFIED)
+    handleWeeklyCheckin() {
+        const today = new Date().toDateString();
+
+        // 1. Check for once-per-day restriction
+        if (this.appData.lastCheckInDate === today) {
+            // Use the custom sidebar notification
+            this.showMessage("You've already checked in today! Try again tomorrow. 😴", "info");
+            return;
+        }
+
+        // 2. Process Check-in
+        this.appData.streak += 1;
+        this.appData.lastCheckInDate = today;
+        
+        // 3. Save the updated data (Crucial for persistence)
+        this.saveAppData(); 
+        
+        // 4. Update UI with the new streak
+        this.renderStreaks();
+        
+        // 5. Update the button state and send non-alert notification
+        this.showMessage(`Weekly Check-in successful! You are now on a ${this.appData.streak} Day Streak! 🎉`, "success");
+        this.updateCheckInButtonStatus(); // Disable the button and change text
+    }
+
+
+    // ===================================================================
+    // END: Dynamic Dashboard Logic
+    // ===================================================================
+
+
     loginUser(user) {
         const safeUser = { ...user };
         delete safeUser.password;
@@ -368,20 +569,20 @@ class AuthManager {
         const isProtectedPage = !(currentPath.includes("index.html") || currentPath.includes("login.html"));
 
         // CASE 1: NOT LOGGED IN and on a PROTECTED page -> Redirect to index/login
-        if (!currentUser && isPublicPage) {
+        if (!currentUser && isProtectedPage) {
             this.showMessage("Please log in to continue", "error");
             setTimeout(() => (window.location.href = "index.html"), 1000);
             return;
         }
 
-        // CASE 2: LOGGED IN and on the LOGIN page -> Redirect to dashboard
-        if (currentUser && isPublicPage) {
+        // CASE 2: LOGGED IN and on the LOGIN/INDEX page -> Redirect to dashboard
+        if (currentUser && !isProtectedPage) {
             // Prevent user from sitting on the dedicated login page if already signed in
             const message = window.location.pathname.includes("login.html")
                 ? "You are already logged in."
                 : "Welcome back! Ready for your dashboard?";
             this.showMessage(message, "info");
-            
+            setTimeout(() => (window.location.href = "dashboard.html"), 1000);
             return;
         }
     }
@@ -433,6 +634,9 @@ class AuthManager {
 
 const style = document.createElement("style");
 style.textContent = `
+/* ... (CSS styles for auth, errors, and popup remain unchanged) ... */
+
+/* Simplified CSS block for brevity, ensure all previous styles are included */
 @keyframes shake {
     0%,100%{transform:translateX(0);}
     25%{transform:translateX(-5px);}
