@@ -34,6 +34,7 @@ body {
 
 .login-form-container {
   max-width: 100%;
+  margin-bottom: 100px;
 }
 
 .form-title {
@@ -248,4 +249,59 @@ body {
 .facebook-btn:hover {
   background: #f9fafb;
   border: #5b4bdb solid 2px;
+}
+
+footer {
+  background-color: #fff;
+  padding: 50px 80px 30px;
+  border-top: 2px solid #e0e0e0;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 40px;
+  text-align: left;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 180px;
+}
+
+.footer-column h3 {
+  color: #6a1b9a;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.footer-column ul li a {
+  text-decoration: none;
+  color: #555;
+  transition: color 0.3s;
+}
+
+.footer-column ul li a:hover {
+  color: #6a1b9a;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 15px;
+  color: #777;
+  font-size: 14px;
 }

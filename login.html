@@ -49,4 +49,55 @@
 
     <script src="js/login.js"></script>
 </body>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-column">
+      <h3>About GoalForge</h3>
+      <ul>
+        <li><a href="mission.html">Our Mission</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h3>Features</h3>
+      <ul>
+        <li>Goal Creation</li>
+        <li>Accountability Circles</li>
+        <li>Progress Tracking</li>
+        <li>Motivational Feed</li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h3>Support</h3>
+      <ul>
+        <li><a href="report.html">Report an Issue</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h3>Resources</h3>
+      <ul>
+        <li><a href="privacy.html">Privacy Policy</a></li>
+        <li><a href="terms.html">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2025 GoalForge. All rights reserved.</p>
+  </div>
+</footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("footer a").forEach(link => {
+    link.addEventListener("click", () => {
+      sessionStorage.setItem("previousPage", window.location.href);
+    });
+  });
+});
+</script>
+
 </html>
