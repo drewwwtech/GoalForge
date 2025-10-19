@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Title - GoalForge</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: url('images/Background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #555;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .content-box {
+      max-width: 800px;
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #4a4a4a;
+      font-size: 2em;
+      margin-bottom: 15px;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      text-align: left;
+      display: inline-block;
+      margin: 20px 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    a.back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: purple;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a.back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="content-box">
+<h1>Terms of Service</h1>
+<p>By using GoalForge, you agree to use the app responsibly and respect other members in your accountability circles.</p>
+<p>We reserve the right to update these terms as the platform evolves. Continued use signifies your acceptance of the latest terms.</p>
+<p>Users must not misuse GoalForge for spam, harassment, or unauthorized data collection.</p>
+
+      <a href="#" class="back-link" id="backLink">← Back</a>
+    </div>
+  </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const back = document.getElementById("backLink");
+  if (!back) return;
+
+  back.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    const prev = sessionStorage.getItem("previousPage");
+
+    if (prev && !prev.includes("terms.html")) {
+      window.location.href = prev;
+    } else if (document.referrer && !document.referrer.includes("terms.html")) {
+      window.location.href = document.referrer;
+    } else {
+      window.location.href = "index.html";
+    }
+  });
+});
+</script>
+
+</script>
+
+</body>
+</html>

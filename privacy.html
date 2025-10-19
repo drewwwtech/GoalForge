@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy - GoalForge</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: url('images/Background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #555;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .content-box {
+      max-width: 800px;
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #4a4a4a;
+      font-size: 2em;
+      margin-bottom: 15px;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    a.back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: purple;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a.back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="content-box">
+      <h1>Privacy Policy</h1>
+      <p>Your privacy is important to us. GoalForge only collects essential information needed to provide a better user experience.</p>
+      <p>We do not share personal data with third parties and allow users to manage their information within the app.</p>
+      <p>All data is stored securely and used solely for app functionality and improvement.</p>
+      <a href="#" class="back-link" id="backLink">← Back</a>
+    </div>
+  </main>
+
+  <!-- ✅ Only one working script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const back = document.getElementById("backLink");
+      if (!back) return;
+
+      back.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        // Try sessionStorage first
+        const prev = sessionStorage.getItem("previousPage");
+
+        if (prev && !prev.includes("privacy.html")) {
+          window.location.href = prev; // Go back to where you came from
+        } else if (document.referrer && !document.referrer.includes("privacy.html")) {
+          window.location.href = document.referrer; // Use browser referrer as backup
+        } else {
+          window.location.href = "index.html"; // Fallback if opened directly
+        }
+      });
+    });
+  </script>
+</body>
+</html>
