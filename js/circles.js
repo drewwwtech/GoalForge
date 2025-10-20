@@ -3,6 +3,7 @@ class FriendsManager {
         this.friends = this.loadFriends();
         this.friendRequests = this.loadFriendRequests();
         this.activities = this.loadActivities();
+        this._injectStyles();
         this.init();
     }
 
@@ -51,6 +52,142 @@ class FriendsManager {
             searchInput.addEventListener('input', (e) => this.searchFriends(e.target.value));
         }
     }
+
+    _injectStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            /*
+             * MODAL STYLING: Self-contained CSS for the Add Friend Modal
+             */
+            
+            .modal-overlay {
+                display: none; /* CRITICAL: Hides the overlay when closed */
+                position: fixed; 
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+            }
+            
+            .modal-overlay.active {
+                display: flex; /* Makes the overlay visible when JavaScript adds the 'active' class */
+            }
+
+            .modal-content {
+                background: white;
+                padding: 40px; /* Generous padding for breathing room */
+                border-radius: 12px;
+                width: 450px;
+                max-width: 90%;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+                position: relative;
+                animation: fadeIn 0.3s ease-out;
+            }
+            
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 25px;
+            }
+
+            .modal-header h2 {
+                font-size: 24px;
+                margin: 0;
+                color: #1f2937;
+            }
+
+            .close-modal {
+                background: none;
+                border: none;
+                font-size: 30px;
+                color: #9ca3af;
+                cursor: pointer;
+                line-height: 1;
+                padding: 0;
+                transition: color 0.2s;
+            }
+
+            .close-modal:hover {
+                color: #6b7280;
+            }
+            
+            /* Form elements inside the modal */
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                display: block;
+                font-weight: 500;
+                margin-bottom: 8px;
+                color: #374151;
+                font-size: 14px;
+            }
+
+            .form-group input[type="email"],
+            .form-group textarea {
+                width: 100%;
+                padding: 12px;
+                border: 1px solid #d1d5db;
+                border-radius: 8px;
+                box-sizing: border-box;
+                font-size: 14px;
+            }
+            
+            .form-group textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+
+            /* Modal Buttons */
+            .modal-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+                margin-top: 30px;
+            }
+
+            .modal-actions button {
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: none;
+            }
+
+            .modal-actions .cancel-btn {
+                background: #e5e7eb;
+                color: #374151;
+            }
+
+            .modal-actions .cancel-btn:hover {
+                background: #d1d5db;
+            }
+
+            .modal-actions .send-request-btn {
+                background: #5b4bdb;
+                color: white;
+            }
+
+            .modal-actions .send-request-btn:hover {
+                background: #4f46e5;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.95); }
+                to { opacity: 1; transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
 
     openAddFriendModal() {
         const modal = document.getElementById('addFriendModal');
