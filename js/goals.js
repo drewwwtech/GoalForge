@@ -558,6 +558,156 @@ style.textContent = `
         background: #4f46e5;
         transform: translateY(-2px);
     }
+
+    .modal-overlay {
+        display: none;
+        /* Re-add core position/sizing if you want to be safe */
+        position: fixed; 
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.4);
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    }
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 40px; /* Adjust as needed */
+        border-radius: 12px;
+        width: 450px; /* Adjust size */
+        max-width: 90%;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        position: relative;
+        animation: slideUp 0.3s ease;
+    }
+    
+    .modal-content h2 {
+        font-size: 24px;
+        margin-bottom: 30px;
+        color: #1f2937;
+    }
+
+    /* Add the form-related styles too: */
+    .modal-content label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 12px;
+        margin-top: 20px;
+    }
+
+    .modal-content input[type="text"],
+    .modal-content textarea,
+    .modal-content select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        box-sizing: border-box;
+        margin-bottom: 15px;
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end; /* Keeps buttons to the right */
+        gap: 12px; /* Slightly more space between buttons */
+        margin-top: 30px; /* A bit more separation from inputs */
+    }
+
+    .modal-btn {
+        padding: 12px 25px; /* Slightly larger padding */
+        border-radius: 8px; /* Slightly more rounded corners */
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 15px; /* Slightly larger font */
+        transition: all 0.2s ease-in-out; /* Smooth transitions for hover effects */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle default shadow */
+        border: none; /* Remove default border to rely on background/shadow */
+    }
+
+    .modal-btn:hover {
+        transform: translateY(-2px); /* Lift button slightly on hover */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */
+    }
+
+    .cancel-btn {
+        background: #e5e7eb; /* Light grey */
+        color: #4b5563; /* Darker grey text */
+        padding: 10px;
+        border-radius: 10px;
+        /* No border needed as we rely on background and shadow */
+    }
+
+    .cancel-btn:hover {
+        background: #d1d5db; /* Slightly darker grey on hover */
+    }
+
+    .create-btn {
+        background: #5b4bdb; /* Your existing primary color */
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+        /* No border needed */
+    }
+
+    .create-btn:hover {
+        background: #4f46e5; /* Slightly darker primary color on hover */
+    }
+    
+    /* Close button for the modal (the 'x') */
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 24px; /* Make it a bit larger */
+        color: #9ca3af; /* A softer grey */
+        cursor: pointer;
+        transition: color 0.2s ease;
+        padding: 5px; /* Add padding for easier clicking */
+        line-height: 1; /* Center the 'x' */
+    }
+
+    .close-btn:hover {
+        color: #6b7280; /* Darken on hover */
+        transform: rotate(90deg); /* Subtle rotate on hover */
+    }
+
+    /* Styles for the date input icon */
+    .date-input-container {
+        position: relative;
+        display: flex; /* Helps align the icon with the input */
+        align-items: center;
+        margin-bottom: 15px; /* Match other input margins */
+    }
+
+    .date-input-container input[type="text"] {
+        flex-grow: 1; /* Allows input to take up available space */
+        padding-right: 40px; /* Make space for the icon */
+        margin-bottom: 0; /* Remove extra margin if flexed */
+    }
+
+    .date-icon {
+        position: absolute;
+        right: 15px;
+        color: #9ca3af;
+        cursor: pointer;
+        font-size: 20px; /* Adjust size if using an actual icon font */
+    }
+    .date-icon:hover {
+        color: #6b7280;
+    }
+
+    /* Ensure textareas look good */
+    textarea {
+        resize: vertical; /* Allow vertical resizing */
+        min-height: 80px; /* Set a minimum height */
+    }
+
 `;
 document.head.appendChild(style);
 
