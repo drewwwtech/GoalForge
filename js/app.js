@@ -5,25 +5,31 @@ class AuthManager {
             currentUser: null,
             users: []
         };
-        // *** START: Dashboard Data (MODIFIED FOR PERSISTENCE) ***
-        // Load persistent data or use defaults
+        
         const storedAppData = JSON.parse(localStorage.getItem('goalforgeAppData') || '{}');
 
         this.appData = {
-            // Load from storage or default to empty arrays/0
             goals: storedAppData.goals || [], 
-            friends: storedAppData.friends || ["Alex", "Sarah", "Mike"], // Pre-populate friends for activity demo
+            friends: storedAppData.friends || ["Alex", "Sarah", "Mike", "Jessica", "David"], 
             
             activity: [
                 { user: "Alex", message: "completed 'Learn Spanish' goal! 🎉", time: "2 hours ago" },
                 { user: "Sarah", message: "is on a 7-day streak! 🔥", time: "1 day ago" },
                 { user: "Mike", message: "checked in on 'Start a business' goal.", time: "1 day ago" },
             ],
-            // Use stored values for streak and lastCheckInDate (CRUCIAL)
             streak: storedAppData.streak || 0, 
-            lastCheckInDate: storedAppData.lastCheckInDate || null 
+            lastCheckInDate: storedAppData.lastCheckInDate || null,
+            currentRecipient: null 
         };
-        // *** END: Dashboard Data ***
+
+        this.QUOTES = [
+            "Keep up the great work, you're crushing it!",
+            "A little progress each day adds up to big results.",
+            "Success is the sum of small efforts repeated daily.",
+            "You got this! Don't stop now.",
+            "Cheering you on! I believe in your goals.",
+        ];
+
         this.init();
     }
 
@@ -36,13 +42,15 @@ class AuthManager {
             this.setupGlobalHandlers();
             this.setupServiceWorker();
             
-            // --- ADDED: Start dashboard setup ---
             this.setupDashboard(); 
-            // ------------------------------------
+            this.setupSupportModalHandlers(); // Now called inside DOMContentLoaded
+            this.setupSocialLogin();
+
+            this.setupMobileMenu();
         });
     }
 
-    // New method to persist the appData (streak and date)
+    // New method to persist the appData
     saveAppData() {
         const dataToStore = {
             goals: this.appData.goals,
@@ -54,14 +62,283 @@ class AuthManager {
     }
 
 
+    // NEW: Setup handlers for the Send Support Modal elements
+    setupSupportModalHandlers() {
+        const friendSearch = document.getElementById('friend-search');
+        const friendsList = document.getElementById('friends-list');
+        const backBtn = document.getElementById('back-to-friends-btn');
+        const sendBtn = document.getElementById('send-message-btn');
+
+        // Search logic
+        friendSearch?.addEventListener('input', (e) => {
+            this.renderFriendsForSupport(e.target.value);
+        });
+
+        // Friend selection logic
+        friendsList?.addEventListener('click', (e) => {
+            const friendItem = e.target.closest('.friend-item');
+            if (friendItem) {
+                const friendName = friendItem.dataset.friendName;
+                this.setupMessageStep(friendName);
+            }
+        });
+
+        // Back button logic
+        backBtn?.addEventListener('click', () => {
+            document.getElementById('friend-select-step').style.display = 'block';
+            document.getElementById('message-input-step').style.display = 'none';
+        });
+
+        // Send message logic
+        sendBtn?.addEventListener('click', () => {
+            this.handleSendSupport();
+        });
+        
+        // 🌟 FIX: Event delegation for quote buttons 🌟
+        const quoteButtonsContainer = document.getElementById('quote-buttons');
+        quoteButtonsContainer?.addEventListener('click', (e) => {
+            const btn = e.target.closest('.quote-btn');
+            if (btn) {
+                document.getElementById('support-message-text').value = btn.dataset.quote;
+            }
+        });
+    }
+
+
+    // NEW: Renders the friend list in the support modal
+    renderFriendsForSupport(searchTerm = '') {
+        const friendsList = document.getElementById('friends-list');
+        if (!friendsList) return;
+
+        const filteredFriends = this.appData.friends.filter(friend => 
+            friend.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        friendsList.innerHTML = filteredFriends.map(friend => `
+            <div class="friend-item" data-friend-name="${friend}">
+                <div class="friend-avatar">${friend.charAt(0).toUpperCase()}</div>
+                <div class="friend-name">${friend}</div>
+            </div>
+        `).join('');
+
+        // If no results, show a message
+        if (filteredFriends.length === 0) {
+            friendsList.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">No friends found.</div>';
+        }
+    }
+    
+    // NEW: Switches the modal view to the message input step
+    setupMessageStep(recipientName) {
+        this.appData.currentRecipient = recipientName;
+
+        document.getElementById('recipient-name').textContent = recipientName;
+        document.getElementById('support-message-text').value = ''; 
+        
+        const quoteButtonsContainer = document.getElementById('quote-buttons');
+        // Only render quotes once on the first time the step is viewed
+        if (quoteButtonsContainer.children.length === 0) {
+            quoteButtonsContainer.innerHTML = this.QUOTES.map((quote, index) => `
+                <button class="quote-btn" data-quote="${quote}" id="quote-btn-${index}">${quote}</button>
+            `).join('');
+        }
+
+        document.getElementById('friend-select-step').style.display = 'none';
+        document.getElementById('message-input-step').style.display = 'block';
+    }
+
+    // NEW: Handles the final sending of the message
+    handleSendSupport() {
+        const messageText = document.getElementById('support-message-text').value.trim();
+        const recipient = this.appData.currentRecipient;
+        const supportModal = document.getElementById('supportModal');
+
+        if (!messageText) {
+            this.showMessage("Please enter a message or select a quote.", "error");
+            return;
+        }
+
+        // 1. Simulate sending message (Update the activity feed)
+        this.appData.activity.unshift({
+            user: "You", 
+            message: `sent support to ${recipient}: "${messageText.substring(0, 30)}..."`,
+            time: "Just now"
+        });
+        
+        // 2. Hide modal and reset
+        supportModal.classList.remove('is-open');
+        this.renderActivity(); // Refresh the activity feed
+        
+        // 3. Show success notification
+        this.showMessage(`Support sent to ${recipient}!`, "success");
+
+        // Reset state
+        this.appData.currentRecipient = null;
+        document.getElementById('friend-select-step').style.display = 'block';
+        document.getElementById('message-input-step').style.display = 'none';
+    }
+
+
+    setupDashboard() {
+        if (!document.getElementById('dashboard-banners')) return; 
+
+        this.renderUserProfile();
+        this.renderGoals();
+        this.renderActivity();
+        this.renderStreaks();
+        
+        document.getElementById('weekly-checkin-btn')?.addEventListener('click', () => {
+            this.handleWeeklyCheckin();
+        });
+        
+        this.updateCheckInButtonStatus();
+    }
+
+    setupMobileMenu() {
+        const toggleButton = document.getElementById('landingMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenuLanding');
+        const desktopLoginBtn = document.getElementById('login-btn');
+        const mobileLoginBtn = document.querySelector('.mobile-login-btn');
+    
+        if (toggleButton && mobileMenu) {
+            toggleButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('is-open');
+                // Check if desktopLoginBtn exists before changing style
+                if (desktopLoginBtn) {
+                    desktopLoginBtn.style.display = mobileMenu.classList.contains('is-open') ? 'none' : 'block';
+                }
+            });
+            
+            mobileMenu.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('is-open');
+                    // Check if desktopLoginBtn exists before changing style
+                    if (desktopLoginBtn) {
+                        desktopLoginBtn.style.display = 'block';
+                    }
+                });
+            });
+        }
+    }
+
+
+    updateCheckInButtonStatus() {
+        const checkinBtn = document.getElementById('weekly-checkin-btn');
+        if (!checkinBtn) return;
+        
+        const today = new Date().toDateString();
+
+        if (this.appData.lastCheckInDate === today) {
+            checkinBtn.textContent = "Checked-in Today 🎉";
+            checkinBtn.disabled = true;
+            checkinBtn.classList.add('checked-in'); 
+        } else {
+            checkinBtn.textContent = "Check-in";
+            checkinBtn.disabled = false;
+            checkinBtn.classList.remove('checked-in');
+        }
+    }
+
+    renderUserProfile() {
+        const user = JSON.parse(localStorage.getItem("goalforgeCurrentUser"));
+        if (!user) return; 
+
+        const welcomeEl = document.getElementById('welcome-message');
+        if(welcomeEl) {
+             welcomeEl.textContent = `Welcome back, ${user.displayName}!`;
+        }
+
+        const profileNameEl = document.getElementById('profileName');
+        if(profileNameEl) profileNameEl.textContent = user.displayName;
+
+        const profileEmailEl = document.getElementById('profileEmail');
+        if(profileEmailEl) profileEmailEl.textContent = user.email;
+
+        const profileAvatarEl = document.getElementById('profileAvatar');
+        if(profileAvatarEl) profileAvatarEl.textContent = user.displayName.charAt(0).toUpperCase();
+        
+        const memberSinceEl = document.getElementById('memberSince');
+        if(memberSinceEl) {
+            const memberSince = new Date(user.createdAt).toLocaleDateString();
+            memberSinceEl.textContent = memberSince;
+        }
+    }
+
+    renderGoals() {
+        const goalListContainer = document.getElementById('goal-lists');
+        const goalsTitle = document.getElementById('goals-title');
+        
+        if (this.appData.goals.length === 0) {
+            if(goalsTitle) goalsTitle.textContent = "My Active Goals (0)";
+            if(goalListContainer) goalListContainer.innerHTML = '<div class="empty-state">No goals yet. Create your first goal!</div>';
+            return;
+        }
+
+        if(goalsTitle) goalsTitle.textContent = `My Active Goals (${this.appData.goals.length})`;
+        if(goalListContainer) {
+            goalListContainer.innerHTML = this.appData.goals.map(goal => `
+                <div class="goal-item">
+                    <span class="goal-title">${goal.title}</span>
+                    <span class="goal-progress">${goal.progress}% Complete</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    renderActivity() {
+        const activityFeedContainer = document.getElementById('activity-feed');
+        
+        const friendsActivity = this.appData.activity.filter(item => 
+            this.appData.friends.includes(item.user) || item.user === "You" 
+        );
+        
+        if (friendsActivity.length === 0) {
+            if(activityFeedContainer) activityFeedContainer.innerHTML = '<div class="empty-state-activity">No friend activity to show. Add friends or check back later!</div>';
+            return;
+        }
+        
+        if(activityFeedContainer) {
+            activityFeedContainer.innerHTML = friendsActivity.map(item => `
+                <div class="activity-item">
+                    <p class="activity-message"><strong>${item.user}</strong> ${item.message}</p>
+                    <p class="activity-time">${item.time}</p>
+                </div>
+            `).join('');
+        }
+    }
+
+    renderStreaks() {
+        const streakDisplayEl = document.getElementById('streakCount');
+        if (streakDisplayEl) {
+             streakDisplayEl.textContent = this.appData.streak;
+        }
+    }
+
+    handleWeeklyCheckin() {
+        const today = new Date().toDateString();
+
+        if (this.appData.lastCheckInDate === today) {
+            this.showMessage("You've already checked in today! Try again tomorrow. 😴", "info");
+            return;
+        }
+
+        this.appData.streak += 1;
+        this.appData.lastCheckInDate = today;
+        
+        this.saveAppData(); 
+        
+        this.renderStreaks();
+        
+        this.showMessage(`Weekly Check-in successful! You are now on a ${this.appData.streak} Day Streak! 🎉`, "success");
+        this.updateCheckInButtonStatus(); 
+    }
+
+    // --- Start of boilerplate Auth methods (MUST be included) ---
     setupAuthSystem() {
         const authForm = document.getElementById("auth-form");
         const formTitle = document.getElementById("form-title");
         const toggleText = document.querySelector(".toggle-auth");
         const toggleLink = toggleText?.querySelector("a");
 
-        // Determine initial mode: If on login.html and the form has a confirm-password field, assume signup mode is possible
-        // Otherwise, look for the 'Log In' button text to infer login mode.
         let currentMode = "signup";
         const confirmPwField = document.getElementById("confirm-password");
         if (confirmPwField && confirmPwField.closest(".input-group").style.display === "none") {
@@ -77,7 +354,6 @@ class AuthManager {
                 currentMode = currentMode === "signup" ? "login" : "signup";
                 this.updateFormMode(currentMode, formTitle, toggleText, toggleLink);
             });
-            // Run updateFormMode once to ensure the initial form state matches the mode
             this.updateFormMode(currentMode, formTitle, toggleText, toggleLink, true); 
         }
 
@@ -87,18 +363,12 @@ class AuthManager {
             this.handleFormSubmission(currentMode);
         });
 
-        this.setupSocialLogin();
         this.setupRealTimeValidation();
     }
-
-    // ===================================================================
-    // Social Login Functionality (Updated Selectors for both pages)
-    // ===================================================================
-
+    
     setupSocialLogin() {
-        // **FIXED SELECTORS**: Search broadly for social buttons within the main document.
-        const googleBtn = document.querySelector('.google-btn');
-        const facebookBtn = document.querySelector('.facebook-btn');
+        const googleBtn = document.querySelector('.google-login-btn');
+        const facebookBtn = document.querySelector('.facebook-login-btn');
 
         googleBtn?.addEventListener('click', (e) => {
             e.preventDefault();
@@ -171,32 +441,24 @@ class AuthManager {
         document.body.appendChild(popupDiv);
     }
     
-    // ===================================================================
-    // END: Social Login Functionality
-    // ===================================================================
-
-
     updateFormMode(mode, titleEl, toggleText, toggleLink, initial = false) {
         const confirmGroup = document.querySelector("#confirm-password")?.closest(".input-group");
         const submitBtn = document.querySelector(".submit-button");
 
         if (mode === "login") {
             titleEl.textContent = "Welcome Back!";
-            // Ensure confirm group is hidden in login mode
             if (confirmGroup) confirmGroup.style.display = "none";
             submitBtn.textContent = "Log In";
             if(toggleText) toggleText.firstChild.textContent = "Don’t have an account? ";
             if(toggleLink) toggleLink.textContent = "Sign Up";
         } else {
             titleEl.textContent = "Start Your Journey";
-            // Ensure confirm group is visible in signup mode
             if (confirmGroup) confirmGroup.style.display = "block";
             submitBtn.textContent = "Create Account";
             if(toggleText) toggleText.firstChild.textContent = "Already have an account? ";
             if(toggleLink) toggleLink.textContent = "Log In";
         }
 
-        // Only use transition animation after the initial load
         if (!initial && titleEl) {
             titleEl.style.opacity = "0";
             setTimeout(() => {
@@ -239,7 +501,6 @@ class AuthManager {
         let valid = true;
         
         if (!email) {
-            // This is likely a non-auth page, skip validation
             return true;
         }
 
@@ -359,172 +620,6 @@ class AuthManager {
         setTimeout(() => (window.location.href = "dashboard.html"), 1000);
     }
 
-    // ===================================================================
-    // START: Dynamic Dashboard Logic (MODIFIED)
-    // ===================================================================
-
-    setupDashboard() {
-        // Only run dashboard logic on the dashboard page
-        if (!document.getElementById('dashboard-banners')) return; 
-
-        console.log("Setting up Dashboard content...");
-        this.renderUserProfile();
-        this.renderGoals();
-        this.renderActivity();
-        this.renderStreaks();
-        
-        // Setup listener for the check-in button
-        document.getElementById('weekly-checkin-btn')?.addEventListener('click', () => {
-            this.handleWeeklyCheckin();
-        });
-        
-        // NEW: Check and update button status on page load
-        this.updateCheckInButtonStatus();
-    }
-
-    // NEW: Handles the button state on load/render
-    updateCheckInButtonStatus() {
-        const checkinBtn = document.getElementById('weekly-checkin-btn');
-        if (!checkinBtn) return;
-        
-        const today = new Date().toDateString();
-
-        if (this.appData.lastCheckInDate === today) {
-            checkinBtn.textContent = "Checked-in Today 🎉";
-            checkinBtn.disabled = true;
-            checkinBtn.classList.add('checked-in'); 
-        } else {
-            checkinBtn.textContent = "Check-in";
-            checkinBtn.disabled = false;
-            checkinBtn.classList.remove('checked-in');
-        }
-    }
-
-
-    // 2. Renders the user's name and profile data (Restored to match structure)
-    renderUserProfile() {
-        const user = JSON.parse(localStorage.getItem("goalforgeCurrentUser"));
-        if (!user) return; 
-
-        // Welcome Banner
-        const welcomeEl = document.getElementById('welcome-message');
-        if(welcomeEl) {
-             welcomeEl.textContent = `Welcome back, ${user.displayName}!`;
-        }
-
-        // Profile Modal
-        const profileNameEl = document.getElementById('profileName');
-        if(profileNameEl) profileNameEl.textContent = user.displayName;
-
-        const profileEmailEl = document.getElementById('profileEmail');
-        if(profileEmailEl) profileEmailEl.textContent = user.email;
-
-        const profileAvatarEl = document.getElementById('profileAvatar');
-        if(profileAvatarEl) profileAvatarEl.textContent = user.displayName.charAt(0).toUpperCase();
-        
-        const memberSinceEl = document.getElementById('memberSince');
-        if(memberSinceEl) {
-            const memberSince = new Date(user.createdAt).toLocaleDateString();
-            memberSinceEl.textContent = memberSince;
-        }
-    }
-
-    // 3. Renders the Goals list (UPDATED for empty state)
-    renderGoals() {
-        const goalListContainer = document.getElementById('goal-lists');
-        const goalsTitle = document.getElementById('goals-title');
-        
-        // The goals array is now empty by default (as requested)
-        if (this.appData.goals.length === 0) {
-            if(goalsTitle) goalsTitle.textContent = "My Active Goals (0)";
-            // Display message when goals are empty
-            if(goalListContainer) goalListContainer.innerHTML = '<div class="empty-state">No goals yet. Create your first goal!</div>';
-            return;
-        }
-
-        if(goalsTitle) goalsTitle.textContent = `My Active Goals (${this.appData.goals.length})`;
-        if(goalListContainer) {
-            goalListContainer.innerHTML = this.appData.goals.map(goal => `
-                <div class="goal-item">
-                    <span class="goal-title">${goal.title}</span>
-                    <span class="goal-progress">${goal.progress}% Complete</span>
-                </div>
-            `).join('');
-        }
-    }
-
-    // 4. Renders the Friends Activity Feed (UPDATED to filter by friends)
-    renderActivity() {
-        const activityFeedContainer = document.getElementById('activity-feed');
-        
-        // --- NEW FILTER LOGIC ---
-        // Filter the raw activity list to only include users in the 'friends' array
-        const friendsActivity = this.appData.activity.filter(item => 
-            this.appData.friends.includes(item.user)
-        );
-        // --- END NEW FILTER LOGIC ---
-        
-        // Check if the filtered list is empty
-        if (friendsActivity.length === 0) {
-            // Display message when the filtered activity is empty
-            if(activityFeedContainer) activityFeedContainer.innerHTML = '<div class="empty-state-activity">No friend activity to show. Add friends or check back later!</div>';
-            return;
-        }
-        
-        // Map over the FILTERED list to generate HTML
-        if(activityFeedContainer) {
-            activityFeedContainer.innerHTML = friendsActivity.map(item => `
-                <div class="activity-item">
-                    <p class="activity-message"><strong>${item.user}</strong> ${item.message}</p>
-                    <p class="activity-time">${item.time}</p>
-                </div>
-            `).join('');
-        }
-    }
-
-
-    // 5. Renders Streak and Quote (MODIFIED to target the new span)
-    renderStreaks() {
-        const streakDisplayEl = document.getElementById('streakCount');
-        if (streakDisplayEl) {
-             streakDisplayEl.textContent = this.appData.streak;
-        }
-        // The quote is static for now, but the framework is set for dynamic updates
-    }
-
-
-    // 6. Handles the Check-in button click (MODIFIED)
-    handleWeeklyCheckin() {
-        const today = new Date().toDateString();
-
-        // 1. Check for once-per-day restriction
-        if (this.appData.lastCheckInDate === today) {
-            // Use the custom sidebar notification
-            this.showMessage("You've already checked in today! Try again tomorrow. 😴", "info");
-            return;
-        }
-
-        // 2. Process Check-in
-        this.appData.streak += 1;
-        this.appData.lastCheckInDate = today;
-        
-        // 3. Save the updated data (Crucial for persistence)
-        this.saveAppData(); 
-        
-        // 4. Update UI with the new streak
-        this.renderStreaks();
-        
-        // 5. Update the button state and send non-alert notification
-        this.showMessage(`Weekly Check-in successful! You are now on a ${this.appData.streak} Day Streak! 🎉`, "success");
-        this.updateCheckInButtonStatus(); // Disable the button and change text
-    }
-
-
-    // ===================================================================
-    // END: Dynamic Dashboard Logic
-    // ===================================================================
-
-
     loginUser(user) {
         const safeUser = { ...user };
         delete safeUser.password;
@@ -568,16 +663,13 @@ class AuthManager {
         const currentPath = window.location.pathname;
         const isProtectedPage = !(currentPath.includes("index.html") || currentPath.includes("login.html"));
 
-        // CASE 1: NOT LOGGED IN and on a PROTECTED page -> Redirect to index/login
         if (!currentUser && isProtectedPage) {
             this.showMessage("Please log in to continue", "error");
             setTimeout(() => (window.location.href = "index.html"), 1000);
             return;
         }
 
-        // CASE 2: LOGGED IN and on the LOGIN/INDEX page -> Redirect to dashboard
         if (currentUser && !isProtectedPage) {
-            // Prevent user from sitting on the dedicated login page if already signed in
             const message = window.location.pathname.includes("login.html")
                 ? "You are already logged in."
                 : "Welcome back! Ready for your dashboard?";
@@ -588,15 +680,46 @@ class AuthManager {
     }
 
     setupGlobalHandlers() {
-        window.handleLogout = this.handleLogout.bind(this);
+        // --- MODIFIED LINE 1: Link handleLogout to the proper logout() method ---
+        // Instead of defining a separate handleLogout, we'll map the global
+        // handler to the new, more robust logout function.
+        window.handleLogout = this.logout.bind(this);
         window.showMessage = this.showMessage.bind(this);
+        // We also need to attach the logout function to the button ID if it exists
+        const logoutBtn = document.getElementById('logout-btn');
+        logoutBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.logout();
+        });
     }
 
+    // --- NEW METHOD: The main logout function with history replacement ---
+    logout() {
+        // 1. Clear session/local storage data
+        localStorage.removeItem("goalforgeCurrentUser");
+        this.userData.isLoggedIn = false;
+        this.userData.currentUser = null;
+
+        // 2. Show message before redirect
+        this.showMessage("Logged out successfully", "success");
+        
+        // 3. FORCE REDIRECTION using .replace()
+        // This command removes the dashboard from the browser's history,
+        // preventing the "back" button from working.
+        setTimeout(() => {
+            window.location.replace("index.html");
+        }, 500); // Give the success message time to show
+    }
+    // --- END OF NEW LOGOUT METHOD ---
+
+    // --- DELETED METHOD: The old handleLogout() is removed to prevent conflicts ---
+    /*
     handleLogout() {
         localStorage.removeItem("goalforgeCurrentUser");
         this.showMessage("Logged out successfully", "success");
         setTimeout(() => (window.location.href = "index.html"), 1000);
     }
+    */
 
     setupServiceWorker() {
         if ("serviceWorker" in navigator) {
@@ -629,102 +752,343 @@ class AuthManager {
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 4000);
     }
+    // --- End of boilerplate Auth methods ---
 }
 
 
-const style = document.createElement("style");
+const style = document.createElement('style');
 style.textContent = `
-/* ... (CSS styles for auth, errors, and popup remain unchanged) ... */
+    /* 1. Modal Container and Overlay Styles (As before) */
+    .modal-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background: rgba(0, 0, 0, 0.4) !important;
+        display: none !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 2000 !important;
+        opacity: 0 !important;
+        transition: opacity 0.3s ease !important;
+        visibility: hidden !important; 
+    }
+    .modal-overlay.is-open {
+        display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    .modal-content-support {
+        background: white;
+        border-radius: 12px;
+        padding: 32px; 
+        width: 100%;
+        max-width: 480px; 
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        animation: scaleIn 0.25s ease;
+    }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .modal-body {
+        /* Basic structure for the body */
+    }
 
-/* Simplified CSS block for brevity, ensure all previous styles are included */
-@keyframes shake {
-    0%,100%{transform:translateX(0);}
-    25%{transform:translateX(-5px);}
-    75%{transform:translateX(5px);}
-}
-.field-error{color:#ef4444;font-size:14px;}
-.error{border-color:#ef4444!important;background:#fef2f2!important;}
-.fake-popup {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.55);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 99999;
-    backdrop-filter: blur(3px);
-    font-family: "Segoe UI", Roboto, Arial, sans-serif;
-}
-.popup-content, .fb-content {
-    background: #fff;
-    border-radius: 10px;
-    width: 340px;
-    max-width: calc(100% - 40px);
-    padding: 18px;
-    text-align: center;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-    animation: popin .16s ease;
-}
-@keyframes popin { from {opacity:0; transform:scale(0.95);} to {opacity:1; transform:scale(1);} }
+    /* 2. Styles for Modal Components (THE MISSING STYLES) */
+    .friend-selection-step {
+        /* Ensures elements stack correctly */
+    }
+    
+    #friend-search {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+    }
+    
+    .friend-list-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px; /* Spacing between friend items */
+        max-height: 250px;
+        overflow-y: auto;
+        padding-right: 10px; /* Space for scrollbar */
+        margin-bottom: 20px;
+    }
+    
+    .friend-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 8px;
+        transition: background-color 0.2s;
+        flex: 0 0 calc(25% - 15px); /* Allows 4 items per row */
+        max-width: calc(25% - 15px);
+        text-align: center;
+    }
+    
+    .friend-item:hover {
+        background-color: #f0f4f8;
+    }
 
-.account-option {
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:12px;
-    margin:8px 0;
-    background:#fafafa;
-    border-radius:8px;
-    cursor:pointer;
-    border: 1px solid #eee;
-    transition: background 0.1s ease;
-}
-.account-option:hover {
-    background: #f1f1f1;
-}
-.account-option img { width:36px; height:36px; border-radius:50%; }
-.cancel-popup { 
-    margin-top:15px; 
-    padding:8px 12px; 
-    background:#eee; 
-    border:1px solid #ddd; 
-    border-radius:6px; 
-    cursor:pointer; 
-    font-size: 14px;
-    font-weight: 500;
-    color: #444;
-}
-.cancel-popup:hover {
-    background: #e0e0e0;
-}
+    .friend-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #6a1b9a; /* Deep Purple */
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
 
-.fb-header { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px; }
-.fb-header img { width:28px; height:28px; }
-.fb-header span { color:#1877f2; font-weight:700; font-size:18px; }
-.fb-content h3 { font-size:15px; margin:6px 0; font-weight:600; color:#111; }
-.fb-receive { color:#444; margin-bottom:15px; font-size:14px; }
-.fb-continue {
-    background:#1877f2; color:#fff; border:none; padding:10px; width:100%; border-radius:6px; cursor:pointer; font-weight:600;
-}
-.fb-continue:hover {
-    background:#166fe5;
-}
-.fb-cancel { 
-    background:none; 
-    border:none; 
-    color:#555; 
-    margin-top:10px; 
-    cursor:pointer; 
-    font-weight: 500;
-    font-size: 14px;
-}
-.fb-note { margin-top:12px; color:#777; font-size:12px; }
+    .friend-name {
+        font-size: 14px;
+        color: #333;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+    }
+
+    /* 3. Button Styles (for Cancel/Action buttons) */
+    .modal-action-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 10px;
+        text-align: center; /* Ensure text is centered on Cancel button */
+    }
+    
+    .cancel-btn {
+        background-color: #ccc;
+        color: #333;
+        border: none;
+    }
+    .cancel-btn:hover {
+        background-color: #bbb;
+    }
+
+    /* 4. Animation (As before) */
+    @keyframes scaleIn {
+        from { transform: scale(0.95); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+        /* 1. Quote Prompts Container */
+    .quote-prompts {
+        margin-bottom: 20px;
+    }
+
+    /* 2. Quick Quotes Buttons Container */
+    #quote-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px; /* Spacing between the quote buttons */
+        margin-top: 10px;
+    }
+
+    /* 3. Individual Quote Buttons */
+    .quote-btn {
+        padding: 8px 12px;
+        border: 1px solid #cceeff; /* Light blue border */
+        background-color: #f0f8ff; /* Very light blue background */
+        color: #0056b3; /* Darker blue text */
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .quote-btn:hover {
+        background-color: #e0f0ff;
+        border-color: #007bff;
+    }
+
+    /* 4. Text Area */
+    #support-message-text {
+        width: 100%;
+        min-height: 120px; /* Gives it vertical space */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box; /* Includes padding in width */
+        font-size: 16px;
+        resize: vertical; /* Allows user to resize vertically */
+        margin-top: 15px;
+    }
+
+    /* 5. Message Actions (Button container) */
+    .message-actions {
+        display: flex;
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    /* 6. Action Button Appearance (Refining the modal-action-btn style) */
+    .modal-action-btn {
+        padding: 12px 20px; /* Slightly larger padding */
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s, opacity 0.2s;
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid transparent;
+    }
+
+    .primary-btn {
+        background-color: #007bff; /* Blue for Send Message */
+        color: white;
+        border: none;
+    }
+    .primary-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .secondary-btn {
+        background-color: #f8f9fa; /* Light grey for Back */
+        color: #333;
+        border-color: #ccc;
+    }
+    .secondary-btn:hover {
+        background-color: #e2e6ea;
+    }
+
+    .fake-popup {
+        position: fixed !important; 
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0, 0, 0, 0.6) !important; /* Dark semi-transparent background */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 5000 !important; /* Extremely high z-index to cover everything */
+        opacity: 1 !important;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .fake-popup .popup-content,
+    .fake-popup .fb-content {
+        background: white;
+        border-radius: 12px;
+        padding: 30px 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        transform: scale(1);
+        animation: scaleIn 0.3s ease;
+    }
+    
+    /* Optional: Add the animation if it's not already defined */
+    @keyframes scaleIn {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    /* Add basic styles for Google/Facebook content inside the popup if they are missing */
+    .fake-popup .account-option {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin: 15px 0 20px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .fake-popup .account-option:hover {
+        background-color: #f5f5f5;
+    }
+    
+    .fake-popup img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 15px;
+    }
+
+    /* In js/app.js, inside the style.textContent block */
+
+    /* --- STYLES FOR POPUP BUTTONS (Google/Facebook) --- */
+    
+    .fake-popup button {
+        /* Base style for all buttons in the popup */
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 5px;
+        transition: background-color 0.2s, color 0.2s;
+        width: 100%; /* Make buttons full-width for modern modal feel */
+        box-sizing: border-box; 
+        text-align: center;
+    }
+    
+    /* Primary/Continue Button (Facebook Continue) */
+    .fake-popup .fb-continue {
+        background-color: #4f46e5; /* Primary App Color */
+        color: white;
+        border: none;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    .fake-popup .fb-continue:hover {
+        background-color: #3b33b0;
+    }
+    
+    /* Secondary/Cancel Button (Google Cancel, Facebook Cancel) */
+    .fake-popup .cancel-popup, 
+    .fake-popup .fb-cancel {
+        background-color: transparent;
+        color: #666; /* Dark gray text */
+        border: 1px solid #ccc; 
+    }
+    .fake-popup .cancel-popup:hover, 
+    .fake-popup .fb-cancel:hover {
+        background-color: #f0f0f0;
+    }
+    
+    /* Style for the Google Account Option (which acts as the "Continue" button) */
+    .fake-popup .account-option {
+        border: 2px solid #4f46e5; /* Highlight the selectable account */
+        background-color: #f0f0ff; /* Very light background to make it stand out */
+    }
+    .fake-popup .account-option:hover {
+        background-color: #e0e0ff;
+    }
+
 `;
 document.head.appendChild(style);
 
 let authManager;
 try {
-    authManager = new AuthManager();
+    const authManager = new AuthManager();
     window.authManager = authManager;
 } catch (e) {
     console.error("AuthManager init failed:", e);

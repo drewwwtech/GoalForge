@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Goal Forge</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -16,14 +19,13 @@
                 <nav class="header-nav">
                     <a href="dashboard.html" class="nav-link active">Dashboard</a>
                     <a href="goals.html" class="nav-link">Goals</a>
-                    <a href="circles.html" class="nav-link">Friends</a>
+                    <a href="circles.html" class="nav-link">Circles</a>
                 </nav>
             </div>
             <div class="header-right">
                 <div class="profile-menu">
                     <img src="images/Profile.png" alt="Profile" class="profile profile-trigger">
-                    <div class="dropdown-menu">
-                        <button class="dropdown-item" id="viewProfileBtn">Profile</button> 
+                    <div class="dropdown-menu"> 
                         <a href="settings.html" class="dropdown-item">Settings</a>
                         <a href="help.html" class="dropdown-item">Help</a>
                         <div class="dropdown-divider"></div>
@@ -94,15 +96,54 @@
                     <div class="support-message">
                         "Your consistency is inspiring your friends!"
                     </div>
-                    <button class="encourage-btn">Send Support</button>
+                    <button class="encourage-btn" id="send-support-btn">Send Support</button>
                 </div>
         </section>
     </main>
+
+    <div class="modal-overlay" id="supportModal">
+        <div class="modal-content-support">
+            <div class="modal-header">
+                <h2>Send Support Message</h2>
+                <button class="close-modal support-close-btn" data-close-target="supportModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="friend-selection-step" id="friend-select-step">
+                    <input type="text" id="friend-search" placeholder="Search friends...">
+                    <div class="friend-list-container">
+                        <div id="friends-list" class="friend-list-grid">
+                            </div>
+                    </div>
+                    <button class="modal-action-btn cancel-btn support-close-btn" data-close-target="supportModal">Cancel</button>
+                </div>
+
+                <div class="message-input-step" id="message-input-step" style="display:none;">
+                    <h3>To: <span id="recipient-name"></span></h3>
+                    
+                    <div class="quote-prompts">
+                        <h4>Quick Quotes:</h4>
+                        <div id="quote-buttons">
+                            </div>
+                    </div>
+
+                    <textarea id="support-message-text" placeholder="Type your personalized motivational message..." maxlength="200"></textarea>
+                    
+                    <div class="message-actions">
+                        <button class="modal-action-btn primary-btn" id="send-message-btn">Send Message</button>
+                        <button class="modal-action-btn secondary-btn" id="back-to-friends-btn">Back</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
     <div class="modal-overlay" id="profileModal">
         <div class="modal-content small">
             <div class="modal-header">
                 <h2>Your Profile</h2>
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" data-close-target="profileModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="profile-info">
@@ -123,16 +164,68 @@
     <script src="js/goals.js"></script>
     <script src="js/circles.js"></script>
 
-    <script>
+   <script>
+function setupModals() {
+    const profileModal = document.getElementById("profileModal");
+    const supportModal = document.getElementById("supportModal");
+    const viewProfileBtn = document.getElementById("viewProfileBtn");
+    const sendSupportBtn = document.getElementById('send-support-btn');
+
+    // Function to close any modal
+    const closeAllModals = () => {
+        profileModal?.classList.remove('is-open');
+        supportModal?.classList.remove('is-open');
+        // Reset the support modal state when closing
+        const friendSelectStep = document.getElementById('friend-select-step');
+        const messageInputStep = document.getElementById('message-input-step');
+        if (friendSelectStep && messageInputStep) {
+            friendSelectStep.style.display = 'block';
+            messageInputStep.style.display = 'none';
+        }
+    };
+
+    // Global close listeners (for X button and Cancel button)
+    document.querySelectorAll('.close-modal, .support-close-btn').forEach(btn => {
+        btn.addEventListener('click', closeAllModals);
+    });
+
+    // Close on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeAllModals();
+            }
+        });
+    });
+
+    // Profile Modal Open
+    viewProfileBtn?.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        closeAllModals(); // Close others first
+        profileModal?.classList.add('is-open');
+        document.querySelector(".dropdown-menu").style.display = 'none';
+    });
+
+    // 🌟 FIX: Ensuring the listener is attached and correctly calls AuthManager 🌟
+    sendSupportBtn?.addEventListener('click', () => {
+        closeAllModals(); // Close others first
+        supportModal?.classList.add('is-open');
+        
+        // This check is CRUCIAL. It makes sure the AuthManager is ready.
+        if (window.authManager && window.authManager.renderFriendsForSupport) {
+            // Render friend list when the modal opens
+            window.authManager.renderFriendsForSupport(''); 
+        } else {
+            console.error("AuthManager or renderFriendsForSupport not initialized.");
+        }
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     // Existing Profile Menu Toggle Logic
     const profileTrigger = document.querySelector(".profile-trigger");
     const dropdownMenu = document.querySelector(".dropdown-menu");
-    const profileModal = document.getElementById("profileModal");
-    const viewProfileBtn = document.getElementById("viewProfileBtn");
-    const closeModalBtn = profileModal?.querySelector(".close-modal");
-    const closeOverlay = profileModal?.querySelector(".modal-overlay");
-
+    
     // Profile menu visibility
     if (profileTrigger && dropdownMenu) {
         profileTrigger.addEventListener("click", (e) => {
@@ -145,27 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
                 dropdownMenu.style.display = "none";
             }
-        });
-    }
-    
-    // Profile modal show/hide
-    if (viewProfileBtn && profileModal) {
-        viewProfileBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            profileModal.classList.add('is-open');
-            dropdownMenu.style.display = 'none';
-        });
-        
-        const closeProfileModal = () => {
-             profileModal.classList.remove('is-open');
-        }
-        
-        closeModalBtn?.addEventListener('click', closeProfileModal);
-        
-        profileModal.addEventListener('click', (e) => {
-             if(e.target === profileModal) {
-                 closeProfileModal();
-             }
         });
     }
 
@@ -186,8 +258,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // NOTE: The check-in logic has been moved to app.js for better structure, 
-    // but the DOMContentLoaded event still sets up the other header/menu handlers.
+    // Setup Modals after all elements are loaded
+    setupModals();
 });
 </script>
 
@@ -243,5 +315,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
-
 </html>

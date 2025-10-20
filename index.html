@@ -72,8 +72,8 @@
 
         
         <div class="social-login">
-            <button type="button" class="google-btn"><img src="images/google.svg">Continue with Google</button>
-            <button type="button" class="facebook-btn"><img src="images/facebook.svg">Continue with Facebook</button>
+            <button type="button" class="google-login-btn"><img src="images/google.svg">Continue with Google</button>
+            <button type="button" class="facebook-login-btn"><img src="images/facebook.svg">Continue with Facebook</button>
         </div>
     </div>
 
@@ -83,33 +83,9 @@
 
     <img src="images/Background.png" alt="Starry Night Sky" class="background">
 
+    
     <script src="js/app.js"></script>
-
-    <script>
-        // --- NEW Mobile Menu Toggle Logic for Landing Page ---
-        document.addEventListener("DOMContentLoaded", () => {
-            const toggleButton = document.getElementById('landingMenuToggle');
-            const mobileMenu = document.getElementById('mobileMenuLanding');
-            const desktopLoginBtn = document.getElementById('login-btn');
-            const mobileLoginBtn = document.querySelector('.mobile-login-btn');
-
-            if (toggleButton && mobileMenu) {
-                toggleButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('is-open');
-                    // Optional: Hide the desktop login button when the menu is open (if they overlap)
-                    desktopLoginBtn.style.display = mobileMenu.classList.contains('is-open') ? 'none' : 'block';
-                });
-                
-                // Close menu when a link is clicked
-                mobileMenu.querySelectorAll('.nav-link').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileMenu.classList.remove('is-open');
-                        desktopLoginBtn.style.display = 'block'; // Show desktop button again
-                    });
-                });
-            }
-        });
-    </script>
+    
 </body>
 
 <footer>

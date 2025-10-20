@@ -197,8 +197,8 @@ body {
     gap: 12px;
 }
 
-.google-btn,
-.facebook-btn {
+.google-login-btn,
+.facebook-login-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -214,8 +214,8 @@ body {
     border: 1px solid #d1d5db;
 }
 
-.google-btn:hover,
-.facebook-btn:hover {
+.google-login-btn:hover,
+.facebook-login-btn:hover {
     background: #f9fafb;
     border: 1px solid #5b4bdb;
 }
