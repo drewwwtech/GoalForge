@@ -353,27 +353,155 @@ body {
   min-height: 100vh;
 }
 
+
+/* ========================================= */
+/*                Welcome Banner             */
+/* ========================================= */
 .welcome-banner {
   background: white;
-  color: #1f2937;
-  padding: 40px;
   border-radius: 12px;
-  margin-bottom: 40px;
-  text-align: center;
+  padding: 60px 60px; /* ⬅ decreased from 80px to 60px to bring content left */
+  margin-bottom: 50px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.welcome-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 80px;
+  flex-wrap: wrap;
+  margin-left: 200px; /* ⬅ small shift to move entire content slightly left */
+}
+
+.welcome-content {
+  flex: 1;
+  min-width: 300px;
+  text-align: left;
+}
+
 .welcome-content h1 {
-  margin: 0 0 8px 0;
-  font-size: 28px;
-  color: rgb(57, 9, 66);
+  margin: 0 0 10px 0;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #3f2cc7;
+  letter-spacing: -0.5px;
 }
 
 .welcome-content p {
   margin: 0;
-  color: #6b7280;
-  font-size: 15px;
+  font-size: 1.5rem;
+  color: #555;
+}
+
+/* Right Side: Progress Visualization */
+.progress-visualization {
+  flex: 1;
+  min-width: 340px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.progress-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 50px;
+  flex-wrap: wrap;
+}
+
+/* Circle Progress */
+.progress-ring {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.circle-chart {
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #eee;
+  stroke-width: 12;
+}
+
+.circle {
+  fill: none;
+  stroke: #6b5bff;
+  stroke-width: 12;
+  stroke-dasharray: 339.292;
+  stroke-dashoffset: calc(339.292 - (339.292 * 75) / 100);
+  transition: stroke-dashoffset 1s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: #4b3bc6;
+}
+
+.progress-ring p {
+  margin-top: 12px;
+  color: #4b3bc6;
+  font-weight: 600;
+}
+
+/* Weekly Progress Bars */
+.weekly-progress {
+  width: 270px;
+}
+
+.weekly-progress h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #4b3bc6;
+  margin-bottom: 10px;
+}
+
+.bar {
+  background: #f3f4f6;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.fill {
+  background: linear-gradient(90deg, #6b5bff, #8b6bff);
+  color: white;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 6px 0;
+  border-radius: 10px;
+  transition: width 0.8s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .welcome-flex {
+    flex-direction: column;
+    text-align: center;
+    margin-left: 0;
+  }
+
+  .welcome-content {
+    text-align: center;
+  }
+
+  .progress-container {
+    justify-content: center;
+  }
+
+  .welcome-banner {
+    padding: 40px 30px;
+  }
 }
 
 .dashboard-banners {

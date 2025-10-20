@@ -49,9 +49,35 @@
     <main class="dashboard-main">
         
         <section class="welcome-banner">
-            <div class="welcome-content">
-                <h1 id="welcome-message">Welcome back, User!</h1> 
-                <p>You're making great progress on your goals!</p>
+            <div class="welcome-flex">
+                <div class="welcome-content">
+                    <h1 id="welcome-message">Welcome back, User!</h1> 
+                    <p>You're making great progress on your goals!</p>
+                </div>
+
+            <!-- Right: Progress Visualization -->
+                <div class="progress-visualization">
+                <div class="progress-container">
+                    <!-- Circle Chart -->
+                    <div class="progress-ring">
+                    <svg class="circle-chart" width="120" height="120" viewBox="0 0 120 120">
+                        <circle class="circle-bg" cx="60" cy="60" r="54"></circle>
+                        <circle class="circle" cx="60" cy="60" r="54"></circle>
+                    </svg>
+                    <div class="progress-text">75%</div>
+                    <p>Goal Completion</p>
+                    </div>
+            
+                    <!-- Weekly Bars -->
+                    <div class="weekly-progress">
+                    <h3>Weekly Check-in</h3>
+                    <div class="bar"><div class="fill" style="width: 80%;">Week 1 - 80%</div></div>
+                    <div class="bar"><div class="fill" style="width: 60%;">Week 2 - 60%</div></div>
+                    <div class="bar"><div class="fill" style="width: 100%;">Week 3 - 100%</div></div>
+                    <div class="bar"><div class="fill" style="width: 40%;">Week 4 - 40%</div></div>
+                    </div>
+                </div>
+                </div>
             </div>
         </section>
 
@@ -315,4 +341,22 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+
+<script>
+    function updateCircle(percent) {
+      const circle = document.querySelector('.circle');
+      const radius = 54;
+      const circumference = 2 * Math.PI * radius;
+      const offset = circumference - (percent / 100) * circumference;
+      circle.style.strokeDashoffset = offset;
+      document.querySelector('.progress-text').textContent = percent + '%';
+    }
+  
+    // Example: dynamically update to 75%
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCircle(75);
+    });
+  </script>
+
+
 </html>
