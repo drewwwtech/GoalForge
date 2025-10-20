@@ -1,3 +1,14 @@
+// ===============================================
+// 🚨 IMMEDIATE SECURITY CHECK: Must execute first 🚨
+// This checks if the main login key is present. If not, redirect immediately.
+// You must apply this exact block to the top of circles.js, settings.js, and help.js as well.
+// ===============================================
+if (!localStorage.getItem('goalforgeCurrentUser')) {
+    window.location.href = 'index.html'; 
+}
+// ===============================================
+
+
 class GoalsManager {
     constructor() {
         this.goals = this.loadGoals();
@@ -31,16 +42,16 @@ class GoalsManager {
     }
 
     setupEventListeners() {
-       
+        
         document.querySelectorAll('.create-goal-btn, .create-first-goal-btn').forEach(btn => {
             btn.addEventListener('click', () => this.openModal());
         });
 
-       
+        
         document.querySelector('.close-modal').addEventListener('click', () => this.closeModal());
         document.querySelector('.cancel-btn').addEventListener('click', () => this.closeModal());
         
-       
+        // Assuming this should be refactored to handle submission/edit (if not already done)
         document.querySelector('.goal-form').addEventListener('submit', (e) => this.createGoal(e));
         
         
@@ -101,7 +112,7 @@ class GoalsManager {
         const goal = this.goals.find(g => g.id === goalId);
         if (goal) {
             if (goal.status === 'completed') {
- 
+    
                 goal.status = 'active';
                 goal.progress = 0;
                 goal.completedAt = null;
@@ -145,7 +156,6 @@ class GoalsManager {
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${goal.progress}%"></div>
                     </div>
-                    <span class="progress-text">${goal.progress}% complete</span>
                 </div>
                 
                 ${goal.deadline ? `
@@ -166,9 +176,6 @@ class GoalsManager {
                 <div class="goal-actions">
                     <button class="complete-goal-btn" onclick="goalsManager.completeGoal('${goal.id}')">
                         ${goal.status === 'completed' ? 'Reactivate' : 'Mark Complete'}
-                    </button>
-                    <button class="view-goal-btn" onclick="goalsManager.viewGoal('${goal.id}')">
-                        View Details
                     </button>
                     <button class="edit-goal-btn" onclick="goalsManager.editGoal('${goal.id}')">
                         Edit
@@ -255,9 +262,10 @@ class GoalsManager {
             document.getElementById('goal-category').value = goal.category;
             document.getElementById('goal-deadline').value = goal.deadline;
             
-  
+    
             document.querySelector('.modal-header h2').textContent = 'Edit Goal';
             document.querySelector('.create-btn').textContent = 'Update Goal';
+            
             
 
             this.editingGoalId = goalId;
@@ -314,7 +322,7 @@ class GoalsManager {
         document.body.appendChild(notification);
         this.notifications.push(notification);
 
-       
+        
         setTimeout(() => {
             this.removeNotification(notification);
         }, 2000);
@@ -715,4 +723,19 @@ document.head.appendChild(style);
 let goalsManager;
 document.addEventListener('DOMContentLoaded', () => {
     goalsManager = new GoalsManager();
+
+    // 🚨 LOGOUT HANDLER 🚨
+    // This is the implementation of the missing logout functionality
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            
+            // 1. Clear the critical authentication key
+            localStorage.removeItem('goalforgeCurrentUser'); 
+            
+            // 3. Redirect to the login page (index.html)
+            window.location.href = 'index.html'; 
+        });
+    }
 });

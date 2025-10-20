@@ -41,7 +41,7 @@ function setupSettingsEvents() {
     }
 
     
-    const logoutBtn = document.getElementById('logoutBtn');
+    const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', handleLogout);
     }

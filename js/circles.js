@@ -1,3 +1,11 @@
+// ===============================================
+// 🚨 IMMEDIATE SECURITY CHECK: Must execute first 🚨
+// This checks if the main login key is present. If not, redirect immediately.
+// ===============================================
+if (!localStorage.getItem('goalforgeCurrentUser')) {
+    window.location.href = 'index.html'; 
+}
+
 class FriendsManager {
     constructor() {
         this.friends = this.loadFriends();
@@ -46,7 +54,7 @@ class FriendsManager {
             quickAddBtn.addEventListener('click', () => this.quickAddFriend());
         }
 
-  
+ 
         const searchInput = document.querySelector('.search-input');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => this.searchFriends(e.target.value));
@@ -231,7 +239,7 @@ class FriendsManager {
         
         this.showNotification('Friend request sent successfully!');
         
-   
+    
         setTimeout(() => {
             this.simulateFriendAcceptance(email);
         }, 2000);
@@ -271,7 +279,7 @@ class FriendsManager {
         this.saveFriends();
         this.renderFriends();
         
-   
+    
         this.addActivity(`${newFriend.name} accepted your friend request and joined GoalForge!`);
         
         this.showNotification(`${newFriend.name} is now your friend!`);
@@ -299,7 +307,7 @@ class FriendsManager {
                     </div>
                 </div>
                 <div class="friend-actions">
-                    <button class="friend-action-btn message-btn" onclick="friendsManager.messageFriend('${friend.id}')">
+                    <button class="friend-action-btn message-btn" onclick="friendsManager.messageFriend('${friend.id}')" >
                         Message
                     </button>
                     <button class="friend-action-btn remove-btn" onclick="friendsManager.removeFriend('${friend.id}')">
@@ -371,7 +379,7 @@ class FriendsManager {
                 </div>
             `;
             
-     
+    
             const addBtn = friendsList.querySelector('.add-first-friend-btn');
             if (addBtn) {
                 addBtn.addEventListener('click', () => this.openAddFriendModal());
@@ -425,7 +433,7 @@ class FriendsManager {
             if (filteredFriends.length === 0) {
                 friendsList.innerHTML = '<div class="empty-friends-state"><p>No friends found matching your search</p></div>';
             } else {
-      
+     
                 const friendsHTML = filteredFriends.map(friend => `
                     <div class="friend-card" data-friend-id="${friend.id}">
                         <div class="friend-avatar">${friend.avatar}</div>
@@ -488,10 +496,12 @@ class FriendsManager {
 
     showNotification(message, type = 'success') {
 
+        // Check if GoalsManager (and its notification function) is available globally
+        // This is a common pattern when sharing a function across pages.
         if (window.goalsManager && typeof window.goalsManager.showNotification === 'function') {
             window.goalsManager.showNotification(message);
         } else {
- 
+            // Fallback: create a temporary notification if the main one isn't loaded
             const notification = document.createElement('div');
             notification.className = 'notification';
             notification.textContent = message;
@@ -556,7 +566,26 @@ class FriendsManager {
     }
 }
 
+// 🚨 CORRECT INITIALIZATION 🚨
 let friendsManager;
 document.addEventListener('DOMContentLoaded', () => {
-    friendsManager = new FriendsManager();
+    // 1. Initialize the correct Manager for this page
+    friendsManager = new FriendsManager(); 
+
+    // 2. The Logout Handler (which was being blocked before)
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            
+            // 1. Clear the critical authentication key
+            localStorage.removeItem('goalforgeCurrentUser'); 
+            
+            // 2. Clear any other user data (to be thorough)
+
+            
+            // 3. Redirect to the login page (index.html)
+            window.location.href = 'index.html'; 
+        });
+    }
 });

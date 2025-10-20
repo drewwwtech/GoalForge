@@ -1,13 +1,64 @@
+// help.js
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeHelpPage();
 });
 
 function initializeHelpPage() {
+    checkAuthentication(); // <-- ADDED: Check auth status on page load
+    setupAuthEvents();     // <-- ADDED: Setup event listeners for auth actions (like logout)
     setupCategoryNavigation();
     setupFAQAccordion();
     setupSearchFunctionality();
     prefillContactForm();
 }
+
+
+// ------------------------------------------------------------------
+// ADDED: Authentication and Logout Logic
+// ------------------------------------------------------------------
+
+function checkAuthentication() {
+    const currentUser = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
+    if (!currentUser) {
+        // If no user is found, redirect to the dashboard/login page
+        window.location.href = 'index.html'; 
+        return;
+    }
+    // Return the user object for use in other functions (like prefillContactForm)
+    return currentUser;
+}
+
+function setupAuthEvents() {
+    // Assuming the HTML has an element with the ID 'logoutBtn'
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+}
+
+function handleLogout() {
+    const user = JSON.parse(localStorage.getItem('goalforgeCurrentUser'));
+    if (user) {
+        // Optional: Cleanup user-specific data upon logout for consistency
+        if (user.email) {
+            localStorage.removeItem(`goalforge-goals-${user.email}`); 
+            localStorage.removeItem(`goalforge-circles-${user.email}`); 
+        }
+    }
+
+    // Clear the current user session
+    localStorage.removeItem('goalforgeCurrentUser');
+    
+    showMessage('Logged out successfully', 'success');
+    
+    // FIX: IMMEDIATE REDIRECT is crucial to prevent the dashboard loop
+    window.location.href = 'index.html';
+}
+
+// ------------------------------------------------------------------
+// EXISTING Code Continues Below
+// ------------------------------------------------------------------
 
 function setupCategoryNavigation() {
     const categoryLinks = document.querySelectorAll('.category-link');
@@ -17,6 +68,7 @@ function setupCategoryNavigation() {
         link.addEventListener('click', function() {
             const targetId = this.getAttribute('href').substring(1);
             
+            
             categoryLinks.forEach(l => l.classList.remove('active'));
             helpSections.forEach(s => s.classList.remove('active'));
             
@@ -24,7 +76,7 @@ function setupCategoryNavigation() {
             this.classList.add('active');
             document.getElementById(targetId).classList.add('active');
             
-       
+            
             document.querySelector('.help-content').scrollTop = 0;
         });
     });
@@ -39,12 +91,12 @@ function setupFAQAccordion() {
             const faqItem = this.parentElement;
             const isActive = faqItem.classList.contains('active');
             
-
+            
             document.querySelectorAll('.faq-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-
+            
             if (!isActive) {
                 faqItem.classList.add('active');
             }
@@ -98,7 +150,7 @@ function performSearch() {
             parentSection.style.display = 'block';
             hasResults = true;
             
-           
+            
             highlightText(item, searchTerm);
         } else {
             item.style.display = 'none';
@@ -142,7 +194,7 @@ function resetSearch() {
         item.style.display = 'block';
         item.classList.remove('active');
         
-  
+ 
         const question = item.querySelector('.faq-question h3');
         const answer = item.querySelector('.faq-answer');
         question.innerHTML = question.textContent;
@@ -158,7 +210,7 @@ function resetSearch() {
         }
     });
     
-  
+ 
     document.querySelectorAll('.category-link').forEach((link, index) => {
         link.classList.remove('active');
         if (index === 0) {
@@ -166,7 +218,7 @@ function resetSearch() {
         }
     });
     
-
+ 
     const noResults = document.querySelector('.no-results');
     if (noResults) {
         noResults.remove();

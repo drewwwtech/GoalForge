@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoalForge Messenger</title>
+<style>
+:root {
+  --purple: #6c4ef7;
+  --light-gray: #f6f6f8;
+  --card: #fff;
+  --shadow: 0 6px 18px rgba(20,20,40,0.06);
+  --radius: 14px;
+  --text: #222;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--light-gray);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.topbar {
+  height: 64px;
+  background: var(--purple);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  box-shadow: var(--shadow);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-left img {
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+}
+
+.topbar-left h1 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+/* Layout */
+.container {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  padding: 18px;
+  box-sizing: border-box;
+  height: calc(100vh - 64px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 380px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 0 16px;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #555;
+}
+
+.search-box {
+  margin: 10px 16px;
+  background: #fafafa;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  padding: 6px 10px;
+}
+.search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+}
+
+.section-title {
+  font-weight: 700;
+  margin: 8px 16px 4px 16px;
+  color: #777;
+  font-size: 13px;
+}
+
+.chat-list {
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 10px;
+}
+
+.chat-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 4px 8px;
+}
+.chat-item:hover { background: #f7f6ff; }
+.chat-item.active { background: #ece8ff; }
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+}
+.avatar.private { background: #7b61ff; }
+.avatar.group { background: #5b3fe8; }
+
+.chat-meta {
+  flex: 1;
+  min-width: 0;
+}
+.chat-meta .name {
+  font-weight: 600;
+  color: var(--text);
+}
+.chat-meta .preview {
+  font-size: 13px;
+  color: #777;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Floating + button */
+.add-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: var(--purple);
+  color: #fff;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: 0.2s ease;
+}
+.add-btn:hover { transform: scale(1.08); background: #7b5fff; }
+
+/* Chat window */
+.chat-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.chat-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+.chat-header small {
+  color: #777;
+  font-size: 13px;
+}
+
+.messages-area {
+  flex: 1;
+  padding: 18px;
+  overflow-y: auto;
+}
+
+.msg-row {
+  display: flex;
+  margin-bottom: 12px;
+  align-items: flex-end;
+}
+.msg-row.me { justify-content: flex-end; }
+.msg-bubble {
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.3;
+  max-width: 65%;
+  box-shadow: 0 2px 6px rgba(10,10,20,0.03);
+}
+.msg-bubble.me {
+  background: var(--purple);
+  color: #fff;
+  border-bottom-right-radius: 6px;
+}
+.msg-bubble.other {
+  background: #f2f2f5;
+  border-bottom-left-radius: 6px;
+  color: #222;
+}
+
+.msg-meta {
+  font-size: 11px;
+  color: #999;
+  margin-top: 6px;
+  text-align: right;
+}
+
+.composer {
+  display: flex;
+  padding: 12px 14px;
+  border-top: 1px solid #eee;
+  gap: 8px;
+}
+.composer input {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  padding: 10px 14px;
+  outline: none;
+}
+.composer button {
+  background: var(--purple);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Loader */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: opacity 0.4s ease;
+}
+.spinner {
+  width: 70px;
+  height: 70px;
+  border: 8px solid #eee;
+  border-top-color: var(--purple);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+  animation: fadeIn 0.3s ease forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  width: 320px;
+  box-shadow: var(--shadow);
+  transform: translateY(-15px);
+  animation: slideIn 0.3s ease forwards;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-tabs {
+  display: flex;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+}
+.modal-tabs button {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.modal-tabs button.active {
+  border-color: var(--purple);
+  color: var(--purple);
+}
+.modal input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 10px;
+  box-sizing: border-box; /* ✅ ensures it fits inside the modal properly */
+}
+
+.modal .actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.modal .actions button {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.modal .cancel { background: #eee; }
+.modal .create { background: var(--purple); color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div class="loader" id="loader"><div class="spinner"></div></div>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <h1>GoalForge</h1>
+  </div>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>Chats</h2>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search chats...">
+    </div>
+
+    <div class="chat-list" id="chatList"></div>
+
+    <div class="add-btn" id="addBtn">+</div>
+  </aside>
+
+  <section class="chat-window">
+    <div class="chat-header">
+      <h3 id="chatName">Select a chat</h3>
+      <small id="chatType"></small>
+    </div>
+    <div class="messages-area" id="messagesArea">
+      <p style="color:#999; text-align:center; margin-top:20px;">Choose a chat from the left to start messaging.</p>
+    </div>
+    <div class="composer">
+      <input type="text" id="messageInput" placeholder="Type a message...">
+      <button id="sendBtn">Send</button>
+    </div>
+  </section>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-tabs">
+      <button id="tabPrivate" class="active">Private Chat</button>
+      <button id="tabGroup">Circle Chat</button>
+    </div>
+    <div class="modal-body">
+      <input type="text" id="chatNameInput" placeholder="Enter name...">
+      <div class="actions">
+        <button class="cancel" id="cancelModal">Cancel</button>
+        <button class="create" id="createChat">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const sampleReplies = [
+  "You're doing great — keep that streak alive! 💪",
+  "Every step counts, don't stop now!",
+  "Proud of your consistency 👏",
+  "Let's make this week productive together!",
+  "Stay focused — you're almost there!"
+];
+
+let chats = [
+  // --- Private Chats ---
+  {id:'1', name:'Alex Johnson', type:'private', avatar:'A', messages:[
+    {sender:'Alex', text:'How’s your morning run?', time:Date.now()-2000000}
+  ]},
+  {id:'2', name:'Mia Lopez', type:'private', avatar:'M', messages:[
+    {sender:'Mia', text:'Hey! Did you finish your workout today?', time:Date.now()-1800000}
+  ]},
+  {id:'3', name:'Jordan Lee', type:'private', avatar:'J', messages:[
+    {sender:'Jordan', text:'Don’t forget about our plan this weekend!', time:Date.now()-900000}
+  ]},
+
+  // --- Circle (Group Chat) ---
+  {id:'4', name:'Goal Crushers', type:'group', avatar:'GC', messages:[
+    {sender:'Rina', text:'We crushed this week’s challenge!', time:Date.now()-1000000}
+  ]},
+  {id:'5', name:'Fit Friends', type:'group', avatar:'FF', messages:[
+    {sender:'Liam', text:'Let’s hit 10k steps today, team!', time:Date.now()-500000}
+  ]}
+];
+
+let activeChat = null;
+
+function renderChats(){
+  const list = document.getElementById('chatList');
+  list.innerHTML = '';
+
+  const privateTitle = document.createElement('div');
+  privateTitle.className = 'section-title';
+  privateTitle.textContent = 'Private Chats';
+  list.appendChild(privateTitle);
+
+  chats.filter(c=>c.type==='private').forEach(chat=>list.appendChild(createChatItem(chat)));
+
+  const groupTitle = document.createElement('div');
+  groupTitle.className = 'section-title';
+  groupTitle.textContent = 'Circles';
+  list.appendChild(groupTitle);
+
+  chats.filter(c=>c.type==='group').forEach(chat=>list.appendChild(createChatItem(chat)));
+
+  attachChatClick();
+}
+
+function createChatItem(chat){
+  const item = document.createElement('div');
+  item.className = 'chat-item';
+  item.dataset.id = chat.id;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar ' + (chat.type==='group' ? 'group' : 'private');
+  avatar.textContent = chat.avatar;
+
+  const meta = document.createElement('div');
+  meta.className = 'chat-meta';
+  const name = document.createElement('div');
+  name.className = 'name';
+  name.textContent = chat.name;
+  const preview = document.createElement('div');
+  preview.className = 'preview';
+  const last = chat.messages[chat.messages.length-1];
+  preview.textContent = last ? `${last.sender}: ${last.text}` : 'No messages yet';
+  meta.appendChild(name);
+  meta.appendChild(preview);
+
+  item.appendChild(avatar);
+  item.appendChild(meta);
+  return item;
+}
+
+function attachChatClick(){
+  document.querySelectorAll('.chat-item').forEach(item=>{
+    item.onclick = ()=>{
+      document.querySelectorAll('.chat-item').forEach(i=>i.classList.remove('active'));
+      item.classList.add('active');
+      openChat(item.dataset.id);
+    };
+  });
+}
+
+function openChat(id){
+  const chat = chats.find(c=>c.id===id);
+  if(!chat) return;
+  activeChat = chat;
+  document.getElementById('chatName').textContent = chat.name;
+  document.getElementById('chatType').textContent = chat.type==='group'?'Circle':'Private';
+  const area = document.getElementById('messagesArea');
+  area.innerHTML = '';
+  chat.messages.forEach(m=>appendMessage(m));
+}
+
+function appendMessage(msg){
+  const area = document.getElementById('messagesArea');
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + (msg.sender==='me'?'me':'other');
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble ' + (msg.sender==='me'?'me':'other');
+  bubble.textContent = msg.text;
+  row.appendChild(bubble);
+  area.appendChild(row);
+  area.scrollTop = area.scrollHeight;
+}
+
+document.getElementById('sendBtn').addEventListener('click', sendMessage);
+document.getElementById('messageInput').addEventListener('keydown', e=>{
+  if(e.key==='Enter') sendMessage();
+});
+
+function sendMessage(){
+  const input = document.getElementById('messageInput');
+  const text = input.value.trim();
+  if(!text || !activeChat) return;
+  const msg = {sender:'me', text, time:Date.now()};
+  activeChat.messages.push(msg);
+  appendMessage(msg);
+  input.value='';
+  setTimeout(()=>simulateReply(activeChat),1000+Math.random()*1500);
+}
+
+function simulateReply(chat){
+  const reply = {
+    sender: chat.type==='group' ? 'Peer' : chat.name.split(' ')[0],
+    text: sampleReplies[Math.floor(Math.random()*sampleReplies.length)],
+    time: Date.now()
+  };
+  chat.messages.push(reply);
+  if(activeChat && activeChat.id===chat.id) appendMessage(reply);
+}
+
+// Add Chat Modal Logic
+const addBtn=document.getElementById('addBtn');
+const modal=document.getElementById('modalOverlay');
+const tabPrivate=document.getElementById('tabPrivate');
+const tabGroup=document.getElementById('tabGroup');
+const nameInput=document.getElementById('chatNameInput');
+
+addBtn.onclick=()=>{ modal.style.display='flex'; tabPrivate.click(); nameInput.value=''; nameInput.focus(); };
+document.getElementById('cancelModal').onclick=()=> modal.style.display='none';
+
+tabPrivate.onclick=()=>{tabPrivate.classList.add('active');tabGroup.classList.remove('active');};
+tabGroup.onclick=()=>{tabGroup.classList.add('active');tabPrivate.classList.remove('active');};
+
+document.getElementById('createChat').onclick=()=>{
+  const name=nameInput.value.trim();
+  if(!name)return;
+  const isGroup=tabGroup.classList.contains('active');
+  const newChat={
+    id:Date.now().toString(),
+    name:name,
+    type:isGroup?'group':'private',
+    avatar:isGroup?name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase():name[0].toUpperCase(),
+    messages:[]
+  };
+  chats.push(newChat);
+  renderChats();
+  
+  modal.style.display='none';
+};
+
+
+// Search filter
+document.getElementById('searchInput').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.chat-item').forEach(item => {
+    const name = item.querySelector('.name').textContent.toLowerCase();
+    item.style.display = name.includes(q) ? '' : 'none';
+  });
+});
+
+// ---------- Fast loader + auto render ----------
+renderChats(); // render immediately
+
+setTimeout(() => {
+  const loader = document.getElementById('loader');
+  loader.style.opacity = '0';
+  setTimeout(() => loader.style.display = 'none', 120);
+}, 120);
+
+// automatically open the first chat if available
+setTimeout(() => {
+  const first = document.querySelector('.chat-item');
+  if (first) first.click();
+}, 220);
+</script>
+</body>
+<script>
+// (keep all existing messages.js content above)
+// ensure renderChats() is already called
+
+// Helper: read query param
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
+// After rendering chats, try to open chat from URL param
+(function openChatFromUrl() {
+  const requested = getQueryParam('chat');
+  if (!requested) return;
+
+  // Wait until chat items are created
+  setTimeout(() => {
+    // Try to find a chat with matching name (case-insensitive)
+    const found = chats.find(c => c.name.toLowerCase() === requested.toLowerCase());
+    if (found) {
+      // Select the chat item DOM with the matching data-id (if present)
+      const chatItem = document.querySelector(`.chat-item[data-id="${found.id}"]`);
+      if (chatItem) {
+        chatItem.click();
+      } else {
+        // Fallback: open by id directly
+        openChat(found.id);
+      }
+    } else {
+      // No exact match — try partial match
+      const partial = chats.find(c => c.name.toLowerCase().includes(requested.toLowerCase()));
+      if (partial) {
+        const item = document.querySelector(`.chat-item[data-id="${partial.id}"]`);
+        if (item) item.click();
+        else openChat(partial.id);
+      }
+    }
+  }, 150); // small delay to let renderChats create elements
+})();
+</script>
+
+
+
+</html>

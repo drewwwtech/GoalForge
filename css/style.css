@@ -415,8 +415,9 @@ body {
 /* Circle Progress */
 .progress-ring {
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
+  text-align: center;
 }
 
 .circle-chart {
@@ -446,6 +447,7 @@ body {
   font-weight: 700;
   font-size: 1.6rem;
   color: #4b3bc6;
+  line-height: 1;
 }
 
 .progress-ring p {

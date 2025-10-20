@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us - GoalForge</title>
+  <style>
+    /* --- Base --- */
+    body {
+      margin: 0;
+      font-family: "Poppins", Arial, sans-serif;
+      color: #333;
+      background: url('images/Background.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* --- Main Content --- */
+    .content-box {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      padding: 50px 60px;
+      max-width: 700px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #4a1d96;
+      margin-bottom: 10px;
+    }
+
+    p.intro {
+      color: #555;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+
+    /* --- Member List --- */
+    .team {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto 30px;
+      text-align: left;
+      display: inline-block;
+    }
+
+    .team li {
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+      position: relative;
+      padding-left: 18px;
+    }
+
+    .team li::before {
+      content: "★";
+      position: absolute;
+      left: 0;
+      color: #a855f7;
+      font-size: 0.9rem;
+    }
+
+    .tagline {
+      font-style: italic;
+      color: #444;
+      margin-top: 25px;
+      line-height: 1.6;
+    }
+
+    /* --- Back Button --- */
+    .back-link {
+      display: inline-block;
+      margin-top: 25px;
+      color: #9333ea;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+      transform: translateX(-4px);
+    }
+
+    /* --- Animation --- */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 600px) {
+      .content-box {
+        padding: 30px 20px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="content-box">
+      <h1>GoalForge</h1>
+      <p class="intro">Meet the passionate creators behind GoalForge</p>
+
+      <ul class="team">
+        <li><strong>Jhon Andrew Valerio</strong> — Project Manager/Front-end Developer</li>
+        <li><strong>Cedric Dizon</strong> — UI/UX Designer</li>
+        <li><strong>Samuel Santos</strong> — Tester/Front-end Developer</li>
+      </ul>
+
+      <p class="tagline">
+        Together, we designed and developed GoalForge to make goal tracking more
+        social, engaging, and effective.
+      </p>
+
+      <a href="#" class="back-link" id="backLink">← Back</a>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const back = document.getElementById("backLink");
+      if (!back) return;
+
+      back.addEventListener("click", function (event) {
+        event.preventDefault();
+        const prev = sessionStorage.getItem("previousPage");
+        if (prev && !prev.includes("aboutus.html")) {
+          window.location.href = prev;
+        } else if (document.referrer && !document.referrer.includes("aboutus.html")) {
+          window.location.href = document.referrer;
+        } else {
+          window.location.href = "index.html";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
