@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Friends - Goal Forge</title>
+    <!-- Note: CSS for main layout assumed to be in style.css, but dynamic elements' styles are injected via JS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-     <header class="main-header">
+    <header class="main-header">
         <div class="header-content">
             <div class="header-left">
                 <div class="logo" onclick="window.location.href='dashboard.html'">
@@ -20,10 +21,13 @@
                 </nav>
             </div>
             <div class="header-right">
+              <a href="messages.html" class="messages-icon-link" title="Messages">
+                <img src="images/chat.svg" alt="Messages Icon" class="chat-icon">
+              </a>
                 <div class="profile-menu">
                     <img src="images/Profile.png" alt="Profile" class="profile profile-trigger">
                     <div class="dropdown-menu">
-                        <button class="dropdown-item" id="viewProfileBtn"><Profile></button>
+                        <button class="dropdown-item" id="viewProfileBtn">Profile</button>
                         <a href="settings.html" class="dropdown-item">Settings</a>
                         <a href="help.html" class="dropdown-item">Help</a>
                         <div class="dropdown-divider"></div>
@@ -53,12 +57,8 @@
                 </div>
                 
                 <div class="friends-list">
-                    
-                    <div class="empty-friends-state">
-                        <h3>No friends yet</h3>
-                        <p>Add friends to build your accountability network!</p>
-                        <button class="add-first-friend-btn">Add Your First Friend</button>
-                    </div>
+                    <!-- Dynamic friend cards will be inserted here by JavaScript -->
+                    <!-- The empty state will also be managed by JS -->
                 </div>
             </div>
       
@@ -72,7 +72,7 @@
                     <div class="friend-suggestions">
                         <h4>Suggested Friends</h4>
                         <div class="suggestions-list">
-                            
+                            <!-- Suggestions inserted here by JS -->
                         </div>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                 <!-- Friend Activity Card -->
                 <div class="sidebar-card activity-card">
                     <h3>Recent Activity</h3>
-                    <div class="activity-list">     
+                    <div class="activity-list"> 
                         <div class="empty-activity">
                             <p>Friend activity will appear here</p>
                         </div>
@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        <!-- Add Friend Modal -->
+        <!-- Add Friend Modal (Existing) -->
         <div class="modal-overlay" id="addFriendModal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -112,81 +112,117 @@
                 </form>
             </div>
         </div>
+
+        <!-- Custom Confirmation Modal for Removing Friend (New Inline Style) -->
+        <div id="removeFriendConfirmationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 2500; justify-content: center; align-items: center;">
+            <div style="background: white; padding: 30px; border-radius: 12px; width: 380px; max-width: 90%; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4); font-family: 'Inter', sans-serif;">
+                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 20px; color: #dc2626;">Remove Friend</h3>
+                <p id="confirmationMessage" style="margin-bottom: 30px; color: #4b5563; font-size: 15px;">Are you sure you want to remove **[Friend Name]** from your friends? This action cannot be undone.</p>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button id="cancelRemoveBtn" style="padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; background: #f3f4f6; color: #4b5563; border: none;">Cancel</button>
+                    <button id="confirmRemoveBtn" style="padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; background: #dc2626; color: white; border: none;">Remove</button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script src="js/circles.js"></script>
     <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const profileTrigger = document.querySelector(".profile-trigger");
-  const dropdownMenu = document.querySelector(".dropdown-menu");
+    const profileTrigger = document.querySelector(".profile-trigger");
+    const dropdownMenu = document.querySelector(".dropdown-menu");
 
-  if (!profileTrigger || !dropdownMenu) return;
+    if (!profileTrigger || !dropdownMenu) return;
 
 
-  profileTrigger.addEventListener("click", (e) => {
-    e.stopPropagation();
-    dropdownMenu.style.display =
-      dropdownMenu.style.display === "flex" ? "none" : "flex";
-  });
+    profileTrigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdownMenu.style.display =
+            dropdownMenu.style.display === "flex" ? "none" : "flex";
+    });
 
- 
-  document.addEventListener("click", (e) => {
-    if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
-      dropdownMenu.style.display = "none";
-    }
-  });
+    
+    document.addEventListener("click", (e) => {
+        if (!dropdownMenu.contains(e.target) && !profileTrigger.contains(e.target)) {
+            dropdownMenu.style.display = "none";
+        }
+    });
 });
 </script>
 </body>
 
 <footer>
-  <div class="footer-container">
-    <div class="footer-column">
-      <h3>About GoalForge</h3>
-      <ul>
-        <li><a href="mission.html">Our Mission</a></li>
-      </ul>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3>About GoalForge</h3>
+            <ul>
+                <li><a href="mission.html">Our Mission</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Features</h3>
+            <ul>
+                <li>Goal Creation</li>
+                <li>Accountability Circles</li>
+                <li>Progress Tracking</li>
+                <li>Motivational Feed</li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Support</h3>
+            <ul>
+                <li><a href="report.html">Report an Issue</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Resources</h3>
+            <ul>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Service</a></li>
+            </ul>
+        </div>
     </div>
 
-    <div class="footer-column">
-      <h3>Features</h3>
-      <ul>
-        <li>Goal Creation</li>
-        <li>Accountability Circles</li>
-        <li>Progress Tracking</li>
-        <li>Motivational Feed</li>
-      </ul>
+    <div class="footer-bottom">
+        <p>&copy; 2025 GoalForge. All rights reserved.</p>
     </div>
-
-    <div class="footer-column">
-      <h3>Support</h3>
-      <ul>
-        <li><a href="report.html">Report an Issue</a></li>
-        <li><a href="contact.html">Contact Us</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-column">
-      <h3>Resources</h3>
-      <ul>
-        <li><a href="privacy.html">Privacy Policy</a></li>
-        <li><a href="terms.html">Terms of Service</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>&copy; 2025 GoalForge. All rights reserved.</p>
-  </div>
 </footer>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll("footer a").forEach(link => {
-    link.addEventListener("click", () => {
-      sessionStorage.setItem("previousPage", window.location.href);
+    document.querySelectorAll("footer a").forEach(link => {
+        link.addEventListener("click", () => {
+            sessionStorage.setItem("previousPage", window.location.href);
+        });
     });
-  });
 });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Redirect to messages.html and send the friend's name
+        document.querySelectorAll('.message-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Find the friend's name near the button
+                const friendItem = btn.closest('.friend-item');
+                let friendName = 'Chat';
+                if (friendItem) {
+                    const nameEl = friendItem.querySelector('div[style*="font-weight:700"]');
+                    if (nameEl) friendName = nameEl.textContent.trim();
+                }
+        
+                // Redirect to messages.html and include the name in the URL
+                const targetUrl = 'messages.html?chat=' + encodeURIComponent(friendName);
+                window.location.href = targetUrl;
+            });
+        });
+    });
+    </script>
 
 </html>

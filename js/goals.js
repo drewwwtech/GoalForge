@@ -36,6 +36,7 @@ class GoalsManager {
         this.setupEventListeners();
         
         
+        // Render after a small delay to ensure the DOM is ready
         setTimeout(() => {
             this.renderGoals();
         }, 100);
@@ -292,11 +293,65 @@ class GoalsManager {
         this.currentFilter = button.textContent.toLowerCase().replace(' goals', '');
         this.renderGoals();
     }
+    
+    // --- START OF FIXED SORTING LOGIC ---
+    sortGoals(sortByOption) {
+        // 1. Extract the actual sort key from the option text (e.g., "Sort by: Due Date" -> "Due Date")
+        const sortKey = sortByOption.split(': ')[1];
+        
+        let sortField;
+        switch (sortKey) {
+            case 'Due Date':
+                sortField = 'deadline';
+                break;
+            case 'Progress':
+                sortField = 'progress';
+                break;
+            case 'Name':
+                sortField = 'title';
+                break;
+            default:
+                // If sortKey is not recognized, do nothing
+                return; 
+        }
 
-    sortGoals(sortBy) {
+        this.goals.sort((a, b) => {
+            const valA = a[sortField];
+            const valB = b[sortField];
 
-        this.showNotification(`Sorted by: ${sortBy}`);
+            // --- Sorting logic based on field type ---
+            if (sortField === 'title') {
+                // Alphabetical (A-Z)
+                return valA.localeCompare(valB);
+            } 
+            
+            if (sortField === 'progress') {
+                // Numeric (0-100)
+                return valA - valB; 
+            } 
+            
+            if (sortField === 'deadline') {
+                // Dates (Sooner date first)
+                
+                // Goals without a deadline go to the end
+                if (!valA) return 1;
+                if (!valB) return -1;
+
+                // Use Date objects for reliable comparison
+                const dateA = new Date(valA).getTime();
+                const dateB = new Date(valB).getTime();
+
+                // Sort by deadline ascending (smaller timestamp means earlier date)
+                return dateA - dateB; 
+            }
+            
+            return 0; // Keep order
+        });
+
+        this.renderGoals();
+        this.showNotification(`Sorted by: ${sortKey}`);
     }
+    // --- END OF FIXED SORTING LOGIC ---
 
     showNotification(message) {
 
@@ -666,7 +721,7 @@ style.textContent = `
     }
     
     /* Close button for the modal (the 'x') */
-    .close-btn {
+    .close-modal {
         position: absolute;
         top: 20px;
         right: 20px;
@@ -680,7 +735,7 @@ style.textContent = `
         line-height: 1; /* Center the 'x' */
     }
 
-    .close-btn:hover {
+    .close-modal:hover {
         color: #6b7280; /* Darken on hover */
         transform: rotate(90deg); /* Subtle rotate on hover */
     }

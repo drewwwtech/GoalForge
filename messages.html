@@ -18,39 +18,9 @@ body {
   margin: 0;
   font-family: "Inter", sans-serif;
   background: var(--light-gray);
-  height: 100vh;
+  height: 90vh;
   display: flex;
   flex-direction: column;
-}
-
-/* Header */
-.topbar {
-  height: 64px;
-  background: var(--purple);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  box-shadow: var(--shadow);
-}
-
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.topbar-left img {
-  width: 38px;
-  height: 38px;
-  cursor: pointer;
-}
-
-.topbar-left h1 {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
 }
 
 /* Layout */
@@ -89,14 +59,14 @@ body {
   color: #555;
 }
 
-.search-box {
+.search-box-chat {
   margin: 10px 16px;
   background: #fafafa;
   border-radius: 10px;
   border: 1px solid #eee;
   padding: 6px 10px;
 }
-.search-box input {
+.search-box-chat input {
   border: none;
   outline: none;
   background: transparent;
@@ -361,15 +331,42 @@ body {
 .modal .cancel { background: #eee; }
 .modal .create { background: var(--purple); color: #fff; }
 </style>
+
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <!-- Loader -->
 <div class="loader" id="loader"><div class="spinner"></div></div>
 
-<header class="topbar">
-  <div class="topbar-left">
-    <h1>GoalForge</h1>
+<header class="main-header">
+  <div class="header-content">
+      <div class="header-left">
+          <div class="logo" onclick="window.location.href='dashboard.html'">
+              <img src="images/Goal.png" alt="Goal Forge Logo" class="logo-img">
+          </div>
+          <nav class="header-nav">
+              <a href="dashboard.html" class="nav-link">Dashboard</a>
+              <a href="goals.html" class="nav-link">Goals</a>
+              <a href="circles.html" class="nav-link">Circles</a>
+          </nav>
+      </div>
+      <div class="header-right">
+        
+          <a href="messages.html" class="messages-icon-link" title="Messages">
+              <img src="images/chat.svg" alt="Messages Icon" class="chat-icon">
+          </a>
+          <div class="profile-menu">
+              <img src="images/Profile.png" alt="Profile" class="profile profile-trigger">
+              <div class="dropdown-menu"> 
+                  <a href="settings.html" class="dropdown-item">Settings</a>
+                  <a href="help.html" class="dropdown-item">Help</a>
+                  <div class="dropdown-divider"></div>
+                  <a href="index.html" class="dropdown-item" id="logout-btn">Logout</a>
+              </div>
+          </div>
+      </div>
+      <button class="menu-toggle" aria-label="Toggle navigation">&#9776;</button>
   </div>
 </header>
 
@@ -378,7 +375,7 @@ body {
     <div class="sidebar-header">
       <h2>Chats</h2>
     </div>
-    <div class="search-box">
+    <div class="search-box-chat">
       <input type="text" id="searchInput" placeholder="Search chats...">
     </div>
 

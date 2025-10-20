@@ -48,13 +48,13 @@ class FriendsManager {
             });
         }
 
-      
+    
         const quickAddBtn = document.querySelector('.send-request-btn');
         if (quickAddBtn) {
             quickAddBtn.addEventListener('click', () => this.quickAddFriend());
         }
 
- 
+    
         const searchInput = document.querySelector('.search-input');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => this.searchFriends(e.target.value));
@@ -69,7 +69,7 @@ class FriendsManager {
              */
             
             .modal-overlay {
-                display: none; /* CRITICAL: Hides the overlay when closed */
+                display: none; 
                 position: fixed; 
                 top: 0;
                 left: 0;
@@ -82,12 +82,12 @@ class FriendsManager {
             }
             
             .modal-overlay.active {
-                display: flex; /* Makes the overlay visible when JavaScript adds the 'active' class */
+                display: flex; 
             }
 
             .modal-content {
                 background: white;
-                padding: 40px; /* Generous padding for breathing room */
+                padding: 40px; 
                 border-radius: 12px;
                 width: 450px;
                 max-width: 90%;
@@ -192,6 +192,133 @@ class FriendsManager {
                 from { opacity: 0; transform: scale(0.95); }
                 to { opacity: 1; transform: scale(1); }
             }
+
+            /* --- Added Styles for Dynamic Friend List --- */
+            .friend-card {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 15px;
+                border-radius: 10px;
+                margin-bottom: 10px;
+                background-color: #f9fafb;
+                border: 1px solid #e5e7eb;
+                transition: all 0.2s ease;
+                cursor: default; /* Changed from pointer as the whole card is not clickable */
+            }
+
+            .friend-card:hover {
+                background-color: #eff6ff;
+                border-color: #93c5fd;
+            }
+
+            .friend-avatar {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background-color: #6c4ef7;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 18px;
+                font-weight: 600;
+                flex-shrink: 0;
+            }
+
+            .friend-info {
+                flex-grow: 1;
+                margin-left: 15px;
+                min-width: 0; /* Ensures overflow text is handled */
+            }
+
+            .friend-name {
+                font-size: 16px;
+                font-weight: 700;
+                margin: 0;
+                color: #1f2937;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .friend-stats {
+                font-size: 12px;
+                color: #6b7280;
+                display: flex;
+                gap: 15px;
+                margin-top: 2px;
+            }
+
+            .friend-actions {
+                display: flex;
+                gap: 8px;
+                flex-shrink: 0;
+            }
+
+            .friend-action-btn {
+                padding: 8px 12px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                border: 1px solid transparent;
+                transition: background-color 0.2s, border-color 0.2s;
+                white-space: nowrap;
+            }
+
+            .friend-action-btn.message-btn {
+                background-color: #6c4ef7;
+                color: white;
+            }
+
+            .friend-action-btn.message-btn:hover {
+                background-color: #5b4bdb;
+            }
+
+            .friend-action-btn.remove-btn {
+                background-color: #fef2f2;
+                color: #dc2626;
+                border-color: #fecaca;
+            }
+
+            .friend-action-btn.remove-btn:hover {
+                background-color: #fee2e2;
+            }
+
+            .empty-friends-state {
+                text-align: center;
+                padding: 40px 20px;
+                border-radius: 10px;
+                background: #fff;
+                border: 1px dashed #d1d5db;
+                margin-top: 20px;
+            }
+            .empty-friends-state h3 { margin-top: 0; color: #4b5563; }
+            .empty-friends-state p { color: #9ca3af; margin-bottom: 20px; }
+
+            .add-first-friend-btn {
+                background: #6c4ef7;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: background 0.2s;
+            }
+            .add-first-friend-btn:hover {
+                background: #5b4bdb;
+            }
+
+            .activity-item {
+                border-bottom: 1px solid #e5e7eb;
+                padding: 10px 0;
+                font-size: 14px;
+            }
+            .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+            .activity-message { margin: 0; color: #374151; }
+            .activity-time { margin: 2px 0 0 0; color: #9ca3af; font-size: 12px; }
         `;
         document.head.appendChild(style);
     }
@@ -275,6 +402,12 @@ class FriendsManager {
             activeGoals: Math.floor(Math.random() * 5) + 1
         };
 
+        // Prevent duplicates
+        if (this.friends.some(f => f.email === email)) {
+            this.showNotification(`${newFriend.name} is already your friend!`);
+            return;
+        }
+
         this.friends.push(newFriend);
         this.saveFriends();
         this.renderFriends();
@@ -307,7 +440,7 @@ class FriendsManager {
                     </div>
                 </div>
                 <div class="friend-actions">
-                    <button class="friend-action-btn message-btn" onclick="friendsManager.messageFriend('${friend.id}')" >
+                    <button class="friend-action-btn message-btn" onclick="friendsManager.messageFriend('${friend.id}', '${this.escapeHtml(friend.name)}')">
                         Message
                     </button>
                     <button class="friend-action-btn remove-btn" onclick="friendsManager.removeFriend('${friend.id}')">
@@ -319,6 +452,58 @@ class FriendsManager {
 
         friendsList.innerHTML = friendsHTML;
     }
+
+    // New: Custom Confirmation Modal Logic
+    openConfirmationModal(friendId) {
+        const friend = this.friends.find(f => f.id === friendId);
+        if (!friend) return;
+
+        const modal = document.getElementById('removeFriendConfirmationModal');
+        const messageEl = document.getElementById('confirmationMessage');
+        const confirmBtn = document.getElementById('confirmRemoveBtn');
+        const cancelBtn = document.getElementById('cancelRemoveBtn');
+
+        // Set message with friend's name
+        messageEl.innerHTML = `Are you sure you want to remove <strong>${this.escapeHtml(friend.name)}</strong> from your circles? This action cannot be undone.`;
+
+        // Clear previous listeners by cloning (required because we are using global onclick in renderFriends)
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        const newCancelBtn = cancelBtn.cloneNode(true);
+        cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+        // Set up new listeners for this specific action
+        newConfirmBtn.addEventListener('click', () => {
+            this._executeRemoveFriend(friendId);
+            this.closeConfirmationModal();
+        });
+        
+        newCancelBtn.addEventListener('click', () => this.closeConfirmationModal());
+        
+        // Show modal (using inline style display: flex to override display: none)
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+
+    closeConfirmationModal() {
+        const modal = document.getElementById('removeFriendConfirmationModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    _executeRemoveFriend(friendId) {
+        const friend = this.friends.find(f => f.id === friendId);
+        if (friend) {
+            this.friends = this.friends.filter(f => f.id !== friendId);
+            this.saveFriends();
+            this.renderFriends();
+            this.addActivity(`You removed ${friend.name} from your friends.`);
+            this.showNotification('Friend removed successfully');
+        }
+    }
+    // End New: Custom Confirmation Modal Logic
 
     renderActivities() {
         const activityList = document.querySelector('.activity-list');
@@ -343,7 +528,7 @@ class FriendsManager {
         const suggestionsList = document.querySelector('.suggestions-list');
         if (!suggestionsList) return;
 
- 
+    
         const suggestions = [
             { name: 'Alex Johnson', email: 'alex@example.com' },
             { name: 'Sarah Miller', email: 'sarah@example.com' },
@@ -388,29 +573,19 @@ class FriendsManager {
     }
 
     hideEmptyFriendsState() {
-        const emptyState = document.querySelector('.empty-friends-state');
-        if (emptyState) {
-            emptyState.remove();
-        }
+        // Since renderFriends recreates the list, we don't need to explicitly hide the state, 
+        // but we'll leave the function here for completeness if needed elsewhere.
     }
 
-    messageFriend(friendId) {
-        const friend = this.friends.find(f => f.id === friendId);
-        if (friend) {
-            this.showNotification(`Opening chat with ${friend.name}...`);
-    
-        }
+    messageFriend(friendId, friendName) {
+        // Redirect to messages.html, which is what the original inline script in HTML did
+        const targetUrl = 'messages.html?chat=' + encodeURIComponent(friendName);
+        window.location.href = targetUrl;
     }
 
     removeFriend(friendId) {
-        const friend = this.friends.find(f => f.id === friendId);
-        if (friend && confirm(`Are you sure you want to remove ${friend.name} from your friends?`)) {
-            this.friends = this.friends.filter(f => f.id !== friendId);
-            this.saveFriends();
-            this.renderFriends();
-            this.addActivity(`You removed ${friend.name} from your friends.`);
-            this.showNotification('Friend removed successfully');
-        }
+        // *** REPLACED CONFIRM() WITH CUSTOM MODAL CALL ***
+        this.openConfirmationModal(friendId);
     }
 
     addSuggestion(email) {
@@ -433,7 +608,7 @@ class FriendsManager {
             if (filteredFriends.length === 0) {
                 friendsList.innerHTML = '<div class="empty-friends-state"><p>No friends found matching your search</p></div>';
             } else {
-     
+    
                 const friendsHTML = filteredFriends.map(friend => `
                     <div class="friend-card" data-friend-id="${friend.id}">
                         <div class="friend-avatar">${friend.avatar}</div>
@@ -445,7 +620,7 @@ class FriendsManager {
                             </div>
                         </div>
                         <div class="friend-actions">
-                            <button class="friend-action-btn message-btn" onclick="friendsManager.messageFriend('${friend.id}')">
+                            <button class="friend-action-btn message-btn" onclick="friendsManager.messageFriend('${friend.id}', '${this.escapeHtml(friend.name)}')">
                                 Message
                             </button>
                             <button class="friend-action-btn remove-btn" onclick="friendsManager.removeFriend('${friend.id}')">
@@ -533,8 +708,14 @@ class FriendsManager {
 
 
     loadFriends() {
+        // Initial dummy data for testing the friend list structure
+        const dummyFriends = [
+            { id: '1', name: 'Alex Johnson', email: 'alex@example.com', avatar: 'A', activeGoals: 3, goalsCompleted: 10, joinedDate: new Date().toISOString() },
+            { id: '2', name: 'Sarah Miller', email: 'sarah@example.com', avatar: 'S', activeGoals: 1, goalsCompleted: 5, joinedDate: new Date().toISOString() }
+        ];
+
         const saved = localStorage.getItem('goalforge-friends');
-        return saved ? JSON.parse(saved) : [];
+        return saved ? JSON.parse(saved) : dummyFriends;
     }
 
     saveFriends() {

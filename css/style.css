@@ -126,13 +126,25 @@ body {
   box-shadow: #4f46e5;
 }
 
-.notification-icon {
-  width: 35%;
-  height: 35px;
-  border-radius: 6px;
-  transform: translateY(2px);
-  display: block;
+/* Styling for the Chat Icon */
+.chat-icon {
+    /* Set the specific width and height */
+    width: 40px; 
+    height: 40px;
+    cursor: pointer;
+    /* Add a transition for a smooth hover effect */
+    transition: opacity 0.15s ease-in-out;
+    /* Recolor the SVG to white using a filter */
+    /* This complex filter turns any color to pure white */
+    filter: brightness(0) invert(1);
 }
+
+/* Hover effect for the Chat Icon link */
+.messages-icon-link:hover .chat-icon {
+    /* You can adjust the opacity for a hover effect if desired */
+    opacity: 0.8; 
+}
+
 
 .profile {
   width: 55px;
